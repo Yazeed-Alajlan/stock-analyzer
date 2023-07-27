@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import InformationCard from "../components/InformationCard";
-import StockChart from "../components/StockChart";
 import { Row, Col, Container } from "react-bootstrap";
-import axios from "axios";
 const MainPage = () => {
   const [price, setLastPrice] = useState(-1);
   const [priceTime, setLastPriceTime] = useState(null);

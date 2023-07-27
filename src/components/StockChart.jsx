@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "react-bootstrap";
 import Chart from "react-apexcharts";
+import { CustomCard } from "./utils/CustomCard";
 
 const StockChart = () => {
   const chart = {
@@ -78,20 +79,15 @@ const StockChart = () => {
 
   return (
     <motion.div whileHover={{ scale: 1.03 }}>
-      <Card
-        className="bg-white border-0 shadow-sm rounded-4 w-100 h-100"
-        style={{ minHeight: "550px" }}
-      >
-        <Card.Body className="d-flex flex-column gap-2">
-          <Chart
-            options={chart.options}
-            series={series}
-            type="candlestick"
-            width="100%"
-            height={320}
-          />
-        </Card.Body>
-      </Card>
+      <CustomCard>
+        <Chart
+          options={chart.options}
+          series={series}
+          type="candlestick"
+          width="100%"
+          height={320}
+        />
+      </CustomCard>
     </motion.div>
   );
 };
