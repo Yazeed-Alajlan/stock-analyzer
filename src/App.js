@@ -10,6 +10,24 @@ import { Container } from "react-bootstrap";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
+  const name = "123123";
+  const email = "4444444444444";
+  async function registerUser(event) {
+    event.preventDefault();
+
+    const response = await fetch("http://localhost:1337/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+      }),
+    });
+    const data = await response.json();
+    console.log("SENT");
+  }
 
   return (
     <Container
@@ -33,6 +51,11 @@ function App() {
         >
           OPEN MODAL
         </button>
+        <form onSubmit={registerUser}>
+          {" "}
+          <br />
+          <input type="submit" value="Register" />
+        </form>
 
         <StockPage />
       </motion.div>

@@ -13,7 +13,7 @@ import { useState } from "react";
 export const Header = ({ sideBar, setSideBar }) => {
   return (
     <div className="bg-white p-4 w-100">
-      <Container>
+      <Container fluid>
         <Navbar expand="lg" className="">
           <Container fluid>
             <Navbar.Brand href="#">
