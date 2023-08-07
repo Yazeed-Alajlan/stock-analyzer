@@ -1,0 +1,68 @@
+const newFinancials = new StockFinancials({
+  ticker: 'AAPL',
+  name: 'Apple Inc.',
+  balanceSheet: [
+    {
+      year: '2022',
+      current_assets: '1,259,133',
+      inventory: '203,387',
+      investments: '129,788',
+      fixed_assets: '3,069,274',
+      other_assets: '-',
+      total_assets: '4,661,582',
+      current_liabilities: '795,023',
+      non_current_liabilities: '790,225',
+      other_liabilities: '-',
+      shareholders_equity: '2,922,847',
+      total_liabilities_and_shareholder_equity: '4,661,582',
+      minority_interests: '153,487',
+      figures_in: 'Thousands',
+      currency_in: 'SAR',
+      last_update_date: '2023-03-22',
+    },
+  ],
+  dividends: [
+    {
+      announced_date: '2022-12-22',
+      eligibility_date: '2023-05-07',
+      distribution_date: '2023-05-17',
+      distribution_way: 'Account Transfer',
+      dividend_per_share: '3',
+    },
+  ],
+});
+
+
+const newFinancials = new StockFinancials({
+  ticker: 'AAPL',
+  name: 'Apple Inc.',
+  balanceSheet: [
+    {
+  year: '2023',
+    current_assets: '1,388,333',
+    inventory: '191,979',
+    investments: '195,995',
+    fixed_assets: '3,059,527',
+    other_assets: '-',
+    total_assets: '4,835,834',
+    current_liabilities: '849,821',
+    non_current_liabilities: '734,955',
+    other_liabilities: '-',
+    shareholders_equity: '3,089,454',
+    total_liabilities_and_shareholder_equity: '4,835,834',
+    minority_interests: '161,604',
+    figures_in: 'Thousands',
+    currency_in: 'SAR',
+    last_update_date: '2023-05-14',
+    },
+  ],
+  dividends: [
+    {
+      announced_date: '2022-12-22',
+      eligibility_date: '2023-05-07',
+      distribution_date: '2023-05-17',
+      distribution_way: 'Account Transfer',
+      dividend_per_share: '3',
+    },
+  ],
+});
