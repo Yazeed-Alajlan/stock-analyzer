@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 
 const stockFinancialsSchema = new mongoose.Schema({
-  ticker: String,
-  name: String,
+  symbol: String,
+  companyNameEN: String,
+  companyNameAR: String,
+  market_type: String,
+  tradingNameEn: String,
+  tradingNameAr: String,
   balanceSheet: [
     {
       year: String,
