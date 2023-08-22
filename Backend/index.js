@@ -21,7 +21,7 @@ mongoose
   });
 
 app.post("/api/register", async (req, res) => {
-  console.log("hi");
+  console.log("hissdasd");
   await runScript();
 });
 

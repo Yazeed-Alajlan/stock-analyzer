@@ -1,15 +1,13 @@
 import { motion } from "framer-motion";
 import { Tab, Tabs } from "react-bootstrap";
 import { CustomCard } from "./utils/CustomCard";
-import BalanceSheet from "./sheets/BalanceSheet";
-import IncomeSheet from "./sheets/IncomeSheet";
-import CashSheet from "./sheets/CashSheet";
+import BalanceSheet from "./Financials/BalanceSheet";
+import IncomeStatement from "./Financials/IncomeStatement";
+import CashFlow from "./Financials/CashFlow";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-const FinancialesTable = () => {
+const FinancialsTable = () => {
   const [data, setData] = useState(null);
-  console.log(data);
-  console.log("data");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,13 +33,13 @@ const FinancialesTable = () => {
                 />
               </Tab>
               <Tab eventKey={"Statment of Income"} title="Statment of Income">
-                <IncomeSheet
+                <IncomeStatement
                   annualData={data.incomeSheet}
                   quarterlyData={data.incomeSheetQuarterly}
                 />
               </Tab>
               <Tab eventKey={"Cash Flow"} title="Cash Flow">
-                <CashSheet
+                <CashFlow
                   annualData={data.cashFlow}
                   quarterlyData={data.cashFlowQuarterly}
                 />
@@ -78,4 +76,4 @@ const FinancialesTable = () => {
   );
 };
 
-export default FinancialesTable;
+export default FinancialsTable;

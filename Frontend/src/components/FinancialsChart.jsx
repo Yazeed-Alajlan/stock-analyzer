@@ -4,7 +4,7 @@ import { CustomCard } from "./utils/CustomCard";
 import CustomButton from "./utils/CustomButton";
 import { isEqual } from "lodash";
 
-const FinancialesChart = ({}) => {
+const FinancialsChart = ({}) => {
   const quarterlyData = {
     labels: ["Q1", "Q2", "Q3", "Q4"],
     datasets: [
@@ -51,4 +51,4 @@ const FinancialesChart = ({}) => {
   );
 };
 
-export default FinancialesChart;
+export default FinancialsChart;

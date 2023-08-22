@@ -2,7 +2,7 @@ import { useState } from "react";
 import { isEqual } from "lodash";
 import CustomButton from "../utils/CustomButton";
 import { Table } from "react-bootstrap";
-const IncomeSheet = ({ quarterlyData, annualData }) => {
+const IncomeStatement = ({ quarterlyData, annualData }) => {
   const [data, setData] = useState(quarterlyData);
   const [title, setTitle] = useState("Show Annual Data");
 
@@ -179,4 +179,4 @@ const IncomeSheet = ({ quarterlyData, annualData }) => {
   );
 };
 
-export default IncomeSheet;
+export default IncomeStatement;

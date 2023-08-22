@@ -1,27 +1,21 @@
 import React from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import StockChart from "../components/StockChart";
-import StockInformation from "../components/StockInformation";
-import FinancialesChart from "../components/FinancialesChart";
-import FinancialesTable from "../components/FinancialesTable";
+import { Routes, Route, Link, Outlet, useParams } from "react-router-dom";
+
+import { SidebarSelection } from "../components/SidebarSelection";
 const StockPage = () => {
-  //   useEffect(() => {}, []);
+  const { symbol } = useParams();
 
   return (
     <Container>
+      {symbol}
       <Row>
-        <Col>
-          <StockInformation title={""} value={3} />
-        </Col>
-
-        <Col>
-          <FinancialesChart />
-        </Col>
-      </Row>
-      <Row className="mt-4 ">
-        <Col xs={6}>{/* <StockChart /> */}</Col>
-        <Col xs={8}>
-          <FinancialesTable />
+        <Col xs={6}>
+          <Outlet />
+        </Col>{" "}
+        <Col xs={6}>
+          <SidebarSelection />
+          {/* <FinancialesChart /> */}
         </Col>
       </Row>
     </Container>
@@ -29,3 +23,10 @@ const StockPage = () => {
 };
 
 export default StockPage;
+
+// <Row className="mt-4 ">
+//   <Col xs={6}>{/* <StockChart /> */}</Col>
+//   <Col xs={8}>
+//     <FinancialesTable />
+//   </Col>
+// </Row>;

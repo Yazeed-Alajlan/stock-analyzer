@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { isEqual } from "lodash";
 import CustomButton from "../utils/CustomButton";
+import HoverGraph from "./HoverGraph";
+
 import { Table } from "react-bootstrap";
 const BalanceSheet = ({ quarterlyData, annualData }) => {
   const [data, setData] = useState(quarterlyData);
@@ -19,6 +21,7 @@ const BalanceSheet = ({ quarterlyData, annualData }) => {
   );
   const otherLiabilities = data.map((item) => item.other_liabilities);
   const shareholdersEquity = data.map((item) => item.shareholders_equity);
+  console.log(shareholdersEquity);
   const totalLiabilitiesAndShareholderEquity = data.map(
     (item) => item.total_liabilities_and_shareholder_equity
   );
@@ -26,6 +29,7 @@ const BalanceSheet = ({ quarterlyData, annualData }) => {
   const figuresIn = data.map((item) => item.figures_in);
   const currencyIn = data.map((item) => item.currency_in);
   const lastUpdateDate = data.map((item) => item.last_update_date);
+
   const toggleData = () => {
     if (isEqual(data, quarterlyData)) {
       setData(annualData);
@@ -49,73 +53,141 @@ const BalanceSheet = ({ quarterlyData, annualData }) => {
         </thead>
         <tbody>
           <tr>
-            <td>Current Assets</td>
+            <td>
+              <HoverGraph
+                text={"Current Assets"}
+                data={currentAssets}
+                years={years}
+              />
+            </td>
             {currentAssets.map((asset, index) => (
               <td key={index}>{asset}</td>
             ))}
           </tr>
           <tr>
-            <td>Inventory</td>
+            <td>
+              <HoverGraph text={"Inventory"} data={inventory} years={years} />
+            </td>
             {inventory.map((inv, index) => (
               <td key={index}>{inv}</td>
             ))}
           </tr>
           <tr>
-            <td>Investments</td>
+            <td>
+              <HoverGraph
+                text={"Investments"}
+                data={investments}
+                years={years}
+              />
+            </td>
             {investments.map((investment, index) => (
               <td key={index}>{investment}</td>
             ))}
           </tr>
           <tr>
-            <td>Fixed Assets</td>
+            <td>
+              <HoverGraph
+                text={"Fixed Assets"}
+                data={fixedAssets}
+                years={years}
+              />
+            </td>
             {fixedAssets.map((fixedAsset, index) => (
               <td key={index}>{fixedAsset}</td>
             ))}
           </tr>
           <tr>
-            <td>Other Assets</td>
+            <td>
+              <HoverGraph
+                text={"Other Assets"}
+                data={otherAssets}
+                years={years}
+              />
+            </td>
             {otherAssets.map((otherAsset, index) => (
               <td key={index}>{otherAsset}</td>
             ))}
           </tr>
           <tr>
-            <td>Total Assets</td>
+            <td>
+              <HoverGraph
+                text={"Total Assets"}
+                data={totalAssets}
+                years={years}
+              />
+            </td>
             {totalAssets.map((totalAsset, index) => (
               <td key={index}>{totalAsset}</td>
             ))}
           </tr>
           <tr>
-            <td>Current Liabilities</td>
+            <td>
+              <HoverGraph
+                text={"Current Liabilities"}
+                data={currentLiabilities}
+                years={years}
+              />
+            </td>
             {currentLiabilities.map((liability, index) => (
               <td key={index}>{liability}</td>
             ))}
           </tr>
           <tr>
-            <td>Non-Current Liabilities</td>
+            <td>
+              <HoverGraph
+                text={"Non-Current Liabilities"}
+                data={nonCurrentLiabilities}
+                years={years}
+              />
+            </td>
             {nonCurrentLiabilities.map((liability, index) => (
               <td key={index}>{liability}</td>
             ))}
           </tr>
           <tr>
-            <td>Other Liabilities</td>
+            <td>
+              <HoverGraph
+                text={"Other Liabilities"}
+                data={otherLiabilities}
+                years={years}
+              />
+            </td>
             {otherLiabilities.map((liability, index) => (
               <td key={index}>{liability}</td>
             ))}
           </tr>
           <tr>
-            <td>Shareholders' Equity</td>
+            <td>
+              <HoverGraph
+                text={"Shareholders' Equity"}
+                data={shareholdersEquity}
+                years={years}
+              />
+            </td>
             {shareholdersEquity.map((equity, index) => (
               <td key={index}>{equity}</td>
             ))}
           </tr>
           <tr>
-            <td>Total Liabilities and Shareholders' Equity</td>
+            <td>
+              <HoverGraph
+                text={"Total Liabilities and Shareholders' Equity"}
+                data={totalLiabilitiesAndShareholderEquity}
+                years={years}
+              />
+            </td>
             {totalLiabilitiesAndShareholderEquity.map((total, index) => (
               <td key={index}>{total}</td>
             ))}
           </tr>
           <tr>
-            <td>Minority Interests</td>
+            <td>
+              <HoverGraph
+                text={"Minority Interests"}
+                data={minorityInterests}
+                years={years}
+              />
+            </td>
             {minorityInterests.map((interest, index) => (
               <td key={index}>{interest}</td>
             ))}
@@ -149,8 +221,8 @@ const BalanceSheet = ({ quarterlyData, annualData }) => {
             </tr>
           ))}
         </tbody> */}
-      </Table>
-      <CustomButton onClick={toggleData} title={title} />
+      </Table>{" "}
+      <CustomButton onClick={toggleData} title={title} />{" "}
     </div>
   );
 };

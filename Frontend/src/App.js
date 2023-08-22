@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Route, Routes } from "react-router-dom";
 
-import MainPage from "./pages/MainPage";
 import CustomSidebar from "./components/utils/CustomSidebar";
 import CusotmModal from "./components/utils/CusotmModal";
 import StockPage from "./pages/StockPage";
 import { Header } from "./components/utils/Header";
 import { Container } from "react-bootstrap";
+import HomePage from "./pages/HomePage";
+import MarketSummary from "./pages/MarketSummary";
+import CompaniesPage from "./pages/CompaniesPage";
+import StockInformation from "./components/StockInformation";
+import FinancialesTable from "./components/FinancialsTable";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -52,13 +57,29 @@ function App() {
         >
           OPEN MODAL
         </button>
-        <form onSubmit={registerUser}>
-          {" "}
-          <br />
-          <input type="submit" value="Register" />
-        </form>
 
-        <StockPage />
+        <Routes>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/companies" element={<CompaniesPage />} />
+
+          {/* <Route path="/companies/symbol/:symbol" element={<StockPage />} />
+          <Route
+            path="/companies/symbol/:symbol/information"
+            element={<StockInformation />}
+          />
+          <Route
+            path="/companies/symbol/:symbol/financials"
+            element={<FinancialesTable />}
+          /> */}
+
+          <Route path="/companies/symbol/:symbol" element={<StockPage />}>
+            <Route path="information" element={<StockInformation />} />
+            <Route path="financials" element={<FinancialesTable />} />
+          </Route>
+
+          <Route path="/market-summary" element={<MarketSummary />} />
+        </Routes>
       </motion.div>
       <CustomSidebar {...{ sideBar, setSideBar }} />
       <CusotmModal {...{ modal, setModal }} />

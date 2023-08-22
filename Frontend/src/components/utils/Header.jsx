@@ -1,3 +1,5 @@
+import React from "react";
+import { Link } from "react-router-dom";
 import {
   Card,
   Container,
@@ -16,7 +18,7 @@ export const Header = ({ sideBar, setSideBar }) => {
       <Container fluid>
         <Navbar expand="lg" className="">
           <Container fluid>
-            <Navbar.Brand href="#">
+            <Navbar.Brand as={Link} to="/">
               LOGO
               {/* <img
                 src=""
@@ -30,8 +32,15 @@ export const Header = ({ sideBar, setSideBar }) => {
               className="me-auto my-2 my-lg-0"
               style={{ maxHeight: "100px" }}
             >
-              <Nav.Link href="#action1">Home</Nav.Link>
-              <Nav.Link href="#action2">Link</Nav.Link>
+              <Nav.Link as={Link} to="/home">
+                Home
+              </Nav.Link>
+              <Nav.Link as={Link} to="/companies">
+                Companies
+              </Nav.Link>
+              <Nav.Link as={Link} to="/market-summary">
+                Market Summary
+              </Nav.Link>
               {/* 
               <NavDropdown title="Link" id="navbarScrollingDropdown">
                 <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
