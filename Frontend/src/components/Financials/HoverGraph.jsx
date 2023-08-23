@@ -3,7 +3,6 @@ import { OverlayTrigger, Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 
 const HoverGraph = ({ text, data, years }) => {
-  console.log(years);
   const chartData = {
     labels: years,
     datasets: [

@@ -122,12 +122,43 @@ async function getSymbols() {
       "https://www.saudiexchange.sa/tadawul.eportal.theme.helper/ThemeSearchUtilityServlet"
     );
     const data = await response.json();
-    return data;
+    const filteredData = data.filter((item) => item.market_type === "M");
+
+    return filteredData;
   } catch (error) {
     console.error("Error:", error);
     throw error;
   }
 }
+async function getSymbolsWithSectors() {
+  try {
+    const response = await fetch(
+      "https://www.saudiexchange.sa/wps/portal/saudiexchange/ourmarkets/main-market-watch/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz8LVxcnA0C3bwtPLwM_I0MzMz1w1EVGAQHmAIVBPga-xgEGbgbmOlHEaPfAAdwNCCsPwpNia-7mUGgn2Ogv5G5qYFBsBG6AixOBCvA44bg1Dz9gtzQCIPMgHQAsqCDtA!!/p0/IZ7_IPG41I82KGASC06S67RB9A0080=CZ6_5A602H80O8DDC0QFK8HJ0O2067=NJgetMainNomucMarketDetails=/?sectorParameter=all&tableViewParameter=1&iswatchListSelected=NO&requestLocale=en&_=1692824593966"
+    );
+    const data = await response.json();
+    const dataItems = data.data || [];
+
+    // Extract the "sectorName" and "companyRef" fields for each item
+    const extractedInfo = dataItems.map((item) => ({
+      sectorName: item.sectorName,
+      companyRef: item.companyRef,
+      acrynomName: item.acrynomName,
+      netChange: item.netChangeModified,
+      highPrice: item.highPriceModified,
+      lowPrice: item.lowPriceModified,
+      precentChange: item.precentChangeModified,
+      previousClosePrice: item.previousClosePrice,
+      todayClosePrice: item.todayClosePrice,
+      todayOpen: item.todayOpenModified,
+      previousClosePrice: item.previousClosePrice,
+    }));
+    return extractedInfo;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
 async function getFinancialsDataForStocks() {
   const browser = await puppeteer.launch({
     headless: true,
@@ -464,7 +495,7 @@ async function saveStockFinancials(stock, financialsData) {
   }
 }
 
-export { getSymbols, runScript };
+export { getSymbols, getSymbolsWithSectors, runScript };
 
 // Extract the Balance Sheet table data
 // const balanceSheetData = await page.evaluate(() => {

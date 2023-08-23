@@ -1,11 +1,15 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { runScript } from "./scraper/tadawul.js";
+import {
+  runScript,
+  getSymbols,
+  getSymbolsWithSectors,
+} from "./scraper/tadawul.js";
 import StockFinancials from "./models/financials.js";
 
 const app = express();
-const port = 5001;
+const port = 5000;
 app.use(cors());
 app.use(express.json());
 mongoose
@@ -26,7 +30,6 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  console.log("hi");
   // const symbol = req.params.symbol;
   const symbol = 4321;
   StockFinancials.findOne({ symbol: symbol })
@@ -41,13 +44,11 @@ app.get("/", (req, res) => {
       console.error("Error retrieving stock:", error);
       res.status(500).json({ error: "Internal server error" });
     });
-
-  // // Fetch or generate the data you want to send
-  // const data = { message: "Hello from the server!adsdassasdasad" };
-
-  // // Send the data as a JSON response
-  // res.json(data);
 });
+app.get("/companies", async (req, res) => {
+  res.json(await getSymbolsWithSectors());
+});
+
 app.listen(port, () => {
   console.log(`Server is listening at https://localhost:${port}`);
 });
