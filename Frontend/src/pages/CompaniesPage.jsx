@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Container, Table } from "react-bootstrap";
 
 const CompaniesPage = () => {
   const [data, setData] = useState(null);
@@ -39,20 +40,20 @@ const CompaniesPage = () => {
       {groupedData && (
         <div>
           {Object.entries(groupedData).map(([sector, sectorData]) => (
-            <div key={sector}>
-              <h3>{sector}</h3>
-              <table>
+            <Container key={sector}>
+              <h2>{sector}</h2>
+              <Table hover>
                 <thead>
                   <tr>
-                    <th>Acronym Name</th>
-                    <th>Company Reference</th>
-                    <th>High Price</th>
-                    <th>Low Price</th>
-                    <th>Net Change</th>
-                    <th>Percent Change</th>
-                    <th>Previous Close Price</th>
-                    <th>Today Close Price</th>
-                    <th>Today Open</th>
+                    <th className="table-header">Name</th>
+                    <th className="table-header">Symbol</th>
+                    <th className="table-header">High Price</th>
+                    <th className="table-header">Low Price</th>
+                    <th className="table-header">Net Change</th>
+                    <th className="table-header">Percent Change</th>
+                    <th className="table-header">Previous Close Price</th>
+                    <th className="table-header">Today Close Price</th>
+                    <th className="table-header">Today Open</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -74,8 +75,8 @@ const CompaniesPage = () => {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
+              </Table>
+            </Container>
           ))}
         </div>
       )}

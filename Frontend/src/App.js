@@ -12,28 +12,19 @@ import MarketSummary from "./pages/MarketSummary";
 import CompaniesPage from "./pages/CompaniesPage";
 import StockInformation from "./components/StockInformation";
 import FinancialesTable from "./components/FinancialsTable";
+import axios from "axios";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
-  const name = "123123";
-  const email = "4444444444444";
-  async function registerUser(event) {
-    event.preventDefault();
 
-    const response = await fetch("http://localhost:5000/api/register", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-      }),
-    });
-    const data = await response.json();
-    console.log("SENT");
-  }
+  const handleClick = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/register");
+      console.log("Request sent successfully");
+    } catch (error) {
+      console.error("Error sending request:", error);
+    }
+  };
 
   return (
     <Container
@@ -50,13 +41,14 @@ function App() {
       >
         <Header {...{ sideBar, setSideBar }} />
 
-        <button
+        {/* <button
           onClick={() => {
             setModal(!modal);
           }}
         >
           OPEN MODAL
-        </button>
+        </button> */}
+        <button onClick={handleClick}>Register</button>
 
         <Routes>
           <Route path="/home" element={<HomePage />} />

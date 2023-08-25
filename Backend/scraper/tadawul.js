@@ -16,22 +16,25 @@ import StockFinancials from "../models/financials.js";
 //   });
 
 async function runScript() {
-  console.log("Script is Running");
-  getSymbols()
-    .then(async (data) => {
-      const browser = await puppeteer.launch({
-        headless: true,
-        defaultViewport: null,
-      });
-      const page = await browser.newPage();
-      page.setDefaultNavigationTimeout(2 * 60 * 1000);
+  try {
+    console.log("Script is Running");
+    const data = await getSymbols();
+    const browser = await puppeteer.launch({
+      headless: true,
+      defaultViewport: null,
+    });
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(2 * 60 * 1000);
 
-      data.map(async (stock) => {
+    for (const stock of data) {
+      try {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
-          stock.symbol == 4321
+          !stock.companyName.includes("REIT")
         ) {
+          console.log(stock);
+
           var url =
             "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
             stock.symbol;
@@ -110,12 +113,121 @@ async function runScript() {
             cashFlowData,
           });
         }
-      });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      } catch (error) {
+        console.error("Error in loop iteration:", error);
+        continue; // Skip to the next iteration
+      }
+    }
+
+    await browser.close();
+    console.log("Script completed successfully");
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
+
+// async function runScript() {
+//   console.log("Script is Running");
+//   getSymbols()
+//     .then(async (data) => {
+//       const browser = await puppeteer.launch({
+//         headless: true,
+//         defaultViewport: null,
+//       });
+//       const page = await browser.newPage();
+//       page.setDefaultNavigationTimeout(2 * 60 * 1000);
+//       data.map(async (stock) => {
+//         if (
+//           stock.symbol.length == 4 &&
+//           stock.market_type == "M" &&
+//           !stock.companyName.includes("REIT")
+//         ) {
+//           console.log(stock);
+
+//           var url =
+//             "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
+//             stock.symbol;
+//           await page.goto(url);
+
+//           // Extract data
+//           const selector = "#statementofincome";
+//           await page.waitForSelector(selector);
+//           await page.evaluate((selector) => {
+//             const element = document.querySelector(selector);
+//             if (element) {
+//               element.scrollTop = element.offsetHeight;
+//               console.error(`Scrolled to selector ${selector}`);
+//             } else {
+//               console.error(`cannot find selector ${selector}`);
+//             }
+//           }, selector);
+//           await page.waitForTimeout(1500);
+//           await page.click("#statementofincome");
+//           await page.waitForTimeout(1500);
+//           await page.click("#cashflow");
+//           await page.waitForTimeout(1500);
+
+//           const data = await page.evaluate(() => {
+//             const tableRows = Array.from(
+//               document.querySelectorAll(".tableStyle table tr")
+//             );
+
+//             return tableRows.map((row) => {
+//               const columns = Array.from(row.querySelectorAll("td,th"));
+//               return columns.map((column) => column.innerText);
+//             });
+//           });
+//           for (let i = 0; i < data.length; i++) {
+//             for (let j = 0; j < data[i].length; j++) {
+//               data[i][j] = data[i][j].replace(/\t|\n/g, "");
+//             }
+//           }
+//           // Find indexes
+//           const balanceSheetIndex = data.findIndex(
+//             (row) => row[0] === "Balance Sheet"
+//           );
+//           const incomeStatementIndex = data.findIndex(
+//             (row) => row[0] === "Statement of Income"
+//           );
+//           const cashFlowIndex = data.findIndex((row) => row[0] === "Cash Flow");
+//           const endIndex = data.findIndex((row) => row[0] === "Trading Date");
+
+//           // Extract the dividend data
+//           const dividendData = data.slice(1, balanceSheetIndex);
+//           // Extract the balance sheet data
+//           const balanceSheetData = data.slice(
+//             balanceSheetIndex,
+//             incomeStatementIndex
+//           );
+//           // Extract the income statement data
+//           const incomeStatementData = data.slice(
+//             incomeStatementIndex,
+//             cashFlowIndex
+//           );
+//           // Extract the cash flow data
+//           const cashFlowData = data.slice(cashFlowIndex, endIndex);
+
+//           // console.log({
+//           //   dividendData,
+//           //   balanceSheetData,
+//           //   incomeStatementData,
+//           //   cashFlowData,
+//           // });
+
+//           // fs.writeFileSync("data.json", JSON.stringify(data));
+//           await saveStockFinancials(stock, {
+//             dividendData,
+//             balanceSheetData,
+//             incomeStatementData,
+//             cashFlowData,
+//           });
+//         }
+//       });
+//     })
+//     .catch((error) => {
+//       console.error("Error:", error);
+//     });
+// }
 async function getSymbols() {
   try {
     const response = await fetch(

@@ -1,21 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import { Routes, Route, Link, Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { SidebarSelection } from "../components/SidebarSelection";
+import axios from "axios";
 const StockPage = () => {
+  const [data, setData] = useState(null);
+
   const { symbol } = useParams();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000");
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Container>
-      {symbol}
       <Row>
-        <Col xs={6}>
-          <Outlet />
-        </Col>{" "}
-        <Col xs={6}>
+        <Col sm={2}>
           <SidebarSelection />
-          {/* <FinancialesChart /> */}
+        </Col>
+        <Col sm={10}>
+          <Outlet context={[data, symbol]} />
         </Col>
       </Row>
     </Container>

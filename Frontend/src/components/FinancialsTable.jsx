@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 const FinancialsTable = () => {
   const [data, setData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {

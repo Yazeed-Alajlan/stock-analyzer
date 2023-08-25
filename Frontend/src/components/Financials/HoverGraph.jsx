@@ -1,8 +1,13 @@
 import React from "react";
 import { OverlayTrigger, Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
+
+Chart.register(...registerables);
 
 const HoverGraph = ({ text, data, years }) => {
+  console.log(data);
+  console.log(years);
   const chartData = {
     labels: years,
     datasets: [
@@ -11,7 +16,6 @@ const HoverGraph = ({ text, data, years }) => {
         data: data.map((value) => parseFloat(value.replace(/,/g, ""))),
         fill: false,
         borderColor: "rgba(75,192,192,1)",
-        lineTension: 0.1,
       },
     ],
   };
@@ -19,6 +23,7 @@ const HoverGraph = ({ text, data, years }) => {
   const chartOptions = {
     scales: {
       y: {
+        type: "linear",
         beginAtZero: true,
       },
     },

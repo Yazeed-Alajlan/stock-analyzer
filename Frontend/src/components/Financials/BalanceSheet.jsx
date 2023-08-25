@@ -21,7 +21,6 @@ const BalanceSheet = ({ quarterlyData, annualData }) => {
   );
   const otherLiabilities = data.map((item) => item.other_liabilities);
   const shareholdersEquity = data.map((item) => item.shareholders_equity);
-  console.log(shareholdersEquity);
   const totalLiabilitiesAndShareholderEquity = data.map(
     (item) => item.total_liabilities_and_shareholder_equity
   );

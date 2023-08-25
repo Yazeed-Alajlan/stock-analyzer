@@ -3,8 +3,12 @@ import { motion } from "framer-motion";
 import { Table } from "react-bootstrap";
 import { BsArrowDown } from "react-icons/bs";
 import { CustomCard } from "./utils/CustomCard";
+import { useOutletContext } from "react-router-dom";
 
-const StockInformation = ({ stockName, stockId }) => {
+const StockInformation = () => {
+  const [data, symbol] = useOutletContext();
+  console.log(symbol);
+
   const getStockInformationById = () => {
     return {
       id: "4321",
@@ -15,7 +19,6 @@ const StockInformation = ({ stockName, stockId }) => {
       changeInPercentagePrice: 33,
     };
   };
-  const getStockInformationByName = () => {};
 
   const stockInformation = getStockInformationById();
 
@@ -23,7 +26,7 @@ const StockInformation = ({ stockName, stockId }) => {
     <motion.div whileHover={{ scale: 1.03 }}>
       <CustomCard>
         <div className="text-secondary">
-          {stockInformation.id} - {stockInformation.sector}
+          {symbol} - {stockInformation.sector}
         </div>
         <div className="d-flex">
           <div className="pe-3 fs-2 fw-bold">{stockInformation.name}</div>
