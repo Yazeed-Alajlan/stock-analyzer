@@ -5,11 +5,15 @@ import { Container, Table } from "react-bootstrap";
 
 const CompaniesPage = () => {
   const [data, setData] = useState(null);
+  const [sectorName, setSectorName] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/companies");
+        const url = sectorName
+          ? `http://localhost:5000/companies/${sectorName}`
+          : "http://localhost:5000/companies";
+        const response = await axios.get(url);
         console.log(response.data);
         setData(response.data);
       } catch (error) {
@@ -18,17 +22,19 @@ const CompaniesPage = () => {
     };
 
     fetchData();
-  }, []);
-
+  }, [sectorName]); // Run useEffect whenever sectorFilter changes
+  const handleFilterChange = (event) => {
+    setSectorName(event.target.value);
+  };
   let groupedData = null;
 
   if (data) {
     groupedData = data.reduce((acc, item) => {
-      const { sectorName } = item;
-      if (acc[sectorName]) {
-        acc[sectorName].push(item);
+      const { sectorNameEn } = item;
+      if (acc[sectorNameEn]) {
+        acc[sectorNameEn].push(item);
       } else {
-        acc[sectorName] = [item];
+        acc[sectorNameEn] = [item];
       }
       return acc;
     }, {});
@@ -37,6 +43,21 @@ const CompaniesPage = () => {
   return (
     <div>
       <h2>Companies Page</h2>
+      <div>
+        {/* Sector filter select */}
+        <select value={sectorName} onChange={handleFilterChange}>
+          <option value="">All Sectors</option>
+          {data &&
+            [...new Set(data.map((item) => item.sectorNameEn))].map(
+              (sector, index) => (
+                <option key={index} value={sector}>
+                  {sector}
+                </option>
+              )
+            )}
+        </select>
+      </div>
+
       {groupedData && (
         <div>
           {Object.entries(groupedData).map(([sector, sectorData]) => (
@@ -60,11 +81,13 @@ const CompaniesPage = () => {
                   {sectorData.map((item, index) => (
                     <tr key={index}>
                       <td>
-                        <Link to={`/companies/symbol/${item.companyRef}`}>
-                          {item.acrynomName}
+                        <Link
+                          to={`/companies/symbol/${item.symbol}/information`}
+                        >
+                          {item.tradingNameEn}
                         </Link>
                       </td>
-                      <td>{item.companyRef}</td>
+                      <td>{item.symbol}</td>
                       <td>{item.highPrice}</td>
                       <td>{item.lowPrice}</td>
                       <td>{item.netChange}</td>
@@ -80,8 +103,6 @@ const CompaniesPage = () => {
           ))}
         </div>
       )}
-
-      {/* <Outlet /> */}
     </div>
   );
 };

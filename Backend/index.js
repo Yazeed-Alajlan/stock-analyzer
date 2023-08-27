@@ -6,7 +6,8 @@ import {
   getSymbols,
   getSymbolsWithSectors,
 } from "./scraper/tadawul.js";
-import StockFinancials from "./models/financials.js";
+import StockFinancials from "./models/stockFinancials.js";
+import StockInformation from "./models/stockInformation.js";
 
 const app = express();
 const port = 5000;
@@ -26,6 +27,7 @@ mongoose
 
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
+  // getSymbols();
   runScript()
     .then(() => {
       console.log("Script completed successfully");
@@ -35,9 +37,10 @@ app.post("/api/register", async (req, res) => {
     });
 });
 
-app.get("/", (req, res) => {
-  // const symbol = req.params.symbol;
-  const symbol = 4321;
+app.get("/stock", (req, res) => {
+  const symbol = req.query.symbol;
+  console.log(symbol);
+  // const symbol = 4321;
   StockFinancials.findOne({ symbol: symbol })
     .then((stock) => {
       if (!stock) {
@@ -51,8 +54,27 @@ app.get("/", (req, res) => {
       res.status(500).json({ error: "Internal server error" });
     });
 });
-app.get("/companies", async (req, res) => {
-  res.json(await getSymbolsWithSectors());
+app.get("/companies/:sectorName?", async (req, res) => {
+  const sectorName = req.params.sectorName;
+  console.log(sectorName);
+  try {
+    const symbolsWithSectors = await getSymbols();
+    console.log(symbolsWithSectors);
+
+    if (sectorName) {
+      const filteredSymbols = symbolsWithSectors.filter(
+        (symbol) =>
+          symbol.sectorNameEn.toLowerCase() === sectorName.toLowerCase()
+      );
+      res.json(filteredSymbols);
+    } else {
+      res.json(symbolsWithSectors);
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the symbols." });
+  }
 });
 
 app.listen(port, () => {

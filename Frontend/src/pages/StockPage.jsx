@@ -11,18 +11,20 @@ const StockPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000");
+        const response = await axios.get(
+          `http://localhost:5000/stock?symbol=${symbol}`
+        );
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
-  }, []);
+  }, [symbol]);
 
   return (
     <Container>
+      {}
       <Row>
         <Col sm={2}>
           <SidebarSelection />

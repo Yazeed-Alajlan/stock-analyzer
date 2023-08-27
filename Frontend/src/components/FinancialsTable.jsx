@@ -6,21 +6,24 @@ import IncomeStatement from "./Financials/IncomeStatement";
 import CashFlow from "./Financials/CashFlow";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useOutletContext } from "react-router-dom";
+
 const FinancialsTable = () => {
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
+  const [data, symbol] = useOutletContext();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000");
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:5000");
+  //       setData(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   return (
     <motion.div whileHover={{ scale: 1.03 }}>
       <div>
