@@ -35,7 +35,7 @@ export const Header = ({ sideBar, setSideBar }) => {
               <Nav.Link as={Link} to="/home">
                 Home
               </Nav.Link>
-              <Nav.Link as={Link} to="/companies">
+              <Nav.Link as={Link} to="/companies/all">
                 Companies
               </Nav.Link>
               <Nav.Link as={Link} to="/market-summary">

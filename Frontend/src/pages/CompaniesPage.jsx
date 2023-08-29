@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Container, Table } from "react-bootstrap";
 
 const CompaniesPage = () => {
+  const { sector } = useParams();
+  const navigate = useNavigate();
+
   const [data, setData] = useState(null);
-  const [sectorName, setSectorName] = useState("");
+  const [sectorName, setSectorName] = useState(sector);
+  let groupedData = null;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = sectorName
-          ? `http://localhost:5000/companies/${sectorName}`
-          : "http://localhost:5000/companies";
+        const url = "http://localhost:5000/companies";
         const response = await axios.get(url);
         console.log(response.data);
         setData(response.data);
@@ -22,19 +24,24 @@ const CompaniesPage = () => {
     };
 
     fetchData();
-  }, [sectorName]); // Run useEffect whenever sectorFilter changes
+  }, []);
+
   const handleFilterChange = (event) => {
     setSectorName(event.target.value);
   };
-  let groupedData = null;
 
   if (data) {
     groupedData = data.reduce((acc, item) => {
       const { sectorNameEn } = item;
-      if (acc[sectorNameEn]) {
-        acc[sectorNameEn].push(item);
-      } else {
-        acc[sectorNameEn] = [item];
+      if (
+        sectorName === "" ||
+        sectorNameEn.toLowerCase() === sectorName.toLowerCase()
+      ) {
+        if (acc[sectorNameEn]) {
+          acc[sectorNameEn].push(item);
+        } else {
+          acc[sectorNameEn] = [item];
+        }
       }
       return acc;
     }, {});
@@ -82,7 +89,7 @@ const CompaniesPage = () => {
                     <tr key={index}>
                       <td>
                         <Link
-                          to={`/companies/symbol/${item.symbol}/information`}
+                          to={`/companies/${item.sectorNameEn}/${item.symbol}/information`}
                         >
                           {item.tradingNameEn}
                         </Link>

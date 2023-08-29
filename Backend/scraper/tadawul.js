@@ -32,79 +32,15 @@ async function runScript() {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
+          stock.symbol == "4321" &&
           !stock.companyNameEN.includes("REIT")
         ) {
           var url =
             "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
             stock.symbol;
           await page.goto(url);
-
-          // Extract data
-          const selector = "#statementofincome";
-          await page.waitForSelector(selector);
-          await page.evaluate((selector) => {
-            const element = document.querySelector(selector);
-            if (element) {
-              element.scrollTop = element.offsetHeight;
-              console.error(`Scrolled to selector ${selector}`);
-            } else {
-              console.error(`cannot find selector ${selector}`);
-            }
-          }, selector);
-          await page.waitForTimeout(1500);
-          await page.click("#statementofincome");
-          await page.waitForTimeout(1500);
-          await page.click("#cashflow");
-          await page.waitForTimeout(1500);
-
-          const data = await page.evaluate(() => {
-            const tableRows = Array.from(
-              document.querySelectorAll(".tableStyle table tr")
-            );
-
-            return tableRows.map((row) => {
-              const columns = Array.from(row.querySelectorAll("td,th"));
-              return columns.map((column) => column.innerText);
-            });
-          });
-          for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < data[i].length; j++) {
-              data[i][j] = data[i][j].replace(/\t|\n/g, "");
-            }
-          }
-          // Find indexes
-          const balanceSheetIndex = data.findIndex(
-            (row) => row[0] === "Balance Sheet"
-          );
-          const incomeStatementIndex = data.findIndex(
-            (row) => row[0] === "Statement of Income"
-          );
-          const cashFlowIndex = data.findIndex((row) => row[0] === "Cash Flow");
-          const endIndex = data.findIndex((row) => row[0] === "Trading Date");
-
-          // Extract the dividend data
-          const dividendData = data.slice(1, balanceSheetIndex);
-          // Extract the balance sheet data
-          const balanceSheetData = data.slice(
-            balanceSheetIndex,
-            incomeStatementIndex
-          );
-          // Extract the income statement data
-          const incomeStatementData = data.slice(
-            incomeStatementIndex,
-            cashFlowIndex
-          );
-          // Extract the cash flow data
-          const cashFlowData = data.slice(cashFlowIndex, endIndex);
-
-          console.log(stock.symbol);
-          // fs.writeFileSync("data.json", JSON.stringify(data));
-          await saveStockData(stock, {
-            dividendData,
-            balanceSheetData,
-            incomeStatementData,
-            cashFlowData,
-          });
+          await getForeignOwnership(stock, browser, page);
+          // await getFinancialsDataForStocks(stock, browser, page);
         }
       } catch (error) {
         console.error("Error in loop iteration:", error);
@@ -118,6 +54,110 @@ async function runScript() {
     console.error("Error:", error);
   }
 }
+async function getForeignOwnership(stock, browser, page) {
+  try {
+    // Extract data
+    const selector = ".shareholding";
+    await page.waitForSelector(selector);
+    await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollTop = element.offsetHeight;
+        console.error(`Scrolled to selector ${selector}`);
+      } else {
+        console.error(`cannot find selector ${selector}`);
+      }
+    }, selector);
+    await page.waitForTimeout(1500);
+    await page.click(
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(11) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
+    );
+    await page.waitForTimeout(1500);
+
+    const data = await page.$eval(
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(11) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
+      (element) => element.textContent
+    );
+    saveStockforeignOwnership(stock, data.trim());
+  } catch (e) {
+    console.error("scrape faild!: \n", e);
+  } finally {
+    await browser?.close();
+  }
+}
+async function getFinancialsDataForStocks(stock, browser, page) {
+  try {
+    // Extract data
+    const selector = "#statementofincome";
+    await page.waitForSelector(selector);
+    await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollTop = element.offsetHeight;
+        console.error(`Scrolled to selector ${selector}`);
+      } else {
+        console.error(`cannot find selector ${selector}`);
+      }
+    }, selector);
+    await page.waitForTimeout(1500);
+    await page.click("#statementofincome");
+    await page.waitForTimeout(1500);
+    await page.click("#cashflow");
+    await page.waitForTimeout(1500);
+
+    const data = await page.evaluate(() => {
+      const tableRows = Array.from(
+        document.querySelectorAll(".tableStyle table tr")
+      );
+
+      return tableRows.map((row) => {
+        const columns = Array.from(row.querySelectorAll("td,th"));
+        return columns.map((column) => column.innerText);
+      });
+    });
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < data[i].length; j++) {
+        data[i][j] = data[i][j].replace(/\t|\n/g, "");
+      }
+    }
+    // Find indexes
+    const balanceSheetIndex = data.findIndex(
+      (row) => row[0] === "Balance Sheet"
+    );
+    const incomeStatementIndex = data.findIndex(
+      (row) => row[0] === "Statement of Income"
+    );
+    const cashFlowIndex = data.findIndex((row) => row[0] === "Cash Flow");
+    const endIndex = data.findIndex((row) => row[0] === "Trading Date");
+
+    // Extract the dividend data
+    const dividendData = data.slice(1, balanceSheetIndex);
+    // Extract the balance sheet data
+    const balanceSheetData = data.slice(
+      balanceSheetIndex,
+      incomeStatementIndex
+    );
+    // Extract the income statement data
+    const incomeStatementData = data.slice(incomeStatementIndex, cashFlowIndex);
+    // Extract the cash flow data
+    const cashFlowData = data.slice(cashFlowIndex, endIndex);
+
+    console.log(stock.symbol);
+    await saveStockData(stock, {
+      dividendData,
+      balanceSheetData,
+      incomeStatementData,
+      cashFlowData,
+    });
+
+    // fs.writeFileSync("data.json", JSON.stringify(data));
+  } catch (e) {
+    console.error("scrape faild!: \n", e);
+  } finally {
+    await browser?.close();
+  }
+}
+
 async function runStockInformationScript() {
   try {
     //English Data
@@ -202,113 +242,7 @@ async function getSymbolsWithSectors() {
     throw error;
   }
 }
-async function getFinancialsDataForStocks() {
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null,
-  });
 
-  try {
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(2 * 60 * 1000);
-    const symbols = await getSymbols();
-
-    for (let i = 0; i < symbols.length; i++) {
-      if (symbols[i].market_type == "M") {
-        var symbol = symbols[i].symbol;
-        var url =
-          "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
-          symbol;
-        await page.goto(url);
-        // await page.waitForNavigation({ waitUntil: "networkidle2" });
-
-        // Extract data
-        const selector = "#statementofincome";
-        await page.waitForSelector(selector);
-        // scroll selector into view
-        await page.evaluate((selector) => {
-          const element = document.querySelector(selector);
-          if (element) {
-            element.scrollTop = element.offsetHeight;
-            console.error(`Scrolled to selector ${selector}`);
-          } else {
-            console.error(`cannot find selector ${selector}`);
-          }
-        }, selector);
-        await page.waitForTimeout(1500);
-        await page.click("#statementofincome");
-        await page.waitForTimeout(1500);
-        await page.click("#cashflow");
-        await page.waitForTimeout(1500);
-
-        const data = await page.evaluate(() => {
-          const tableRows = Array.from(
-            document.querySelectorAll(".tableStyle table tr")
-          );
-
-          return tableRows.map((row) => {
-            const columns = Array.from(row.querySelectorAll("td,th"));
-            return columns.map((column) => column.innerText);
-          });
-        });
-        for (let i = 0; i < data.length; i++) {
-          for (let j = 0; j < data[i].length; j++) {
-            data[i][j] = data[i][j].replace(/\t|\n/g, "");
-          }
-        }
-
-        const balanceSheetIndex = data.findIndex(
-          (row) => row[0] === "Balance Sheet"
-        );
-        const incomeStatementIndex = data.findIndex(
-          (row) => row[0] === "Statement of Income"
-        );
-        const cashFlowIndex = data.findIndex((row) => row[0] === "Cash Flow");
-        const endIndex = data.findIndex((row) => row[0] === "Trading Date");
-        // Extract the dividend data
-        const dividendData = data.slice(1, balanceSheetIndex);
-        // Extract the balance sheet data
-        const balanceSheetData = data.slice(
-          balanceSheetIndex,
-          incomeStatementIndex
-        );
-        // Extract the income statement data
-        const incomeStatementData = data.slice(
-          incomeStatementIndex,
-          cashFlowIndex
-        );
-        // Extract the cash flow data
-        const cashFlowData = data.slice(cashFlowIndex, endIndex);
-        balanceSheetData[0][1] = "2023-03-31";
-        // console.log({
-        //   dividendData,
-        //   balanceSheetData,
-        //   incomeStatementData,
-        //   cashFlowData,
-        // });
-
-        // await saveStockFinancials(symbols[i], {
-        //   dividendData,
-        //   balanceSheetData,
-        //   incomeStatementData,
-        //   cashFlowData,
-        // });
-
-        // fs.writeFileSync("data.json", JSON.stringify(data));
-        // return {
-        //   dividendData,
-        //   balanceSheetData,
-        //   incomeStatementData,
-        //   cashFlowData,
-        // };
-      }
-    }
-  } catch (e) {
-    console.error("scrape faild!: \n", e);
-  } finally {
-    await browser?.close();
-  }
-}
 async function saveStockData(stock, financialsData) {
   try {
     await saveStockFinancials(stock, financialsData);
@@ -408,6 +342,30 @@ async function saveStockDividends(stock, financialsData) {
     } catch (error) {
       console.error("Error retrieving stock:", error);
     }
+  }
+}
+async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
+  console.log(stockData);
+  try {
+    const stock = await StockFinancials.findOne({
+      symbol: stockData.symbol,
+    }).exec();
+    if (stock) {
+      console.log(foreignOwnershipData);
+      stock.foreignOwnership.push({
+        date: new Date().toLocaleDateString("en-GB"),
+        percentage: foreignOwnershipData,
+      });
+      await stock.save();
+      console.log("New data added to existing record");
+    } else {
+      const newData = new StockFinancials(stockData);
+      newData.foreignOwnership.push(foreignOwnershipData);
+      await newData.save();
+      console.log("First time");
+    }
+  } catch (error) {
+    console.error("Error retrieving stock:", error);
   }
 }
 

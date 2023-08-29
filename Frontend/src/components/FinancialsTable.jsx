@@ -9,21 +9,8 @@ import axios from "axios";
 import { useOutletContext } from "react-router-dom";
 
 const FinancialsTable = () => {
-  // const [data, setData] = useState(null);
   const [data, symbol] = useOutletContext();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:5000");
-  //       setData(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
   return (
     <motion.div whileHover={{ scale: 1.03 }}>
       <div>
@@ -54,28 +41,6 @@ const FinancialsTable = () => {
           <p>Loading...</p>
         )}
       </div>
-      {/* <CustomCard>
-        <Tabs defaultActiveKey={"Balance Sheet"}>
-          <Tab eventKey={"Balance Sheet"} title="Balance Sheet">
-            <BalanceSheet
-              annualData={data.balanceSheet}
-              quarterlyData={data.balanceSheetQuarterly}
-            />
-          </Tab>
-          <Tab eventKey={"Statment of Income"} title="Statment of Income">
-            <IncomeSheet
-              annualData={data.incomeSheet}
-              quarterlyData={data.incomeSheetQuarterly}
-            />
-          </Tab>
-          <Tab eventKey={"Cash Flow"} title="Cash Flow">
-            <CashSheet
-              annualData={data.cashFlow}
-              quarterlyData={data.cashFlowQuarterly}
-            />
-          </Tab>
-        </Tabs>
-      </CustomCard> */}
     </motion.div>
   );
 };

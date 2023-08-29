@@ -4,8 +4,11 @@ import { BsCaretDownFill } from "react-icons/bs";
 import { BsCaretUpFill } from "react-icons/bs";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { CustomCard } from "./utils/CustomCard";
+import { useOutletContext } from "react-router-dom";
 
 const InformationCard = ({ title, value, percentage, icon }) => {
+  const [data, symbol] = useOutletContext();
+
   return (
     <motion.div whileHover={{ scale: 1.03 }}>
       <CustomCard>

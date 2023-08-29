@@ -148,6 +148,12 @@ const stockFinancialsSchema = new mongoose.Schema({
       dividend_per_share: String,
     },
   ],
+  foreignOwnership: [
+    {
+      date: String,
+      percentage: String,
+    },
+  ],
 });
 
 const StockFinancials = mongoose.model(

@@ -53,7 +53,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<HomePage />} />
-          <Route path="/companies" element={<CompaniesPage />} />
+          <Route path="/companies/:sector" element={<CompaniesPage />} />
 
           {/* <Route path="/companies/symbol/:symbol" element={<StockPage />} />
           <Route
@@ -65,7 +65,7 @@ function App() {
             element={<FinancialesTable />}
           /> */}
 
-          <Route path="/companies/symbol/:symbol" element={<StockPage />}>
+          <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />
             <Route path="financials" element={<FinancialesTable />} />
           </Route>
