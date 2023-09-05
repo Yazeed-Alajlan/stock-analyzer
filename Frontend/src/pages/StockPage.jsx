@@ -29,12 +29,10 @@ const StockPage = () => {
       {data ? (
         <>
           <Row>
-            <Container className="d-flex gap-3">
-              <Link to={"/companies"}>Companies</Link>/
+            <Container className="d-flex gap-2">
+              <Link to={"/companies/all"}>Companies</Link>/
               <Link to={`/companies/${sector}`}>{sector}</Link>/
-              <Link to={`/companies/${data.symbol}/information`}>
-                {data.tradingNameEn}
-              </Link>
+              <p>{data.tradingNameEn}</p>
             </Container>
           </Row>
           <Row>
