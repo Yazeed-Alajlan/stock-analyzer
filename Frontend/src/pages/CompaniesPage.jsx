@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Container, Table } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
+import { Card, Container, Table, Button, Col, Row } from "react-bootstrap";
+import Select from "react-select";
 
 const CompaniesPage = () => {
-  const { sector } = useParams();
-  const navigate = useNavigate();
+  let { sector } = useParams();
+  if (sector === "all") {
+    sector = "";
+  }
 
   const [data, setData] = useState(null);
   const [sectorName, setSectorName] = useState(sector);
-  let groupedData = null;
+  const [filteredData, setFilteredData] = useState(null);
+  const [selectedStock, setSelectedStock] = useState({}); // Initialize with an empty object
+
+  const sectorOptions = data
+    ? [...new Set(data.map((item) => item.sectorNameEn))].map((sector) => ({
+        value: sector,
+        label: sector,
+      }))
+    : [];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const url = "http://localhost:5000/companies";
         const response = await axios.get(url);
-        console.log(response.data);
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -26,52 +36,113 @@ const CompaniesPage = () => {
     fetchData();
   }, []);
 
-  const handleFilterChange = (event) => {
-    setSectorName(event.target.value);
+  useEffect(() => {
+    // Filter data based on sector and search query
+    if (data) {
+      const filtered = data.filter((item) => {
+        const sectorMatch =
+          sectorName === "" ||
+          item.sectorNameEn.toLowerCase() === sectorName.toLowerCase();
+
+        return sectorMatch;
+      });
+
+      setFilteredData(filtered);
+    }
+  }, [data, sectorName, selectedStock]);
+
+  const handleFilterChange = (selectedOption) => {
+    console.log(selectedOption);
+    if (selectedOption != null) {
+      setSectorName(selectedOption.value);
+    } else {
+      setSectorName("");
+    }
   };
 
-  if (data) {
-    groupedData = data.reduce((acc, item) => {
-      const { sectorNameEn } = item;
-      if (
-        sectorName === "" ||
-        sectorNameEn.toLowerCase() === sectorName.toLowerCase()
-      ) {
-        if (acc[sectorNameEn]) {
-          acc[sectorNameEn].push(item);
-        } else {
-          acc[sectorNameEn] = [item];
-        }
+  const handleFilterStock = (selectedOption) => {
+    if (selectedOption != null) {
+      setSelectedStock(selectedOption);
+      // Filter data to show only the selected stock
+      if (data) {
+        const stockMatch = data.filter(
+          (item) => item.symbol === selectedOption.value
+        );
+        setFilteredData(stockMatch);
       }
-      return acc;
-    }, {});
-  }
+    } else {
+      setSelectedStock({}); // Clear selected stock by setting it to an empty object
+    }
+  };
+
+  const clearFilters = () => {
+    setSectorName("");
+    setSelectedStock({}); // Clear selected stock by setting it to an empty object
+  };
 
   return (
-    <div>
-      <h2>Companies Page</h2>
-      <div>
-        {/* Sector filter select */}
-        <select value={sectorName} onChange={handleFilterChange}>
-          <option value="">All Sectors</option>
-          {data &&
-            [...new Set(data.map((item) => item.sectorNameEn))].map(
-              (sector, index) => (
-                <option key={index} value={sector}>
-                  {sector}
-                </option>
-              )
-            )}
-        </select>
-      </div>
-
-      {groupedData && (
-        <div>
-          {Object.entries(groupedData).map(([sector, sectorData]) => (
-            <Container key={sector}>
-              <h2>{sector}</h2>
-              <Table hover>
-                <thead>
+    <Container className="d-flex flex-column gap-4">
+      <h1>الشركات</h1>
+      <Card>
+        <Card.Header>
+          <Row className=" align-items-center">
+            <Col xs={8} xl={4}>
+              <div className="d-flex">
+                <p className="my-auto mx-2">الشركة</p>
+                <Select
+                  className="w-100"
+                  placeholder="Search by Company Name or Symbol"
+                  options={
+                    filteredData &&
+                    filteredData.map((stock) => ({
+                      value: stock.symbol,
+                      label: `${stock.tradingNameEn} (${stock.symbol})`,
+                    }))
+                  }
+                  onChange={handleFilterStock}
+                  value={selectedStock}
+                  isClearable={true}
+                  isSearchable={true}
+                />
+              </div>
+            </Col>
+            <Col xs={8} xl={7}>
+              <div className="d-flex w-100">
+                <p className="my-auto mx-2">القطاع</p>
+                {/* Sector filter select */}
+                <Select
+                  className="w-100"
+                  value={{ value: sectorName, label: sectorName }}
+                  options={[
+                    { value: "", label: "All Sectors" },
+                    ...sectorOptions,
+                  ]}
+                  isClearable={true}
+                  isSearchable={true}
+                  onChange={handleFilterChange}
+                />
+              </div>
+            </Col>
+            <Col xs={8} xl={1}>
+              <Button
+                variant="danger"
+                as="input"
+                type="reset"
+                value="حذف"
+                onClick={clearFilters}
+              />
+            </Col>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          {filteredData && (
+            <div
+              className="custom-scrollbar"
+              style={{ maxHeight: "500px", overflowY: "auto" }}
+            >
+              {/* Make the table scrollable by wrapping it in a div */}
+              <Table borderless striped hover>
+                <thead className="position-sticky top-0">
                   <tr>
                     <th className="table-header">Name</th>
                     <th className="table-header">Symbol</th>
@@ -85,7 +156,7 @@ const CompaniesPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sectorData.map((item, index) => (
+                  {filteredData.map((item, index) => (
                     <tr key={index}>
                       <td>
                         <Link
@@ -106,11 +177,11 @@ const CompaniesPage = () => {
                   ))}
                 </tbody>
               </Table>
-            </Container>
-          ))}
-        </div>
-      )}
-    </div>
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

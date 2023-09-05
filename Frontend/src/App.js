@@ -29,8 +29,9 @@ function App() {
   return (
     <Container
       fluid
-      className="bg-light"
+      className="bg-light p-0"
       style={{ minHeight: "100vh", width: "100%" }}
+      dir="rtl"
     >
       <motion.div
         animate={{
