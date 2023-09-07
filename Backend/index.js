@@ -46,7 +46,6 @@ app.get("/stock", (req, res) => {
       if (!stock) {
         return res.status(404).json({ error: "Stock not found" });
       }
-      console.log(stock);
       res.json(stock);
     })
     .catch((error) => {
@@ -64,7 +63,7 @@ app.get("/companies/:sectorName?", async (req, res) => {
     if (sectorName) {
       const filteredSymbols = symbolsWithSectors.filter(
         (symbol) =>
-          symbol.sectorNameEn.toLowerCase() === sectorName.toLowerCase()
+          symbol.sectorNameAr.toLowerCase() === sectorName.toLowerCase()
       );
       res.json(filteredSymbols);
     } else {
