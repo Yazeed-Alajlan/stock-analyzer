@@ -16,7 +16,7 @@ const CompaniesPage = () => {
   const [selectedStock, setSelectedStock] = useState({}); // Initialize with an empty object
 
   const sectorOptions = data
-    ? [...new Set(data.map((item) => item.sectorNameEn))].map((sector) => ({
+    ? [...new Set(data.map((item) => item.sectorNameAr))].map((sector) => ({
         value: sector,
         label: sector,
       }))
@@ -42,7 +42,7 @@ const CompaniesPage = () => {
       const filtered = data.filter((item) => {
         const sectorMatch =
           sectorName === "" ||
-          item.sectorNameEn.toLowerCase() === sectorName.toLowerCase();
+          item.sectorNameAr.toLowerCase() === sectorName.toLowerCase();
 
         return sectorMatch;
       });
@@ -96,7 +96,7 @@ const CompaniesPage = () => {
                     filteredData &&
                     filteredData.map((stock) => ({
                       value: stock.symbol,
-                      label: `${stock.tradingNameEn} (${stock.symbol})`,
+                      label: `${stock.tradingNameAr} (${stock.symbol})`,
                     }))
                   }
                   onChange={handleFilterStock}
@@ -160,9 +160,9 @@ const CompaniesPage = () => {
                     <tr key={index}>
                       <td>
                         <Link
-                          to={`/companies/${item.sectorNameEn}/${item.symbol}/information`}
+                          to={`/companies/${item.sectorNameAr}/${item.symbol}/information`}
                         >
-                          {item.tradingNameEn}
+                          {item.tradingNameAr}
                         </Link>
                       </td>
                       <td>{item.symbol}</td>

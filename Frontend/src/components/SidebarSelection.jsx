@@ -1,10 +1,10 @@
 import { CustomCard } from "./utils/CustomCard";
-import { Card, Container, Nav } from "react-bootstrap";
+import { Container, Nav } from "react-bootstrap";
 import { FaInfoCircle, FaChartLine, FaCog } from "react-icons/fa";
 import React from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 export const SidebarSelection = () => {
-  const { symbol } = useParams();
+  const { symbol, sector } = useParams();
   const location = useLocation();
 
   const isActive = (path) => {
@@ -18,7 +18,7 @@ export const SidebarSelection = () => {
           <Nav.Item>
             <Nav.Link
               as={Link}
-              to={`/companies/symbol/${symbol}/information`}
+              to={`/companies/${sector}/${symbol}/information`}
               className={isActive("/information") ? "bg-light" : ""}
             >
               <FaInfoCircle className="mr-2" /> Information
@@ -27,7 +27,7 @@ export const SidebarSelection = () => {
           <Nav.Item>
             <Nav.Link
               as={Link}
-              to={`/companies/symbol/${symbol}/financials`}
+              to={`/companies/${sector}/${symbol}/financials`}
               className={isActive("financials") ? "bg-light" : ""}
             >
               <FaChartLine className="mr-2" /> Financials

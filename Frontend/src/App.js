@@ -4,14 +4,14 @@ import { Route, Routes } from "react-router-dom";
 
 import CustomSidebar from "./components/utils/CustomSidebar";
 import CusotmModal from "./components/utils/CusotmModal";
-import StockPage from "./pages/StockPage";
+import StockPage from "./components/StockPage/StockPage";
 import { Header } from "./components/utils/Header";
 import { Container } from "react-bootstrap";
 import HomePage from "./pages/HomePage";
 import MarketSummary from "./pages/MarketSummary";
 import CompaniesPage from "./pages/CompaniesPage";
 import StockInformation from "./components/StockInformation";
-import FinancialesTable from "./components/FinancialsTable";
+import FinancialesTable from "./components/StockPage/utils/FinancialsTable";
 import axios from "axios";
 function App() {
   const [sideBar, setSideBar] = useState(false);

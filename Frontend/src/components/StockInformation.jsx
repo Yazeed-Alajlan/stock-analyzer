@@ -7,7 +7,6 @@ import { useOutletContext } from "react-router-dom";
 
 const StockInformation = () => {
   const [data, symbol] = useOutletContext();
-  console.log(symbol);
 
   const getStockInformationById = () => {
     return {

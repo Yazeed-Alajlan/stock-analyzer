@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { Tab, Tabs } from "react-bootstrap";
-import { CustomCard } from "./utils/CustomCard";
-import BalanceSheet from "./Financials/BalanceSheet";
-import IncomeStatement from "./Financials/IncomeStatement";
-import CashFlow from "./Financials/CashFlow";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { CustomCard } from "../../utils/CustomCard";
+import BalanceSheet from "../../Financials/BalanceSheet";
+import IncomeStatement from "../../Financials/IncomeStatement";
+import CashFlow from "../../Financials/CashFlow";
+import React from "react";
 import { useOutletContext } from "react-router-dom";
 
 const FinancialsTable = () => {
