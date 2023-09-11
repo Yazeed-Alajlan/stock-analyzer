@@ -32,15 +32,15 @@ async function runScript() {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
-          stock.symbol == "4321" &&
+          // stock.symbol == "1833" &&
           !stock.companyNameEN.includes("REIT")
         ) {
           var url =
             "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
             stock.symbol;
           await page.goto(url);
-          await getForeignOwnership(stock, browser, page);
-          // await getFinancialsDataForStocks(stock, browser, page);
+          // await getForeignOwnership(stock, browser, page);
+          await getFinancialsDataForStocks(stock, browser, page);
         }
       } catch (error) {
         console.error("Error in loop iteration:", error);
@@ -242,7 +242,6 @@ async function getSymbolsWithSectors() {
     throw error;
   }
 }
-
 async function saveStockData(stock, financialsData) {
   try {
     await saveStockFinancials(stock, financialsData);
@@ -263,6 +262,7 @@ async function saveStockFinancials(stock, financialsData) {
   const numberOfColumns = Math.max(
     ...financialsData.balanceSheetData.map((arr) => arr.length)
   );
+
   for (let i = 0; i < numberOfColumns - 1; i++) {
     const stockData = createStockFinancialsData(
       stock,
@@ -285,6 +285,8 @@ async function saveStockFinancials(stock, financialsData) {
             stock.incomeSheet.push(stockData.incomeSheet[0]);
             stock.cashFlow.push(stockData.cashFlow[0]);
           }
+          console.log(stockData.balanceSheetQuarterly[0].year);
+          console.log(stockData.balanceSheetQuarterly);
           if (stockData.balanceSheetQuarterly[0].year !== "REMOVE") {
             stock.balanceSheetQuarterly.push(
               stockData.balanceSheetQuarterly[0]
@@ -313,9 +315,7 @@ async function saveStockFinancials(stock, financialsData) {
 }
 async function saveStockDividends(stock, financialsData) {
   const dividendColumnData = financialsData.dividendData;
-  console.log(dividendColumnData);
   const numberOfColumns = financialsData.dividendData.length;
-  console.log(numberOfColumns);
   for (let i = 0; i < numberOfColumns; i++) {
     const stockData = createStockDividendsData(stock, dividendColumnData[i]);
     try {
@@ -345,13 +345,11 @@ async function saveStockDividends(stock, financialsData) {
   }
 }
 async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
-  console.log(stockData);
   try {
     const stock = await StockFinancials.findOne({
       symbol: stockData.symbol,
     }).exec();
     if (stock) {
-      console.log(foreignOwnershipData);
       stock.foreignOwnership.push({
         date: new Date().toLocaleDateString("en-GB"),
         percentage: foreignOwnershipData,
@@ -368,7 +366,6 @@ async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
     console.error("Error retrieving stock:", error);
   }
 }
-
 function createStockDividendsData(stock, dividendColumn) {
   const stockData = {
     symbol: stock.symbol,
@@ -395,6 +392,12 @@ function createStockFinancialsData(
   incomeStatementColumn,
   cashFlowColumn
 ) {
+  const balanceSheetData = getQuarterlyAndAnnuallyData(balanceSheetColumn);
+  const incomeStatementData = getQuarterlyAndAnnuallyData(
+    incomeStatementColumn
+  );
+  const cashFlowData = getQuarterlyAndAnnuallyData(cashFlowColumn);
+
   const stockData = {
     symbol: stock.symbol,
     companyNameEN: stock.companyNameEN,
@@ -402,138 +405,12 @@ function createStockFinancialsData(
     market_type: stock.market_type,
     tradingNameEn: stock.tradingNameEn,
     tradingNameAr: stock.tradingNameAr,
-    balanceSheet: [
-      {
-        year: balanceSheetColumn[0],
-        current_assets: balanceSheetColumn[1],
-        inventory: balanceSheetColumn[2],
-        investments: balanceSheetColumn[3],
-        fixed_assets: balanceSheetColumn[4],
-        other_assets: balanceSheetColumn[5],
-        total_assets: balanceSheetColumn[6],
-        current_liabilities: balanceSheetColumn[7],
-        non_current_liabilities: balanceSheetColumn[8],
-        other_liabilities: balanceSheetColumn[9],
-        shareholders_equity: balanceSheetColumn[10],
-        total_liabilities_and_shareholder_equity: balanceSheetColumn[11],
-        minority_interests: balanceSheetColumn[12],
-        figures_in: balanceSheetColumn[13],
-        currency_in: balanceSheetColumn[14],
-        last_update_date: balanceSheetColumn[15],
-      },
-    ],
-    balanceSheetQuarterly: [
-      {
-        year: balanceSheetColumn[16],
-        current_assets: balanceSheetColumn[17],
-        inventory: balanceSheetColumn[18],
-        investments: balanceSheetColumn[19],
-        fixed_assets: balanceSheetColumn[20],
-        other_assets: balanceSheetColumn[21],
-        total_assets: balanceSheetColumn[22],
-        current_liabilities: balanceSheetColumn[23],
-        non_current_liabilities: balanceSheetColumn[24],
-        other_liabilities: balanceSheetColumn[25],
-        shareholders_equity: balanceSheetColumn[26],
-        total_liabilities_and_shareholder_equity: balanceSheetColumn[27],
-        minority_interests: balanceSheetColumn[28],
-        figures_in: balanceSheetColumn[29],
-        currency_in: balanceSheetColumn[30],
-        last_update_date: balanceSheetColumn[31],
-      },
-    ],
-    incomeSheet: [
-      {
-        year: incomeStatementColumn[0],
-        sales: incomeStatementColumn[1],
-        sales_cost: incomeStatementColumn[2],
-        total_income: incomeStatementColumn[3],
-        other_revenues: incomeStatementColumn[4],
-        total_revenues: incomeStatementColumn[5],
-        admin_marketing_expenses: incomeStatementColumn[6],
-        depreciation: incomeStatementColumn[7],
-        other_expenses: incomeStatementColumn[8],
-        total_expenses: incomeStatementColumn[9],
-        net_income_before_zakat: incomeStatementColumn[10],
-        zakat: incomeStatementColumn[11],
-        net_income: incomeStatementColumn[12],
-        balance_first_period: incomeStatementColumn[13],
-        reserves: incomeStatementColumn[14],
-        cash_dividends: incomeStatementColumn[15],
-        other_distributions: incomeStatementColumn[16],
-        balance_end_period: incomeStatementColumn[17],
-        figures_in: incomeStatementColumn[18],
-        currency_in: incomeStatementColumn[19],
-        last_update_date: incomeStatementColumn[20],
-      },
-    ],
-    incomeSheetQuarterly: [
-      {
-        year: incomeStatementColumn[21],
-        sales: incomeStatementColumn[22],
-        sales_cost: incomeStatementColumn[23],
-        total_income: incomeStatementColumn[24],
-        other_revenues: incomeStatementColumn[25],
-        total_revenues: incomeStatementColumn[26],
-        admin_marketing_expenses: incomeStatementColumn[27],
-        depreciation: incomeStatementColumn[28],
-        other_expenses: incomeStatementColumn[29],
-        total_expenses: incomeStatementColumn[30],
-        net_income_before_zakat: incomeStatementColumn[31],
-        zakat: incomeStatementColumn[32],
-        net_income: incomeStatementColumn[33],
-        balance_first_period: incomeStatementColumn[34],
-        reserves: incomeStatementColumn[35],
-        cash_dividends: incomeStatementColumn[36],
-        other_distributions: incomeStatementColumn[37],
-        balance_end_period: incomeStatementColumn[38],
-        figures_in: incomeStatementColumn[39],
-        currency_in: incomeStatementColumn[40],
-        last_update_date: incomeStatementColumn[41],
-      },
-    ],
-    cashFlow: [
-      {
-        year: cashFlowColumn[0],
-        net_income: cashFlowColumn[1],
-        depreciation: cashFlowColumn[2],
-        accounts_receivable: cashFlowColumn[3],
-        inventory: cashFlowColumn[4],
-        prepaid_expenses: cashFlowColumn[5],
-        accounts_payable: cashFlowColumn[6],
-        other_changes_operating_activity: cashFlowColumn[7],
-        purchases_fixed_assets: cashFlowColumn[8],
-        other_changes_investing_activity: cashFlowColumn[9],
-        increase_in_debts: cashFlowColumn[10],
-        other_changes_financing_activity: cashFlowColumn[11],
-        cash_beginning_period: cashFlowColumn[12],
-        cash_end_period: cashFlowColumn[13],
-        figures_in: cashFlowColumn[14],
-        currency_in: cashFlowColumn[15],
-        last_update_date: cashFlowColumn[16],
-      },
-    ],
-    cashFlowQuarterly: [
-      {
-        year: cashFlowColumn[17],
-        net_income: cashFlowColumn[18],
-        depreciation: cashFlowColumn[19],
-        accounts_receivable: cashFlowColumn[20],
-        inventory: cashFlowColumn[21],
-        prepaid_expenses: cashFlowColumn[22],
-        accounts_payable: cashFlowColumn[23],
-        other_changes_operating_activity: cashFlowColumn[24],
-        purchases_fixed_assets: cashFlowColumn[25],
-        other_changes_investing_activity: cashFlowColumn[26],
-        increase_in_debts: cashFlowColumn[27],
-        other_changes_financing_activity: cashFlowColumn[28],
-        cash_beginning_period: cashFlowColumn[29],
-        cash_end_period: cashFlowColumn[30],
-        figures_in: cashFlowColumn[31],
-        currency_in: cashFlowColumn[32],
-        last_update_date: cashFlowColumn[33],
-      },
-    ],
+    balanceSheet: [balanceSheetData.annually],
+    balanceSheetQuarterly: [balanceSheetData.quarterly],
+    incomeSheet: [incomeStatementData.annually],
+    incomeSheetQuarterly: [incomeStatementData.quarterly],
+    cashFlow: [cashFlowData.annually],
+    cashFlowQuarterly: [cashFlowData.quarterly],
   };
   return stockData;
 }
@@ -549,12 +426,40 @@ function extractDataAsColumns(data) {
       }
     }
     const columnData = [];
+    const keys = data.map((row) => row[0]);
     for (let i = 1; i < maxLength; i++) {
-      const column = data.map((row) => row[i]);
-      columnData.push(column);
+      const columnWithKey = data.map((row, index) => ({
+        key: keys[index], // Add a key property with the desired value (in this example, using the index as the key)
+        value: row[i], // Assuming you want to retain the existing value in the row[i] property
+      }));
+      columnData.push(columnWithKey);
     }
     return columnData;
   }
+}
+
+function getQuarterlyAndAnnuallyData(data) {
+  const halfIndex = Math.ceil(data.length / 2);
+  const firstHalf = data.slice(0, halfIndex);
+  const secondHalf = data.slice(halfIndex);
+  firstHalf[0].key = "year";
+  secondHalf[0].key = "year";
+
+  console.log(firstHalf);
+  console.log(secondHalf);
+  const annually = {};
+  for (let i = 0; i < firstHalf.length; i++) {
+    const key = firstHalf[i].key.toLowerCase().replace(/\s+/g, "_");
+    annually[key] = firstHalf[i].value;
+  }
+
+  const quarterly = {};
+  for (let i = 0; i < secondHalf.length; i++) {
+    const key = secondHalf[i].key.toLowerCase().replace(/\s+/g, "_");
+    quarterly[key] = secondHalf[i].value;
+  }
+
+  return { annually, quarterly };
 }
 export {
   getSymbols,
@@ -562,3 +467,31 @@ export {
   runScript,
   runStockInformationScript,
 };
+
+function extractHeadersAsColumns(data) {
+  // No data available in table
+  if (data.length == 1) return;
+  const maxLength = Math.max(...data.map((arr) => arr.length));
+  if (maxLength > 0) {
+    // Initialize an object to store column data
+    const columnData = {};
+
+    // Iterate through the first row to get column names
+    const columnNames = data[0];
+
+    // Initialize objects for each column
+    for (const columnName of columnNames) {
+      columnData[columnName] = {};
+    }
+
+    // Iterate through the data rows and populate column data
+    for (let i = 1; i < data.length; i++) {
+      const rowData = data[i];
+      for (let j = 0; j < rowData.length; j++) {
+        columnData[columnNames[j]][rowData[0]] = rowData[j];
+      }
+    }
+
+    return columnData;
+  }
+}

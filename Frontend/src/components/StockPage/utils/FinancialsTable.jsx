@@ -9,6 +9,7 @@ import { useOutletContext } from "react-router-dom";
 
 const FinancialsTable = () => {
   const [data, symbol] = useOutletContext();
+  console.log(data);
 
   return (
     <motion.div whileHover={{ scale: 1.03 }}>
