@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import { Link, Outlet, useParams } from "react-router-dom";
 
-import { SidebarSelection } from "../SidebarSelection";
+import { SidebarSelection } from "./utils/SidebarSelection";
 import axios from "axios";
 import SmCardInformaiton from "../utils/SmCardInformaiton";
 import StockPriceCard from "./utils/StockPriceCard";
@@ -36,10 +36,10 @@ const StockPage = () => {
               </Container>
             </Row>
             <Row>
-              <Container className="d-flex flex-column">
+              <Container className="d-flex flex-column gap-4">
                 <h1>{data.companyNameAR}</h1>
 
-                <Container className="d-flex gap-2">
+                <Container className="d-flex gap-4">
                   <SmCardInformaiton
                     title={"اسم التداول"}
                     text={data.tradingNameAr}

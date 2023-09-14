@@ -10,8 +10,8 @@ import { Container } from "react-bootstrap";
 import HomePage from "./pages/HomePage";
 import MarketSummary from "./pages/MarketSummary";
 import CompaniesPage from "./pages/CompaniesPage";
-import StockInformation from "./components/StockInformation";
-import FinancialesTable from "./components/StockPage/utils/FinancialsTable";
+import StockInformation from "./components/StockPage/StockInformation";
+import FinancialesTable from "./components/StockPage/FinancialsTable";
 import axios from "axios";
 function App() {
   const [sideBar, setSideBar] = useState(false);

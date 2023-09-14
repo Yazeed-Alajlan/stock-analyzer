@@ -1,13 +1,11 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import {
-  runScript,
-  getSymbols,
-  getSymbolsWithSectors,
-} from "./scraper/tadawul.js";
+import { runScript, getSymbols } from "./scraper/tadawul.js";
 import StockFinancials from "./models/stockFinancials.js";
 import StockInformation from "./models/stockInformation.js";
+import axios from "axios";
+import yahooFinance from "yahoo-finance2";
 
 const app = express();
 const port = 5000;
@@ -39,7 +37,6 @@ app.post("/api/register", async (req, res) => {
 
 app.get("/stock", (req, res) => {
   const symbol = req.query.symbol;
-  console.log(symbol);
   // const symbol = 4321;
   StockFinancials.findOne({ symbol: symbol })
     .then((stock) => {
@@ -55,10 +52,8 @@ app.get("/stock", (req, res) => {
 });
 app.get("/companies/:sectorName?", async (req, res) => {
   const sectorName = req.params.sectorName;
-  console.log(sectorName);
   try {
     const symbolsWithSectors = await getSymbols();
-    console.log(symbolsWithSectors);
 
     if (sectorName) {
       const filteredSymbols = symbolsWithSectors.filter(
@@ -93,3 +88,23 @@ const connectDB = async () => {
       console.log("Error connecting to MongoDB:", error);
     });
 };
+
+// Define a route to fetch stock price data
+app.get("/api/stock-price/:symbol", async (req, res) => {
+  try {
+    const symbol = req.params.symbol + ".SR";
+
+    // Fetch stock data using yahoo-finance2
+    const queryOptions = { period1: "2021-05-08" /* ... */ };
+    const result = await yahooFinance._chart(symbol, queryOptions);
+    console.log(result);
+    if (!result) {
+      throw new Error("Invalid stock symbol or no data available.");
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    res.status(500).json({ error: "Unable to fetch stock data" });
+  }
+});

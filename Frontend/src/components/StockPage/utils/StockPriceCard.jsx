@@ -12,7 +12,7 @@ const StockPriceCard = ({
   highest,
 }) => {
   return (
-    <Card className="bg-white border-0 shadow-sm rounded-4 w-100  text-center">
+    <Card className="bg-light border-2 shadow-sm rounded-4 w-100  text-center">
       <Card.Body>
         <Row>
           <Col xs={"7"}>

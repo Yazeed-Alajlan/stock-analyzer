@@ -26,7 +26,6 @@ export const Header = ({ sideBar, setSideBar }) => {
   }, []);
 
   const handleStockSelect = (selectedOption) => {
-    console.log(selectedOption);
     navigate(
       `/companies/${selectedOption.sector}/${selectedOption.value}/information`
     );

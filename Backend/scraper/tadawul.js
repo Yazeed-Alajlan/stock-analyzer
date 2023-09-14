@@ -32,15 +32,20 @@ async function runScript() {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
-          // stock.symbol == "1833" &&
+          stock.symbol == "3004" &&
           !stock.companyNameEN.includes("REIT")
         ) {
           var url =
             "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
             stock.symbol;
+          console.log(stock.symbol);
           await page.goto(url);
-          // await getForeignOwnership(stock, browser, page);
+          await page.waitForSelector("#statementofincome", {
+            timeout: 60000,
+          });
+
           await getFinancialsDataForStocks(stock, browser, page);
+          await getForeignOwnership(stock, browser, page);
         }
       } catch (error) {
         console.error("Error in loop iteration:", error);
@@ -81,8 +86,6 @@ async function getForeignOwnership(stock, browser, page) {
     saveStockforeignOwnership(stock, data.trim());
   } catch (e) {
     console.error("scrape faild!: \n", e);
-  } finally {
-    await browser?.close();
   }
 }
 async function getFinancialsDataForStocks(stock, browser, page) {
@@ -153,8 +156,6 @@ async function getFinancialsDataForStocks(stock, browser, page) {
     // fs.writeFileSync("data.json", JSON.stringify(data));
   } catch (e) {
     console.error("scrape faild!: \n", e);
-  } finally {
-    await browser?.close();
   }
 }
 
@@ -285,8 +286,6 @@ async function saveStockFinancials(stock, financialsData) {
             stock.incomeSheet.push(stockData.incomeSheet[0]);
             stock.cashFlow.push(stockData.cashFlow[0]);
           }
-          console.log(stockData.balanceSheetQuarterly[0].year);
-          console.log(stockData.balanceSheetQuarterly);
           if (stockData.balanceSheetQuarterly[0].year !== "REMOVE") {
             stock.balanceSheetQuarterly.push(
               stockData.balanceSheetQuarterly[0]
@@ -345,6 +344,7 @@ async function saveStockDividends(stock, financialsData) {
   }
 }
 async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
+  console.log(foreignOwnershipData);
   try {
     const stock = await StockFinancials.findOne({
       symbol: stockData.symbol,
@@ -445,8 +445,6 @@ function getQuarterlyAndAnnuallyData(data) {
   firstHalf[0].key = "year";
   secondHalf[0].key = "year";
 
-  console.log(firstHalf);
-  console.log(secondHalf);
   const annually = {};
   for (let i = 0; i < firstHalf.length; i++) {
     const key = firstHalf[i].key.toLowerCase().replace(/\s+/g, "_");

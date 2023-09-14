@@ -52,7 +52,6 @@ const CompaniesPage = () => {
   }, [data, sectorName, selectedStock]);
 
   const handleFilterChange = (selectedOption) => {
-    console.log(selectedOption);
     if (selectedOption != null) {
       setSectorName(selectedOption.value);
     } else {
@@ -144,11 +143,11 @@ const CompaniesPage = () => {
               <Table borderless striped hover>
                 <thead className="position-sticky top-0">
                   <tr>
-                    <th className="table-header">Name</th>
-                    <th className="table-header">Symbol</th>
-                    <th className="table-header">High Price</th>
-                    <th className="table-header">Low Price</th>
-                    <th className="table-header">Net Change</th>
+                    <th className="table-header">الاسم</th>
+                    <th className="table-header">الرمز</th>
+                    <th className="table-header">السعر</th>
+                    <th className="table-header">التغيير</th>
+                    <th className="table-header">نسبة التغيير</th>
                     <th className="table-header">Percent Change</th>
                     <th className="table-header">Previous Close Price</th>
                     <th className="table-header">Today Close Price</th>

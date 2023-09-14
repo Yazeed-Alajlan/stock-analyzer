@@ -1,94 +1,151 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Card } from "react-bootstrap";
-import Chart from "react-apexcharts";
-import { CustomCard } from "./utils/CustomCard";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { createChart } from "lightweight-charts";
 
-const StockChart = () => {
-  const chart = {
-    options: {
-      chart: {
-        type: "candlestick",
-        height: 350,
-      },
-      title: {
-        text: "CandleStick Chart",
-        align: "left",
-      },
-      xaxis: {
-        type: "datetime",
-      },
-      yaxis: {
-        tooltip: {
-          enabled: true,
+const StockChart = ({ symbol }) => {
+  const [stockData, setStockData] = useState(null);
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState("max"); // Default to 1 month
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch stock data using yfinance
+        const response = await axios.get(
+          `http://localhost:5000/api/stock-price/${symbol}`
+        );
+        const data = response.data;
+
+        if (!data) {
+          throw new Error("Invalid stock symbol or no data available.");
+        }
+        console.log(data);
+        setStockData(data);
+      } catch (error) {
+        console.error("Error fetching stock data:", error);
+      }
+    };
+
+    fetchData();
+  }, [symbol]);
+
+  const formatData = () => {
+    if (!stockData) return [];
+
+    const filteredData = stockData.quotes.filter((quote) => {
+      const currentDate = new Date();
+      const quoteDate = new Date(quote.date);
+      console.log(quoteDate.getTime());
+      switch (selectedTimeFrame) {
+        case "1m":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            30 * 24 * 60 * 60 * 1000
+          ); // 30 days
+        case "1w":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            7 * 24 * 60 * 60 * 1000
+          ); // 7 days (1 week)
+        case "3m":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            90 * 24 * 60 * 60 * 1000
+          ); // 90 days
+        case "6m":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            180 * 24 * 60 * 60 * 1000
+          ); // 180 days
+        case "1y":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            365 * 24 * 60 * 60 * 1000
+          ); // 365 days
+        case "3y":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            3 * 365 * 24 * 60 * 60 * 1000
+          ); // 3 years
+        case "5y":
+          return (
+            currentDate.getTime() - quoteDate.getTime() <=
+            5 * 365 * 24 * 60 * 60 * 1000
+          ); // 5 years
+        case "max":
+          return true;
+        default:
+          return true; // By default, return all data
+      }
+    });
+
+    return filteredData.map((quote) => ({
+      time: quote.date.split("T")[0], // Extract yyyy-mm-dd from the date string
+      open: Number(quote.open.toFixed(2)),
+      high: Number(quote.high.toFixed(2)),
+      low: Number(quote.low.toFixed(2)),
+      close: Number(quote.close.toFixed(2)),
+    }));
+  };
+
+  const handleTimeFrameChange = (event) => {
+    const newTimeFrame = event.target.value;
+    setSelectedTimeFrame(newTimeFrame);
+  };
+
+  useEffect(() => {
+    const chart = createChart("chart-container", { width: 1000, height: 400 });
+    chart.applyOptions({
+      rightPriceScale: {
+        scaleMargins: {
+          top: 0.3, // leave some space for the legend
+          bottom: 0.25,
         },
       },
-    },
-  };
-  const round = (number) => {
-    return number ? +number.toFixed(2) : null;
-  };
-  const [series, setSeries] = useState([{ data: [] }]);
-  const [lastPrice, setLastPrice] = useState(-1);
-  const [lastPriceTime, setLastPriceTime] = useState(null);
-  var SYMBOL = "AAPL";
+      crosshair: {
+        // hide the horizontal crosshair line
+        horzLine: {
+          visible: false,
+          labelVisible: false,
+        },
+      },
+      // hide the grid lines
+      grid: {
+        vertLines: {
+          visible: false,
+        },
+        horzLines: {
+          visible: false,
+        },
+      },
+    });
+    const candlestickSeries = chart.addCandlestickSeries();
 
-  async function getPriceData(symbol) {
-    const proxyUrl = "http://cors-anywhere.herokuapp.com/";
-    // https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?modules=incomeStatementHistory
-    const stockUrl = `${proxyUrl}https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
-    const response = await fetch(stockUrl);
-    return response.json();
-  }
-  useEffect(() => {
-    let timeoutId;
-    async function getLastPrice() {
-      try {
-        const data = await getPriceData(SYMBOL);
-        const res = data.chart.result[0];
-        const value = res.meta.regularMarketPrice.toFixed(2);
-        const time = new Date(res.meta.regularMarketTime * 1000);
+    candlestickSeries.setData(formatData());
 
-        const quote = res.indicators.quote[0];
-        const prices = res.timestamp.map((timestamp, index) => ({
-          x: new Date(timestamp * 1000),
-          y: [
-            quote.open[index],
-            quote.high[index],
-            quote.low[index],
-            quote.close[index],
-          ].map(round),
-        }));
-        setSeries([{ data: prices }]);
-        setLastPrice(value);
-        setLastPriceTime(time);
+    // Configure x-axis to display dates in a custom format
+    chart.timeScale().fitContent();
 
-        // timeoutId = setTimeout(getLastPrice, 5000);
-
-        console.log(value);
-        console.log(time.toLocaleTimeString());
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getLastPrice();
     return () => {
-      clearTimeout(timeoutId);
+      chart.remove();
     };
-  }, []);
+  }, [stockData, selectedTimeFrame]);
 
   return (
-    <motion.div whileHover={{ scale: 1.03 }}>
-      <CustomCard>
-        <Chart
-          options={chart.options}
-          series={series}
-          type="candlestick"
-          width="100%"
-          height={320}
-        />
-      </CustomCard>
-    </motion.div>
+    <div>
+      <div>
+        <select value={selectedTimeFrame} onChange={handleTimeFrameChange}>
+          <option value="1w">1 Week</option>
+          <option value="1m">1 Month</option>
+          <option value="3m">3 Months</option>
+          <option value="6m">6 Months</option>
+          <option value="1y">1 Year</option>
+          <option value="3y">3 Years</option>
+          <option value="5y">5 Years</option>
+          <option value="max">Max</option>
+        </select>
+      </div>
+      <div id="chart-container"></div>
+    </div>
   );
 };
 
