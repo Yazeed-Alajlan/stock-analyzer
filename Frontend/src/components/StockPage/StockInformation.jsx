@@ -31,20 +31,20 @@ const StockInformation = () => {
               <Table className="" responsive>
                 <tbody>
                   <tr>
-                    <th> مكرر الربحية</th>
+                    <th>القيمة السوقية</th>
+                    <th></th>
+                  </tr>
+                  <tr>
+                    <th>ربحية السهم EPS</th>
+                    <th></th>
+                  </tr>
+                  <tr>
+                    <th>مكرر الربحية</th>
                     <th> 32</th>
                   </tr>
                   <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
-                  </tr>
-                  <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
-                  </tr>
-                  <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
+                    <th>القيمة الدفترية</th>
+                    <th> </th>
                   </tr>
                 </tbody>
               </Table>
@@ -53,6 +53,10 @@ const StockInformation = () => {
               <Table className="" responsive>
                 <tbody>
                   <tr>
+                    <th>مضاعف القيمة الدفترية</th>
+                    <th> </th>
+                  </tr>
+                  {/* <tr>
                     <th> مكرر الربحية</th>
                     <th> 32</th>
                   </tr>
@@ -63,11 +67,7 @@ const StockInformation = () => {
                   <tr>
                     <th> مكرر الربحية</th>
                     <th> 32</th>
-                  </tr>
-                  <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </Table>
             </Col>

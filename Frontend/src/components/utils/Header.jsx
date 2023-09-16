@@ -6,7 +6,7 @@ import axios from "axios";
 import Select from "react-select";
 
 export const Header = ({ sideBar, setSideBar }) => {
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate();
 
   const [data, setData] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -31,6 +31,7 @@ export const Header = ({ sideBar, setSideBar }) => {
     );
     setSelectedOption(null); // Replace setSelectedOption with your state setter
   };
+
   return (
     <div className="bg-white p-4 w-100">
       <Container>
@@ -52,14 +53,14 @@ export const Header = ({ sideBar, setSideBar }) => {
                 style={{ maxHeight: "100px" }}
               >
                 <Nav.Link as={Link} to="/home">
-                  Home
+                  الرئيسية
                 </Nav.Link>
                 <Nav.Link as={Link} to="/companies/all">
-                  Companies
+                  السوق
                 </Nav.Link>
-                <Nav.Link as={Link} to="/market-summary">
+                {/* <Nav.Link as={Link} to="/market-summary">
                   Market Summary
-                </Nav.Link>
+                </Nav.Link> */}
                 {/* 
               <NavDropdown title="Link" id="navbarScrollingDropdown">
                 <NavDropdown.Item href="#action3">Action</NavDropdown.Item>

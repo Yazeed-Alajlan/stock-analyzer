@@ -208,7 +208,9 @@ async function runStockInformationScript() {
 }
 async function getSymbols() {
   try {
-    const data = await StockInformation.find();
+    const data = await StockInformation.find({
+      companyNameEN: { $not: { $regex: /REIT/i } }, // Case-insensitive check for "REIT"
+    });
     return data;
   } catch (error) {
     console.error("Error:", error);

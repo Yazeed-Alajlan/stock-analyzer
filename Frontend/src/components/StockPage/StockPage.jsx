@@ -16,6 +16,7 @@ const StockPage = () => {
           `http://localhost:5000/stock?symbol=${symbol}`
         );
         setData(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
