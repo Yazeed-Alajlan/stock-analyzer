@@ -26,16 +26,35 @@ export function StocksDataProvider({ children }) {
     fetchData();
   }, []);
 
-  function hi() {
-    console.log("hi");
-    return "hii";
+  function getStockFinancialData(symbol) {
+    return axios
+      .get(`http://localhost:5000/api/StockFinancialData/${symbol}`)
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        throw error;
+      });
+  }
+  async function getStockInformationData(symbol) {
+    let response;
+    try {
+      response = await axios.get(
+        `http://localhost:5000/api/StockInformation/${symbol}`
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+    return response.data;
   }
 
   const value = {
     stocksData,
     selectedStockData,
     setSelectedStockData,
-    hi,
+    getStockFinancialData,
+    getStockInformationData,
   };
 
   return (

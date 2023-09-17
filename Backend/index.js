@@ -36,9 +36,8 @@ app.post("/api/register", async (req, res) => {
   //   });
 });
 
-app.get("/stock", (req, res) => {
-  const symbol = req.query.symbol;
-  // const symbol = 4321;
+app.get("/api/StockFinancialData/:symbol", (req, res) => {
+  const symbol = req.params.symbol;
   StockFinancials.findOne({ symbol: symbol })
     .then((stock) => {
       if (!stock) {
@@ -51,6 +50,22 @@ app.get("/stock", (req, res) => {
       res.status(500).json({ error: "Internal server error" });
     });
 });
+
+app.get("/api/StockInformation/:symbol", (req, res) => {
+  const symbol = req.params.symbol;
+  StockInformation.findOne({ symbol: symbol })
+    .then((stock) => {
+      if (!stock) {
+        return res.status(404).json({ error: "Stock not found" });
+      }
+      res.json(stock);
+    })
+    .catch((error) => {
+      console.error("Error retrieving stock:", error);
+      res.status(500).json({ error: "Internal server error" });
+    });
+});
+
 app.get("/companies/:sectorName?", async (req, res) => {
   const sectorName = req.params.sectorName;
   try {

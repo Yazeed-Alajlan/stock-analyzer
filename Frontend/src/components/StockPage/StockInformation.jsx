@@ -7,44 +7,37 @@ import { useOutletContext, useParams } from "react-router-dom";
 import StockChart from "../StockChart";
 
 const StockInformation = () => {
-  const [data, symbol] = useOutletContext();
+  const [data, symbol, stockInformationData] = useOutletContext();
   const { sector } = useParams();
 
   return (
     <div>
-      {data ? (
+      {data && stockInformationData ? (
         <CustomCard>
-          <div className="text-secondary">
-            {symbol} - {sector}
-          </div>
-          <div className="d-flex">
-            <div className="pe-3 fs-2 fw-bold">{data.companyNameAR}</div>
-            {/* <div className="d-flex align-items-end fs-4 text-danger">
-            {stockInformation.lastPrice}
-            <BsArrowDown className="fs-3" />
-            (-{stockInformation.changeInPrice})(
-            {stockInformation.changeInPercentagePrice}%)
-          </div> */}
-          </div>
           <Row>
             <Col xs={6}>
-              <Table className="" responsive>
+              <Table responsive>
                 <tbody>
                   <tr>
                     <th>القيمة السوقية</th>
-                    <th></th>
+                    <th>
+                      {stockInformationData.summary[0].daily_price_to_earnings}
+                    </th>
                   </tr>
                   <tr>
                     <th>ربحية السهم EPS</th>
-                    <th></th>
+                    <th>
+                      {
+                        stockInformationData.summary[0]
+                          .basic_earnings_per_share_ttm
+                      }
+                    </th>
                   </tr>
                   <tr>
                     <th>مكرر الربحية</th>
-                    <th> 32</th>
-                  </tr>
-                  <tr>
-                    <th>القيمة الدفترية</th>
-                    <th> </th>
+                    <th>
+                      {stockInformationData.summary[0].daily_price_to_earnings}
+                    </th>
                   </tr>
                 </tbody>
               </Table>
@@ -54,20 +47,19 @@ const StockInformation = () => {
                 <tbody>
                   <tr>
                     <th>مضاعف القيمة الدفترية</th>
-                    <th> </th>
-                  </tr>
-                  {/* <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
-                  </tr>
+                    <th>
+                      {
+                        stockInformationData.summary[0]
+                          .basic_earnings_per_share_ttm
+                      }
+                    </th>
+                  </tr>{" "}
                   <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
+                    <th>القيمة الدفترية</th>
+                    <th>
+                      {stockInformationData.summary[0].book_value_per_share_ttm}
+                    </th>
                   </tr>
-                  <tr>
-                    <th> مكرر الربحية</th>
-                    <th> 32</th>
-                  </tr> */}
                 </tbody>
               </Table>
             </Col>

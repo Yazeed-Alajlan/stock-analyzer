@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import { Link, Outlet, useParams } from "react-router-dom";
-
 import { SidebarSelection } from "./utils/SidebarSelection";
 import axios from "axios";
 import SmCardInformaiton from "../utils/SmCardInformaiton";
 import StockPriceCard from "./utils/StockPriceCard";
+import { useStocksData } from "../../contexts/StocksDataContext";
+
 const StockPage = () => {
-  const [data, setData] = useState(null);
   const { symbol, sector } = useParams();
+
+  const [data, setData] = useState();
+  const [stockInformationData, setStockInformationData] = useState();
+  const { getStockFinancialData, getStockInformationData } = useStocksData();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/stock?symbol=${symbol}`
-        );
-        setData(response.data);
-        console.log(response.data);
+        const response = await getStockFinancialData(symbol);
+        setData(response);
+        setStockInformationData(await getStockInformationData(symbol));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, [symbol]);
+  }, []);
 
   return (
     <Container>
@@ -63,7 +66,7 @@ const StockPage = () => {
           <SidebarSelection />
         </Col>
         <Col sm={10}>
-          <Outlet context={[data, symbol]} />
+          <Outlet context={[data, symbol, stockInformationData]} />
         </Col>
       </Row>
     </Container>
@@ -71,10 +74,3 @@ const StockPage = () => {
 };
 
 export default StockPage;
-
-// <Row className="mt-4 ">
-//   <Col xs={6}>{/* <StockChart /> */}</Col>
-//   <Col xs={8}>
-//     <FinancialesTable />
-//   </Col>
-// </Row>;
