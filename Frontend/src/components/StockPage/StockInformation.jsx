@@ -7,12 +7,12 @@ import { useOutletContext, useParams } from "react-router-dom";
 import StockChart from "../StockChart";
 
 const StockInformation = () => {
-  const [data, symbol, stockInformationData] = useOutletContext();
+  const [stockInformationData, symbol] = useOutletContext();
   const { sector } = useParams();
 
   return (
     <div>
-      {data && stockInformationData ? (
+      {stockInformationData ? (
         <CustomCard>
           <Row>
             <Col xs={6}>

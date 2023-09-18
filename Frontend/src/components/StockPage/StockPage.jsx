@@ -66,7 +66,9 @@ const StockPage = () => {
           <SidebarSelection />
         </Col>
         <Col sm={10}>
-          <Outlet context={[data, symbol, stockInformationData]} />
+          <Outlet
+            context={[stockInformationData, stockFinancialData, symbol]}
+          />
         </Col>
       </Row>
     </Container>

@@ -5,11 +5,11 @@ import { useOutletContext } from "react-router-dom";
 import FinancialsTab from "../Financials/FinancialsTab";
 
 const FinancialsTable = () => {
-  const [data, symbol] = useOutletContext();
+  const [stockInformationData, stockFinancialData, symbol] = useOutletContext();
 
   return (
     <div>
-      {data ? (
+      {stockFinancialData ? (
         <CustomCard>
           <Tabs className="p-0" defaultActiveKey={"Balance Sheet"}>
             <Tab eventKey={"Balance Sheet"} title={"المركز المالي"}>

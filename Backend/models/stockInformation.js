@@ -48,15 +48,3 @@ const StockInformation = mongoose.model(
 );
 
 export default StockInformation;
-
-//  sectorName: item.sectorName,
-//       companyRef: item.companyRef,
-//       acrynomName: item.acrynomName,
-//       netChange: item.netChangeModified,
-//       highPrice: item.highPriceModified,
-//       lowPrice: item.lowPriceModified,
-//       precentChange: item.precentChangeModified,
-//       previousClosePrice: item.previousClosePrice,
-//       todayClosePrice: item.todayClosePrice,
-//       todayOpen: item.todayOpenModified,
-//       previousClosePrice: item.previousClosePrice,
