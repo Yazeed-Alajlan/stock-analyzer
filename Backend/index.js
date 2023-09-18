@@ -27,7 +27,7 @@ mongoose
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
   // getSymbols();
-  // saveStockPrices();
+  saveStockPrices();
   // saveStockInformationData();
   // runScript()
   //   .then(() => {
@@ -65,6 +65,29 @@ app.get("/api/StockInformation/:symbol", (req, res) => {
     .catch((error) => {
       console.error("Error retrieving stock:", error);
       res.status(500).json({ error: "Internal server error" });
+    });
+});
+
+app.get("/api/StockPrice/:symbol", (req, res) => {
+  // const symbol = req.params.symbol;
+  // Define your date range
+  const symbol = "2222";
+  const startDate = new Date("2023-01-01T00:00:00.000Z");
+  const endDate = new Date("2023-01-04T23:59:59.999Z");
+
+  StockPrices.find({
+    symbol: symbolToFind,
+    "price.date": {
+      $gte: startDate,
+      $lte: endDate,
+    },
+  })
+    .then((result) => {
+      // Do something with the query result
+      console.log(result);
+    })
+    .catch((error) => {
+      console.error("Error querying data:", error);
     });
 });
 
@@ -245,39 +268,69 @@ const saveStockInformationData = async () => {
 };
 
 async function saveStockPrices() {
-  const symbol = "AAPL";
-  const newPriceData = {
-    trade_date: new Date("2023-09-18T12:00:00Z"),
-    open: 155.0,
-    close: 156.25,
-    high: 157.5,
-    low: 153.75,
-  };
+  // const symbol = "AAPL";
+  // const newPriceData = {
+  //   trade_date: new Date("2023-09-18T12:00:00Z"),
+  //   open: 155.0,
+  //   close: 156.25,
+  //   high: 157.5,
+  //   low: 153.75,
+  // };
 
-  // Check if a document with the specified symbol already exists
-  const existingDocument = await StockPrices.findOne({ symbol });
+  // // Check if a document with the specified symbol already exists
+  // const existingDocument = await StockPrices.findOne({ symbol });
 
-  if (existingDocument) {
-    // If the document exists, add the new price data to the "price" array
-    existingDocument.price.push(newPriceData);
-    try {
-      await existingDocument.save();
-      console.log("Added new data to the existing document:", existingDocument);
-    } catch (err) {
-      console.error("Error updating the document:", err);
-    }
-  } else {
-    // If the document does not exist, create a new one with the new data
-    const newDocument = new StockPrices({
-      symbol,
-      price: [newPriceData],
+  // if (existingDocument) {
+  //   // If the document exists, add the new price data to the "price" array
+  //   existingDocument.price.push(newPriceData);
+  //   try {
+  //     await existingDocument.save();
+  //     console.log("Added new data to the existing document:", existingDocument);
+  //   } catch (err) {
+  //     console.error("Error updating the document:", err);
+  //   }
+  // } else {
+  //   // If the document does not exist, create a new one with the new data
+  //   const newDocument = new StockPrices({
+  //     symbol,
+  //     price: [newPriceData],
+  //   });
+
+  //   try {
+  //     await newDocument.save();
+  //     console.log("Created a new document with the new data:", newDocument);
+  //   } catch (err) {
+  //     console.error("Error creating a new document:", err);
+  //   }
+  // }
+
+  const symbol = "2222";
+  const startDate = new Date("2023-01-01T00:00:00.000Z");
+  const endDate = new Date("2023-01-03T00:00:00.000Z"); // Exclusive for January 3rd
+  console.log(endDate);
+
+  StockPrices.findOne({
+    symbol: symbol,
+    price: {
+      $elemMatch: {
+        date: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      },
+    },
+  })
+    .then((result) => {
+      if (result) {
+        // Found a document matching the criteria
+        console.log(result);
+      } else {
+        // No document found matching the criteria
+        console.log("No matching document found.");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      // Handle the error
     });
-
-    try {
-      await newDocument.save();
-      console.log("Created a new document with the new data:", newDocument);
-    } catch (err) {
-      console.error("Error creating a new document:", err);
-    }
-  }
 }
