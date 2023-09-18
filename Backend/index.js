@@ -6,6 +6,7 @@ import StockFinancials from "./models/stockFinancials.js";
 import StockInformation from "./models/stockInformation.js";
 import yahooFinance from "yahoo-finance2";
 import fs from "fs";
+import StockPrices from "./models/stockPrices.js";
 
 const app = express();
 const port = 5000;
@@ -26,7 +27,8 @@ mongoose
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
   // getSymbols();
-  saveStockInformationData();
+  // saveStockPrices();
+  // saveStockInformationData();
   // runScript()
   //   .then(() => {
   //     console.log("Script completed successfully");
@@ -104,24 +106,72 @@ const connectDB = async () => {
       console.log("Error connecting to MongoDB:", error);
     });
 };
-
-// Define a route to fetch stock price data
 app.get("/api/stock-price/:symbol", async (req, res) => {
   try {
     const symbol = req.params.symbol + ".SR";
 
+    // Set period1 to a date far in the past (e.g., stock inception date)
+    const period1 = "2023-01-01";
+
+    // Set period2 to the current date
+    const period2 = new Date().toISOString().split("T")[0];
+
     // Fetch stock data using yahoo-finance2
-    const queryOptions = { period1: "2021-05-08" /* ... */ };
+    const queryOptions = { period1, period2 };
     const result = await yahooFinance._chart(symbol, queryOptions);
-    console.log(result);
-    if (!result) {
+
+    if (!result || !result.quotes || result.quotes.length === 0) {
       throw new Error("Invalid stock symbol or no data available.");
     }
 
-    res.json(result);
+    // Check if a document with the same symbol already exists in the database
+    const existingDocument = await StockPrices.findOne({ symbol });
+    console.log(result.quotes);
+    if (existingDocument) {
+      // If the document exists, update it with the new data
+      for (const quote of result.quotes) {
+        const existingDataPoint = existingDocument.price.find(
+          (dataPoint) =>
+            dataPoint.date.toLocaleDateString("en-GB") ===
+            new Date(quote.date).toLocaleDateString("en-GB")
+        );
+        if (!existingDataPoint) {
+          existingDocument.price.push({
+            date: new Date(quote.date), // Convert the date string to a Date object
+            open: quote.open,
+            close: quote.close,
+            high: quote.high,
+            low: quote.low,
+            volume: quote.volume,
+            adjclose: quote.adjclose,
+          });
+        }
+      }
+
+      await existingDocument.save();
+      res.json(result);
+    } else {
+      // If the document does not exist, create a new one with the new data
+      const stockPriceData = {
+        symbol: symbol,
+        price: result.quotes.map((quote) => ({
+          date: new Date(quote.date), // Convert the date string to a Date object
+          open: quote.open,
+          close: quote.close,
+          high: quote.high,
+          low: quote.low,
+          volume: quote.volume,
+          adjclose: quote.adjclose,
+        })),
+      };
+
+      const stockPrice = new StockPrices(stockPriceData);
+      await stockPrice.save();
+      res.json(result);
+    }
   } catch (error) {
-    console.error("Error fetching stock data:", error);
-    res.status(500).json({ error: "Unable to fetch stock data" });
+    console.error("Error fetching and saving stock data:", error);
+    res.status(500).json({ error: "Unable to fetch and save stock data" });
   }
 });
 
@@ -193,3 +243,41 @@ const saveStockInformationData = async () => {
     }
   }
 };
+
+async function saveStockPrices() {
+  const symbol = "AAPL";
+  const newPriceData = {
+    trade_date: new Date("2023-09-18T12:00:00Z"),
+    open: 155.0,
+    close: 156.25,
+    high: 157.5,
+    low: 153.75,
+  };
+
+  // Check if a document with the specified symbol already exists
+  const existingDocument = await StockPrices.findOne({ symbol });
+
+  if (existingDocument) {
+    // If the document exists, add the new price data to the "price" array
+    existingDocument.price.push(newPriceData);
+    try {
+      await existingDocument.save();
+      console.log("Added new data to the existing document:", existingDocument);
+    } catch (err) {
+      console.error("Error updating the document:", err);
+    }
+  } else {
+    // If the document does not exist, create a new one with the new data
+    const newDocument = new StockPrices({
+      symbol,
+      price: [newPriceData],
+    });
+
+    try {
+      await newDocument.save();
+      console.log("Created a new document with the new data:", newDocument);
+    } catch (err) {
+      console.error("Error creating a new document:", err);
+    }
+  }
+}

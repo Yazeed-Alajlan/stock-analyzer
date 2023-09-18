@@ -12,6 +12,7 @@ const StockPage = () => {
 
   const [data, setData] = useState();
   const [stockInformationData, setStockInformationData] = useState();
+  const [stockFinancialData, setStockFinancialData] = useState();
   const { getStockFinancialData, getStockInformationData } = useStocksData();
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const StockPage = () => {
         const response = await getStockFinancialData(symbol);
         setData(response);
         setStockInformationData(await getStockInformationData(symbol));
+        setStockFinancialData(await getStockFinancialData(symbol));
       } catch (error) {
         console.error("Error fetching data:", error);
       }

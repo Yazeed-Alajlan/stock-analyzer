@@ -15,22 +15,22 @@ const FinancialsTable = () => {
             <Tab eventKey={"Balance Sheet"} title={"المركز المالي"}>
               <FinancialsTab
                 title={"المركز المالي"}
-                annualData={data.balanceSheet}
-                quarterlyData={data.balanceSheetQuarterly}
+                annualData={stockFinancialData.balanceSheet}
+                quarterlyData={stockFinancialData.balanceSheetQuarterly}
               />
             </Tab>
             <Tab eventKey={"Statment of Income"} title={"قائمة الدخل"}>
               <FinancialsTab
                 title={"قائمة الدخل"}
-                annualData={data.incomeSheet}
-                quarterlyData={data.incomeSheetQuarterly}
+                annualData={stockFinancialData.incomeSheet}
+                quarterlyData={stockFinancialData.incomeSheetQuarterly}
               />
             </Tab>
             <Tab eventKey={"Cash Flow"} title={"التدفق النقدي"}>
               <FinancialsTab
                 title={"التدفق النقدي"}
-                annualData={data.cashFlow}
-                quarterlyData={data.cashFlowQuarterly}
+                annualData={stockFinancialData.cashFlow}
+                quarterlyData={stockFinancialData.cashFlowQuarterly}
               />
             </Tab>
           </Tabs>

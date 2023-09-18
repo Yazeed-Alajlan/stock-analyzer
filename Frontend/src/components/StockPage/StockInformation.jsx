@@ -7,7 +7,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import StockChart from "../StockChart";
 
 const StockInformation = () => {
-  const [stockInformationData, symbol] = useOutletContext();
+  const [stockInformationData, x, symbol] = useOutletContext();
   const { sector } = useParams();
 
   return (
@@ -64,7 +64,9 @@ const StockInformation = () => {
               </Table>
             </Col>
           </Row>
-          <Row>{/* <StockChart symbol={symbol} /> */}</Row>
+          <Row>
+            <StockChart symbol={symbol} />
+          </Row>
         </CustomCard>
       ) : (
         <p>loading</p>
