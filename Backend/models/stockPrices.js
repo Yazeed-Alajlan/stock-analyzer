@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const stockPricesSchema = new mongoose.Schema({
   symbol: String,
-  price: [
+  quotes: [
     {
       date: Date,
       open: Number,

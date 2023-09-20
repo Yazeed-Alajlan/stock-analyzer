@@ -131,71 +131,80 @@ const connectDB = async () => {
 };
 app.get("/api/stock-price/:symbol", async (req, res) => {
   try {
-    const symbol = req.params.symbol + ".SR";
-
-    // Set period1 to a date far in the past (e.g., stock inception date)
-    const period1 = "2023-01-01";
-
-    // Set period2 to the current date
-    const period2 = new Date().toISOString().split("T")[0];
-
-    // Fetch stock data using yahoo-finance2
-    const queryOptions = { period1, period2 };
-    const result = await yahooFinance._chart(symbol, queryOptions);
-
-    if (!result || !result.quotes || result.quotes.length === 0) {
-      throw new Error("Invalid stock symbol or no data available.");
-    }
-
-    // Check if a document with the same symbol already exists in the database
-    const existingDocument = await StockPrices.findOne({ symbol });
-    console.log(result.quotes);
-    if (existingDocument) {
-      // If the document exists, update it with the new data
-      for (const quote of result.quotes) {
-        const existingDataPoint = existingDocument.price.find(
-          (dataPoint) =>
-            dataPoint.date.toLocaleDateString("en-GB") ===
-            new Date(quote.date).toLocaleDateString("en-GB")
-        );
-        if (!existingDataPoint) {
-          existingDocument.price.push({
-            date: new Date(quote.date), // Convert the date string to a Date object
-            open: quote.open,
-            close: quote.close,
-            high: quote.high,
-            low: quote.low,
-            volume: quote.volume,
-            adjclose: quote.adjclose,
-          });
-        }
-      }
-
-      await existingDocument.save();
-      res.json(result);
-    } else {
-      // If the document does not exist, create a new one with the new data
-      const stockPriceData = {
-        symbol: symbol,
-        price: result.quotes.map((quote) => ({
-          date: new Date(quote.date), // Convert the date string to a Date object
-          open: quote.open,
-          close: quote.close,
-          high: quote.high,
-          low: quote.low,
-          volume: quote.volume,
-          adjclose: quote.adjclose,
-        })),
-      };
-
-      const stockPrice = new StockPrices(stockPriceData);
-      await stockPrice.save();
-      res.json(result);
-    }
-  } catch (error) {
-    console.error("Error fetching and saving stock data:", error);
-    res.status(500).json({ error: "Unable to fetch and save stock data" });
+    const result = await StockPrices.find({
+      symbol: req.params.symbol,
+    });
+    res.json(result);
+  } catch (err) {
+    console.error("Error fetching data:", err);
   }
+
+  // try {
+  //   const symbol = req.params.symbol + ".SR";
+
+  //   // Set period1 to a date far in the past (e.g., stock inception date)
+  //   const period1 = "2023-01-01";
+
+  //   // Set period2 to the current date
+  //   const period2 = new Date().toISOString().split("T")[0];
+
+  //   // Fetch stock data using yahoo-finance2
+  //   const queryOptions = { period1, period2 };
+  //   const result = await yahooFinance._chart(symbol, queryOptions);
+
+  //   if (!result || !result.quotes || result.quotes.length === 0) {
+  //     throw new Error("Invalid stock symbol or no data available.");
+  //   }
+
+  //   // Check if a document with the same symbol already exists in the database
+  //   const existingDocument = await StockPrices.findOne({ symbol });
+  //   console.log(result.quotes);
+  //   if (existingDocument) {
+  //     // If the document exists, update it with the new data
+  //     for (const quote of result.quotes) {
+  //       const existingDataPoint = existingDocument.price.find(
+  //         (dataPoint) =>
+  //           dataPoint.date.toLocaleDateString("en-GB") ===
+  //           new Date(quote.date).toLocaleDateString("en-GB")
+  //       );
+  //       if (!existingDataPoint) {
+  //         existingDocument.price.push({
+  //           date: new Date(quote.date), // Convert the date string to a Date object
+  //           open: quote.open,
+  //           close: quote.close,
+  //           high: quote.high,
+  //           low: quote.low,
+  //           volume: quote.volume,
+  //           adjclose: quote.adjclose,
+  //         });
+  //       }
+  //     }
+
+  //     await existingDocument.save();
+  //     res.json(result);
+  //   } else {
+  //     // If the document does not exist, create a new one with the new data
+  //     const stockPriceData = {
+  //       symbol: symbol,
+  //       price: result.quotes.map((quote) => ({
+  //         date: new Date(quote.date), // Convert the date string to a Date object
+  //         open: quote.open,
+  //         close: quote.close,
+  //         high: quote.high,
+  //         low: quote.low,
+  //         volume: quote.volume,
+  //         adjclose: quote.adjclose,
+  //       })),
+  //     };
+
+  //     const stockPrice = new StockPrices(stockPriceData);
+  //     await stockPrice.save();
+  //     res.json(result);
+  //   }
+  // } catch (error) {
+  //   console.error("Error fetching and saving stock data:", error);
+  //   res.status(500).json({ error: "Unable to fetch and save stock data" });
+  // }
 });
 
 const saveStockInformationData = async () => {
@@ -305,32 +314,26 @@ async function saveStockPrices() {
   // }
 
   const symbol = "2222";
-  const startDate = new Date("2023-01-01T00:00:00.000Z");
-  const endDate = new Date("2023-01-03T00:00:00.000Z"); // Exclusive for January 3rd
-  console.log(endDate);
+  const startDate = new Date("2023-01-01T07:00:00.000+00:00"); // Replace with your start date
+  const endDate = new Date("2023-01-02T07:00:00.000+00:00"); // Replace with your end date
 
-  StockPrices.findOne({
-    symbol: symbol,
-    price: {
-      $elemMatch: {
-        date: {
-          $gte: startDate,
-          $lte: endDate,
-        },
-      },
-    },
-  })
-    .then((result) => {
-      if (result) {
-        // Found a document matching the criteria
-        console.log(result);
-      } else {
-        // No document found matching the criteria
-        console.log("No matching document found.");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      // Handle the error
+  try {
+    const result = await StockPrices.find({
+      symbol: symbol,
     });
+
+    // Filter the results based on the date range
+    const filteredResults = result.map((doc) => {
+      doc.price = doc.price.filter(
+        (priceData) => priceData.date >= startDate && priceData.date <= endDate
+      );
+      return doc;
+    });
+    console.log(
+      "Filtered data within the date range:",
+      filteredResults[0].price
+    );
+  } catch (err) {
+    console.error("Error fetching data:", err);
+  }
 }

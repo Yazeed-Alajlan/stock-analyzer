@@ -3,25 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import { useStocksData } from "../contexts/StocksDataContext";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const [data, setData] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = "http://localhost:5000/companies";
-        const response = await axios.get(url);
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const { stocksData } = useStocksData();
 
-    fetchData();
-  }, []);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const handleStockSelect = (selectedOption) => {
     navigate(
@@ -42,8 +31,8 @@ const HomePage = () => {
             placeholder="ابحث  باسم الشركة أو الرمز"
             value={selectedOption}
             options={
-              data &&
-              data.map((stock) => ({
+              stocksData &&
+              stocksData.map((stock) => ({
                 value: stock.symbol,
                 label: `${stock.tradingNameEn} (${stock.symbol})`,
                 sector: stock.sectorNameEn,

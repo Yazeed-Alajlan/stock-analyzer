@@ -10,7 +10,6 @@ import { useStocksData } from "../../contexts/StocksDataContext";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 
-  const [data, setData] = useState();
   const [stockInformationData, setStockInformationData] = useState();
   const [stockFinancialData, setStockFinancialData] = useState();
   const { getStockFinancialData, getStockInformationData } = useStocksData();
@@ -18,8 +17,6 @@ const StockPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getStockFinancialData(symbol);
-        setData(response);
         setStockInformationData(await getStockInformationData(symbol));
         setStockFinancialData(await getStockFinancialData(symbol));
       } catch (error) {
@@ -27,30 +24,33 @@ const StockPage = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [symbol]);
 
   return (
     <Container>
-      {data ? (
+      {stockInformationData ? (
         <Row className="pb-4 border-bottom border-2">
           <Col xs={"8"}>
             <Row>
               <Container className="d-flex gap-2">
                 <Link to={"/companies/all"}>الشركات</Link>/
                 <Link to={`/companies/${sector}`}>{sector}</Link>/
-                <p>{data.tradingNameAr}</p>
+                <p>{stockInformationData.tradingNameAr}</p>
               </Container>
             </Row>
             <Row>
               <Container className="d-flex flex-column gap-4">
-                <h1>{data.companyNameAR}</h1>
+                <h1>{stockInformationData.companyNameAR}</h1>
 
                 <Container className="d-flex gap-4">
                   <SmCardInformaiton
                     title={"اسم التداول"}
-                    text={data.tradingNameAr}
+                    text={stockInformationData.tradingNameAr}
                   />
-                  <SmCardInformaiton title={"رمز التداول"} text={data.symbol} />
+                  <SmCardInformaiton
+                    title={"رمز التداول"}
+                    text={stockInformationData.symbol}
+                  />
                   <SmCardInformaiton title={"القطاع"} text={sector} />
                 </Container>
               </Container>

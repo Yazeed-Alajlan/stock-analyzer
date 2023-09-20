@@ -1,37 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Navbar, Nav, Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { Container, Navbar, Nav } from "react-bootstrap";
 import Select from "react-select";
+import { useStocksData } from "../../contexts/StocksDataContext";
 
 export const Header = ({ sideBar, setSideBar }) => {
   const navigate = useNavigate();
-
-  const [data, setData] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = "http://localhost:5000/companies";
-        const response = await axios.get(url);
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { stocksData, selectedStock, setSelectedStock } = useStocksData();
 
   const handleStockSelect = (selectedOption) => {
-    navigate(
-      `/companies/${selectedOption.sector}/${selectedOption.value}/information`
-    );
-    setSelectedOption(null); // Replace setSelectedOption with your state setter
+    if (selectedOption != null) {
+      setSelectedStock(selectedOption);
+      navigate(
+        `/companies/${selectedOption.sector}/${selectedOption.value}/information`
+      );
+    }
   };
 
+  useEffect(() => {
+    console.log("HIII HEADER");
+    setSelectedStock(selectedStock);
+    console.log(selectedStock);
+  }, [stocksData, selectedStock, setSelectedStock]);
   return (
     <div className="bg-white p-4 w-100">
       <Container>
@@ -52,10 +42,14 @@ export const Header = ({ sideBar, setSideBar }) => {
                 className="me-auto my-2 my-lg-0"
                 style={{ maxHeight: "100px" }}
               >
-                <Nav.Link as={Link} to="/home">
+                <Nav.Link as={Link} to="/home" onClick={handleStockSelect}>
                   الرئيسية
                 </Nav.Link>
-                <Nav.Link as={Link} to="/companies/all">
+                <Nav.Link
+                  as={Link}
+                  to="/companies/all"
+                  onClick={handleStockSelect}
+                >
                   السوق
                 </Nav.Link>
                 {/* <Nav.Link as={Link} to="/market-summary">
@@ -75,7 +69,6 @@ export const Header = ({ sideBar, setSideBar }) => {
               */}
               </Nav>
             </div>
-
             <button
               onClick={() => {
                 setSideBar(!sideBar);
@@ -87,16 +80,16 @@ export const Header = ({ sideBar, setSideBar }) => {
             <Select
               className="w-25"
               placeholder="البحث عن شركة"
-              value={selectedOption} // Set the value of the Select component
+              value={selectedStock}
               options={
-                data &&
-                data.map((stock) => ({
+                stocksData &&
+                stocksData.map((stock) => ({
                   value: stock.symbol,
-                  label: `${stock.tradingNameEn} (${stock.symbol})`,
-                  sector: stock.sectorNameEn,
+                  label: `${stock.tradingNameAr} (${stock.symbol})`,
+                  sector: stock.sectorNameAr,
                 }))
               }
-              isSearchable={true}
+              isSearchable
               onChange={handleStockSelect}
             />
           </Container>

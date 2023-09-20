@@ -11,7 +11,7 @@ const CompaniesPage = () => {
   const { stocksData } = useStocksData();
   const [sectorName, setSectorName] = useState(sector);
   const [filteredData, setFilteredData] = useState(null);
-  const [selectedStock, setSelectedStock] = useState({}); // Initialize with an empty object
+  const [selectedStock, setSelectedStock] = useState(); // Initialize with an empty object
 
   const sectorOptions = stocksData
     ? [...new Set(stocksData.map((item) => item.sectorNameAr))].map(
@@ -67,7 +67,7 @@ const CompaniesPage = () => {
       );
       setFilteredData(stockMatch); // Update filteredData with the selected stock
     } else {
-      setSelectedStock({}); // Clear selected stock by setting it to an empty object
+      setSelectedStock(); // Clear selected stock by setting it to an empty object
       // Reset filteredData to show all data
       setFilteredData(stocksData);
     }
@@ -75,7 +75,7 @@ const CompaniesPage = () => {
 
   const clearFilters = () => {
     setSectorName("جميع القطاعات");
-    setSelectedStock({}); // Clear selected stock by setting it to an empty object
+    setSelectedStock(); // Clear selected stock by setting it to an empty object
     // Reset filteredData to show all data
     setFilteredData(stocksData);
   };

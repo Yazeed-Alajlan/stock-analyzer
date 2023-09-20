@@ -14,12 +14,12 @@ const StockChart = ({ symbol }) => {
           `http://localhost:5000/api/stock-price/${symbol}`
         );
         const data = response.data;
-
+        console.log(data);
         if (!data) {
           throw new Error("Invalid stock symbol or no data available.");
         }
         console.log(data);
-        setStockData(data);
+        setStockData(data[0]);
       } catch (error) {
         console.error("Error fetching stock data:", error);
       }

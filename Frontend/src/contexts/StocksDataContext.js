@@ -9,7 +9,7 @@ export function useStocksData() {
 
 export function StocksDataProvider({ children }) {
   const [stocksData, setStocksData] = useState();
-  const [selectedStockData, setSelectedStockData] = useState();
+  const [selectedStock, setSelectedStock] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +22,6 @@ export function StocksDataProvider({ children }) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -48,11 +47,12 @@ export function StocksDataProvider({ children }) {
 
     return response.data;
   }
-
+  console.log(selectedStock);
   const value = {
     stocksData,
-    selectedStockData,
-    setSelectedStockData,
+    setStocksData,
+    selectedStock,
+    setSelectedStock,
     getStockFinancialData,
     getStockInformationData,
   };
