@@ -64,7 +64,9 @@ const StockInformation = () => {
               </Table>
             </Col>
           </Row>
-          <Row>{/* <StockChart symbol={symbol} /> */}</Row>
+          <Row>
+            <StockChart symbol={symbol} />
+          </Row>
         </CustomCard>
       ) : (
         <p>loading</p>

@@ -17,11 +17,6 @@ export const Header = ({ sideBar, setSideBar }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("HIII HEADER");
-    setSelectedStock(selectedStock);
-    console.log(selectedStock);
-  }, [stocksData, selectedStock, setSelectedStock]);
   return (
     <div className="bg-white p-4 w-100">
       <Container>

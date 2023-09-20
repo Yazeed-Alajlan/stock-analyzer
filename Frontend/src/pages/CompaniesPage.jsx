@@ -8,10 +8,10 @@ import { useStocksData } from "../contexts/StocksDataContext";
 const CompaniesPage = () => {
   let { sector } = useParams();
   if (sector == "all") sector = "جميع القطاعات";
-  const { stocksData } = useStocksData();
+  const { stocksData, selectedStock, setSelectedStock } = useStocksData();
   const [sectorName, setSectorName] = useState(sector);
   const [filteredData, setFilteredData] = useState(null);
-  const [selectedStock, setSelectedStock] = useState(); // Initialize with an empty object
+  const [selectedStockOption, setSelectedStockOption] = useState(); // Initialize with an empty object
 
   const sectorOptions = stocksData
     ? [...new Set(stocksData.map((item) => item.sectorNameAr))].map(
@@ -60,14 +60,14 @@ const CompaniesPage = () => {
 
   const handleFilterStock = (selectedOption) => {
     if (selectedOption != null) {
-      setSelectedStock(selectedOption);
+      setSelectedStockOption(selectedOption);
       // Filter data to show only the selected stock
       const stockMatch = stocksData.filter(
         (item) => item.symbol === selectedOption.value
       );
       setFilteredData(stockMatch); // Update filteredData with the selected stock
     } else {
-      setSelectedStock(); // Clear selected stock by setting it to an empty object
+      setSelectedStockOption(); // Clear selected stock by setting it to an empty object
       // Reset filteredData to show all data
       setFilteredData(stocksData);
     }
@@ -75,7 +75,7 @@ const CompaniesPage = () => {
 
   const clearFilters = () => {
     setSectorName("جميع القطاعات");
-    setSelectedStock(); // Clear selected stock by setting it to an empty object
+    setSelectedStockOption(); // Clear selected stock by setting it to an empty object
     // Reset filteredData to show all data
     setFilteredData(stocksData);
   };
@@ -94,7 +94,7 @@ const CompaniesPage = () => {
                   placeholder="Search by Company Name or Symbol"
                   options={companyOptions} // Use the filtered company options here
                   onChange={handleFilterStock}
-                  value={selectedStock}
+                  value={selectedStockOption}
                   isClearable={true}
                   isSearchable={true}
                 />
@@ -162,6 +162,13 @@ const CompaniesPage = () => {
                         <Link
                           className="text-decoration-none"
                           to={`/companies/${item.sectorNameAr}/${item.symbol}/information`}
+                          onClick={() => {
+                            setSelectedStock({
+                              value: item.symbol,
+                              label: `${item.tradingNameAr} (${item.symbol})`,
+                              sector: item.sectorNameAr,
+                            });
+                          }}
                         >
                           <span className="ms-3">{item.symbol}</span>
                           <span>{item.tradingNameAr}</span>
@@ -175,8 +182,7 @@ const CompaniesPage = () => {
                         className={
                           item.summary[0].change_value.includes("-")
                             ? "text-danger"
-                            : // Make it green for all other cases
-                              "text-success"
+                            : "text-success"
                         }
                       >
                         {item.summary[0].change_value}
@@ -185,8 +191,7 @@ const CompaniesPage = () => {
                         className={
                           item.summary[0].change_ratio.includes("-")
                             ? "text-danger"
-                            : // Make it green for all other cases
-                              "text-success"
+                            : "text-success"
                         }
                       >
                         {item.summary[0].change_ratio}

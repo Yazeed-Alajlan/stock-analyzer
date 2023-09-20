@@ -47,7 +47,6 @@ export function StocksDataProvider({ children }) {
 
     return response.data;
   }
-  console.log(selectedStock);
   const value = {
     stocksData,
     setStocksData,

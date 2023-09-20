@@ -8,15 +8,13 @@ import { useStocksData } from "../contexts/StocksDataContext";
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const { stocksData } = useStocksData();
-
-  const [selectedOption, setSelectedOption] = useState(null);
+  const { stocksData, selectedStock, setSelectedStock } = useStocksData();
 
   const handleStockSelect = (selectedOption) => {
+    setSelectedStock(selectedOption);
     navigate(
       `/companies/${selectedOption.sector}/${selectedOption.value}/information`
     );
-    setSelectedOption(null); // Replace setSelectedOption with your state setter
   };
   return (
     <Container className="mt-5">
@@ -29,7 +27,7 @@ const HomePage = () => {
           <Select
             className="text-center"
             placeholder="ابحث  باسم الشركة أو الرمز"
-            value={selectedOption}
+            value={selectedStock}
             options={
               stocksData &&
               stocksData.map((stock) => ({

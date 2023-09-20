@@ -27,7 +27,7 @@ mongoose
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
   // getSymbols();
-  saveStockPrices();
+  // saveStockPrices();
   // saveStockInformationData();
   // runScript()
   //   .then(() => {
@@ -138,73 +138,6 @@ app.get("/api/stock-price/:symbol", async (req, res) => {
   } catch (err) {
     console.error("Error fetching data:", err);
   }
-
-  // try {
-  //   const symbol = req.params.symbol + ".SR";
-
-  //   // Set period1 to a date far in the past (e.g., stock inception date)
-  //   const period1 = "2023-01-01";
-
-  //   // Set period2 to the current date
-  //   const period2 = new Date().toISOString().split("T")[0];
-
-  //   // Fetch stock data using yahoo-finance2
-  //   const queryOptions = { period1, period2 };
-  //   const result = await yahooFinance._chart(symbol, queryOptions);
-
-  //   if (!result || !result.quotes || result.quotes.length === 0) {
-  //     throw new Error("Invalid stock symbol or no data available.");
-  //   }
-
-  //   // Check if a document with the same symbol already exists in the database
-  //   const existingDocument = await StockPrices.findOne({ symbol });
-  //   console.log(result.quotes);
-  //   if (existingDocument) {
-  //     // If the document exists, update it with the new data
-  //     for (const quote of result.quotes) {
-  //       const existingDataPoint = existingDocument.price.find(
-  //         (dataPoint) =>
-  //           dataPoint.date.toLocaleDateString("en-GB") ===
-  //           new Date(quote.date).toLocaleDateString("en-GB")
-  //       );
-  //       if (!existingDataPoint) {
-  //         existingDocument.price.push({
-  //           date: new Date(quote.date), // Convert the date string to a Date object
-  //           open: quote.open,
-  //           close: quote.close,
-  //           high: quote.high,
-  //           low: quote.low,
-  //           volume: quote.volume,
-  //           adjclose: quote.adjclose,
-  //         });
-  //       }
-  //     }
-
-  //     await existingDocument.save();
-  //     res.json(result);
-  //   } else {
-  //     // If the document does not exist, create a new one with the new data
-  //     const stockPriceData = {
-  //       symbol: symbol,
-  //       price: result.quotes.map((quote) => ({
-  //         date: new Date(quote.date), // Convert the date string to a Date object
-  //         open: quote.open,
-  //         close: quote.close,
-  //         high: quote.high,
-  //         low: quote.low,
-  //         volume: quote.volume,
-  //         adjclose: quote.adjclose,
-  //       })),
-  //     };
-
-  //     const stockPrice = new StockPrices(stockPriceData);
-  //     await stockPrice.save();
-  //     res.json(result);
-  //   }
-  // } catch (error) {
-  //   console.error("Error fetching and saving stock data:", error);
-  //   res.status(500).json({ error: "Unable to fetch and save stock data" });
-  // }
 });
 
 const saveStockInformationData = async () => {
@@ -212,128 +145,127 @@ const saveStockInformationData = async () => {
   const data = JSON.parse(jsonData);
   for (const company of data.items) {
     console.log(company.symbol_code);
-    if (company.symbol_code == "2083") {
-      try {
-        const stock = await StockInformation.findOne({
-          symbol: company.symbol_code,
-        }).exec();
-        if (stock) {
-          // Create an object with all the fields
-          const newSummaryData = {
-            trade_date: new Date(company.today_points.trade_date),
-            open: company.today_points.open.toString(),
-            close: company.today_points.close.toString(),
-            high: company.today_points.high.toString(),
-            low: company.today_points.low.toString(),
-            previous_close: company.today_points.previous_close.toString(),
-            change_value: company.today_points.change_value.toString(),
-            change_ratio: company.today_points.change_ratio.toString(),
-            trade_count: company.today_points.trade_count.toString(),
-            trade_value: company.today_points.trade_value.toString(),
-            trade_volume: company.today_points.trade_volume.toString(),
-            fifty_two_week_high:
-              company.today_points.fifty_two_week_high.toString(),
-            fifty_two_week_low:
-              company.today_points.fifty_two_week_low.toString(),
-            previous_close_7_days_back:
-              company.today_points.previous_close_7_days_back.toString(),
-            previous_close_30_days_back:
-              company.today_points.previous_close_30_days_back.toString(),
-            previous_close_365_days_back:
-              company.today_points.previous_close_365_days_back.toString(),
-            return_value_last_week:
-              company.today_points.return_value_last_week.toString(),
-            return_value_last_month:
-              company.today_points.return_value_last_month.toString(),
-            return_value_last_year:
-              company.today_points.return_value_last_year.toString(),
-            return_last_week: company.today_points.return_last_week.toString(),
-            return_last_month:
-              company.today_points.return_last_month.toString(),
-            return_last_year: company.today_points.return_last_year.toString(),
-            daily_price_to_earnings:
-              company.today_points.daily_price_to_earnings.toString(),
-            daily_price_to_book_value:
-              company.today_points.daily_price_to_book_value.toString(),
-            daily_market_capitalization:
-              company.today_points.daily_market_capitalization.toString(),
-            basic_earnings_per_share_ttm:
-              company.today_points.basic_earnings_per_share_ttm.toString(),
-            book_value_per_share_ttm:
-              company.today_points.book_value_per_share_ttm.toString(),
-          };
+    try {
+      const stock = await StockInformation.findOne({
+        symbol: company.symbol_code,
+      }).exec();
+      if (stock) {
+        // Create an object with all the fields
+        const newSummaryData = {
+          trade_date: new Date(company.today_points.trade_date),
+          open: company.today_points.open.toString(),
+          close: company.today_points.close.toString(),
+          high: company.today_points.high.toString(),
+          low: company.today_points.low.toString(),
+          previous_close: company.today_points.previous_close.toString(),
+          change_value: company.today_points.change_value.toString(),
+          change_ratio: company.today_points.change_ratio.toString(),
+          trade_count: company.today_points.trade_count.toString(),
+          trade_value: company.today_points.trade_value.toString(),
+          trade_volume: company.today_points.trade_volume.toString(),
+          fifty_two_week_high:
+            company.today_points.fifty_two_week_high.toString(),
+          fifty_two_week_low:
+            company.today_points.fifty_two_week_low.toString(),
+          previous_close_7_days_back:
+            company.today_points.previous_close_7_days_back.toString(),
+          previous_close_30_days_back:
+            company.today_points.previous_close_30_days_back.toString(),
+          previous_close_365_days_back:
+            company.today_points.previous_close_365_days_back.toString(),
+          return_value_last_week:
+            company.today_points.return_value_last_week.toString(),
+          return_value_last_month:
+            company.today_points.return_value_last_month.toString(),
+          return_value_last_year:
+            company.today_points.return_value_last_year.toString(),
+          return_last_week: company.today_points.return_last_week.toString(),
+          return_last_month: company.today_points.return_last_month.toString(),
+          return_last_year: company.today_points.return_last_year.toString(),
+          daily_price_to_earnings:
+            company.today_points.daily_price_to_earnings.toString(),
+          daily_price_to_book_value:
+            company.today_points.daily_price_to_book_value.toString(),
+          daily_market_capitalization:
+            company.today_points.daily_market_capitalization.toString(),
+          basic_earnings_per_share_ttm:
+            company.today_points.basic_earnings_per_share_ttm.toString(),
+          book_value_per_share_ttm:
+            company.today_points.book_value_per_share_ttm.toString(),
+        };
 
-          // Push the new data to the "summary" array
-          stock.summary.push(newSummaryData);
+        // Push the new data to the "summary" array
+        stock.summary.push(newSummaryData);
 
-          // Save the updated document back to the database
-          await stock.save();
-        }
-      } catch (error) {
-        console.error("Error retrieving stock:", error);
+        // Save the updated document back to the database
+        await stock.save();
       }
+    } catch (error) {
+      console.error("Error retrieving stock:", error);
     }
   }
 };
 
 async function saveStockPrices() {
-  // const symbol = "AAPL";
-  // const newPriceData = {
-  //   trade_date: new Date("2023-09-18T12:00:00Z"),
-  //   open: 155.0,
-  //   close: 156.25,
-  //   high: 157.5,
-  //   low: 153.75,
-  // };
-
-  // // Check if a document with the specified symbol already exists
-  // const existingDocument = await StockPrices.findOne({ symbol });
-
-  // if (existingDocument) {
-  //   // If the document exists, add the new price data to the "price" array
-  //   existingDocument.price.push(newPriceData);
-  //   try {
-  //     await existingDocument.save();
-  //     console.log("Added new data to the existing document:", existingDocument);
-  //   } catch (err) {
-  //     console.error("Error updating the document:", err);
-  //   }
-  // } else {
-  //   // If the document does not exist, create a new one with the new data
-  //   const newDocument = new StockPrices({
-  //     symbol,
-  //     price: [newPriceData],
-  //   });
-
-  //   try {
-  //     await newDocument.save();
-  //     console.log("Created a new document with the new data:", newDocument);
-  //   } catch (err) {
-  //     console.error("Error creating a new document:", err);
-  //   }
-  // }
-
-  const symbol = "2222";
-  const startDate = new Date("2023-01-01T07:00:00.000+00:00"); // Replace with your start date
-  const endDate = new Date("2023-01-02T07:00:00.000+00:00"); // Replace with your end date
-
   try {
-    const result = await StockPrices.find({
-      symbol: symbol,
-    });
-
-    // Filter the results based on the date range
-    const filteredResults = result.map((doc) => {
-      doc.price = doc.price.filter(
-        (priceData) => priceData.date >= startDate && priceData.date <= endDate
+    const symbols = await getSymbols();
+    for (const stock of symbols) {
+      console.log(stock.symbol);
+      const symbol = stock.symbol;
+      const period1 = "2022-01-01";
+      const period2 = new Date().toISOString().split("T")[0];
+      const queryOptions = { period1, period2 };
+      const result = await yahooFinance._chart(
+        stock.symbol + ".SR",
+        queryOptions
       );
-      return doc;
-    });
-    console.log(
-      "Filtered data within the date range:",
-      filteredResults[0].price
-    );
-  } catch (err) {
-    console.error("Error fetching data:", err);
+      if (!result || !result.quotes || result.quotes.length === 0) {
+        throw new Error("Invalid stock symbol or no data available.");
+      }
+      // Check if a document with the same symbol already exists in the database
+      const existingDocument = await StockPrices.findOne({ symbol });
+      console.log(result.quotes);
+      if (existingDocument) {
+        // If the document exists, update it with the new data
+        for (const quote of result.quotes) {
+          const existingDataPoint = existingDocument.quotes.find(
+            (dataPoint) =>
+              dataPoint.date.toLocaleDateString("en-GB") ===
+              new Date(quote.date).toLocaleDateString("en-GB")
+          );
+          if (!existingDataPoint) {
+            existingDocument.quotes.push({
+              date: new Date(quote.date), // Convert the date string to a Date object
+              open: quote.open,
+              close: quote.close,
+              high: quote.high,
+              low: quote.low,
+              volume: quote.volume,
+              adjclose: quote.adjclose,
+            });
+          }
+        }
+        await existingDocument.save();
+      } else {
+        // If the document does not exist, create a new one with the new data
+        const stockPriceData = {
+          symbol: symbol,
+          quotes: result.quotes.map((quote) => ({
+            date: new Date(quote.date), // Convert the date string to a Date object
+            open: quote.open,
+            close: quote.close,
+            high: quote.high,
+            low: quote.low,
+            volume: quote.volume,
+            adjclose: quote.adjclose,
+          })),
+        };
+        const stockPrice = new StockPrices(stockPriceData);
+        await stockPrice.save();
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching and saving stock data:", error);
+    res.status(500).json({ error: "Unable to fetch and save stock data" });
   }
 }
