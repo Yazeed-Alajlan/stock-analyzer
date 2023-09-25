@@ -69,7 +69,7 @@ const StockPage = () => {
         </Col>
         <Col sm={10}>
           <Outlet
-            context={[stockInformationData, stockFinancialData, symbol]}
+            context={{ stockInformationData, stockFinancialData, symbol }}
           />
         </Col>
       </Row>

@@ -33,7 +33,7 @@ const HoverGraph = ({ text, data, years }) => {
   );
 
   return (
-    <OverlayTrigger placement="right" overlay={renderTooltip}>
+    <OverlayTrigger placement="left" overlay={renderTooltip}>
       <div className="hover-div">{text}</div>
     </OverlayTrigger>
   );

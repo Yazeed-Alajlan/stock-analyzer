@@ -13,6 +13,8 @@ import CompaniesPage from "./pages/CompaniesPage";
 import StockInformation from "./components/StockPage/StockInformation";
 import FinancialesTable from "./components/StockPage/FinancialsTable";
 import axios from "axios";
+import StockChart from "./components/StockPage/StockChart";
+import Dividend from "./components/StockPage/Dividend";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -69,6 +71,8 @@ function App() {
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />
             <Route path="financials" element={<FinancialesTable />} />
+            <Route path="chart" element={<StockChart />} />
+            <Route path="dividend" element={<Dividend />} />
           </Route>
 
           <Route path="/market-summary" element={<MarketSummary />} />

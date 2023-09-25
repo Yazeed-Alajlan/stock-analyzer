@@ -1,23 +1,7 @@
-import { useState } from "react";
-import { isEqual } from "lodash";
-import CustomButton from "../utils/CustomButton";
 import HoverGraph from "./HoverGraph";
 import { Container, Table } from "react-bootstrap";
-import { BsCalendar3, BsGraphUp } from "react-icons/bs";
 
-const FinancialsTab = ({ title, quarterlyData, annualData }) => {
-  const [data, setData] = useState(quarterlyData);
-  const [text, setText] = useState("سنوي");
-
-  const toggleData = () => {
-    if (isEqual(data, quarterlyData)) {
-      setData(annualData);
-      setText("ربع سنوي");
-    } else {
-      setData(quarterlyData);
-      setText("سنوي");
-    }
-  };
+const FinancialsTab = ({ title, data }) => {
   const keys = data.length > 0 ? Object.keys(data[0]) : [];
   // Transpose the data
   const transposedData = keys.map((key) => ({
@@ -27,17 +11,7 @@ const FinancialsTab = ({ title, quarterlyData, annualData }) => {
   const firstRowValues = transposedData[0].values;
 
   return (
-    <Container>
-      <div className="d-flex align-items-center py-4 gap-4 ">
-        <div className="fs-2">
-          <span className="mx-2">
-            <BsCalendar3 />
-          </span>
-          المدة:
-        </div>
-        <CustomButton onClick={toggleData} title={text} />
-      </div>
-
+    <>
       <Table className="fs-5 " responsive hover>
         <thead>
           <tr>
@@ -91,7 +65,7 @@ const FinancialsTab = ({ title, quarterlyData, annualData }) => {
           ))}
         </tbody>
       </Table>
-    </Container>
+    </>
   );
 };
 

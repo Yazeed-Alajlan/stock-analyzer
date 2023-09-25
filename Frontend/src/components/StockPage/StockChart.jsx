@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { createChart } from "lightweight-charts";
+import { useOutletContext } from "react-router-dom";
+import { CustomCard } from "../utils/CustomCard";
+import SelectionTitle from "./utils/SelectionTitle";
+import { Container } from "react-bootstrap";
 
-const StockChart = ({ symbol }) => {
+const StockChart = () => {
   const [stockData, setStockData] = useState(null);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("max"); // Default to 1 month
+  const { symbol } = useOutletContext();
 
+  console.log(symbol);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -14,11 +20,9 @@ const StockChart = ({ symbol }) => {
           `http://localhost:5000/api/stock-price/${symbol}`
         );
         const data = response.data;
-        console.log(data);
         if (!data) {
           throw new Error("Invalid stock symbol or no data available.");
         }
-        console.log(data);
         setStockData(data[0]);
       } catch (error) {
         console.error("Error fetching stock data:", error);
@@ -131,8 +135,9 @@ const StockChart = ({ symbol }) => {
   }, [stockData, selectedTimeFrame]);
 
   return (
-    <div>
-      <div>
+    <CustomCard>
+      <SelectionTitle title={"تحركات السهم"} />
+      <Container className=" py-4">
         <select value={selectedTimeFrame} onChange={handleTimeFrameChange}>
           <option value="1w">1 Week</option>
           <option value="1m">1 Month</option>
@@ -143,9 +148,9 @@ const StockChart = ({ symbol }) => {
           <option value="5y">5 Years</option>
           <option value="max">Max</option>
         </select>
-      </div>
+      </Container>
       <div id="chart-container"></div>
-    </div>
+    </CustomCard>
   );
 };
 

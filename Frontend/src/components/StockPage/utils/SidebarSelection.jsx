@@ -1,6 +1,11 @@
 import { CustomCard } from "../../utils/CustomCard";
 import { Container, Nav } from "react-bootstrap";
-import { FaInfoCircle, FaChartLine, FaCog } from "react-icons/fa";
+import {
+  FaInfoCircle,
+  FaChartLine,
+  FaChartPie,
+  FaMoneyBillAlt,
+} from "react-icons/fa";
 import React from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 export const SidebarSelection = () => {
@@ -30,7 +35,25 @@ export const SidebarSelection = () => {
               to={`/companies/${sector}/${symbol}/financials`}
               className={isActive("financials") ? "bg-light" : ""}
             >
-              <FaChartLine className="mr-2" /> Financials
+              <FaChartPie className="mr-2" /> Financials
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as={Link}
+              to={`/companies/${sector}/${symbol}/chart`}
+              className={isActive("chart") ? "bg-light" : ""}
+            >
+              <FaChartLine className="mr-2" /> Chart
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              as={Link}
+              to={`/companies/${sector}/${symbol}/dividend`}
+              className={isActive("dividend") ? "bg-light" : ""}
+            >
+              <FaMoneyBillAlt className="mr-2" /> Dividend
             </Nav.Link>
           </Nav.Item>
           {/* <Nav.Item>
