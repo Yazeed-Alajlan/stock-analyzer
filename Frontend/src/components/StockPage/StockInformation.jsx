@@ -72,13 +72,8 @@ const StockInformation = () => {
                       </th>
                     </tr>
                     <tr>
-                      <th>القيمة الدفترية</th>
-                      <th>
-                        {
-                          stockInformationData.summary[0]
-                            .book_value_per_share_ttm
-                        }
-                      </th>
+                      <th>رأس المال</th>
+                      <th>{stockInformationData.capital[0].newCApital}</th>
                     </tr>
                   </tbody>
                 </Table>

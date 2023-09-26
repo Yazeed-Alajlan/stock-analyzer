@@ -34,7 +34,7 @@ const Dividend = () => {
                   </tr>
                 ))}
               </tbody>
-            </Table>{" "}
+            </Table>
           </Container>
         </CustomCard>
       ) : (

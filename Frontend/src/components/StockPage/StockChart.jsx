@@ -137,7 +137,7 @@ const StockChart = () => {
   return (
     <CustomCard>
       <SelectionTitle title={"تحركات السهم"} />
-      <Container className=" py-4">
+      <Container className="py-4">
         <select value={selectedTimeFrame} onChange={handleTimeFrameChange}>
           <option value="1w">1 Week</option>
           <option value="1m">1 Month</option>

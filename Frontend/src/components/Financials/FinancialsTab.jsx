@@ -11,7 +11,7 @@ const FinancialsTab = ({ title, data }) => {
   const firstRowValues = transposedData[0].values;
 
   return (
-    <>
+    <Container>
       <Table className="fs-5 " responsive hover>
         <thead>
           <tr>
@@ -65,7 +65,7 @@ const FinancialsTab = ({ title, data }) => {
           ))}
         </tbody>
       </Table>
-    </>
+    </Container>
   );
 };
 
