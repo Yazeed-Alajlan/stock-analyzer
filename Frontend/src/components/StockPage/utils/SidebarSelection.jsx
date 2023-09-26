@@ -26,7 +26,7 @@ export const SidebarSelection = () => {
               to={`/companies/${sector}/${symbol}/information`}
               className={isActive("/information") ? "bg-light" : ""}
             >
-              <FaInfoCircle className="mr-2" /> Information
+              <FaInfoCircle className="mr-2" /> معلومات السهم
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
@@ -35,7 +35,7 @@ export const SidebarSelection = () => {
               to={`/companies/${sector}/${symbol}/financials`}
               className={isActive("financials") ? "bg-light" : ""}
             >
-              <FaChartPie className="mr-2" /> Financials
+              <FaChartPie className="mr-2" /> القوائم المالية
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
@@ -44,7 +44,7 @@ export const SidebarSelection = () => {
               to={`/companies/${sector}/${symbol}/chart`}
               className={isActive("chart") ? "bg-light" : ""}
             >
-              <FaChartLine className="mr-2" /> Chart
+              <FaChartLine className="mr-2" /> تحركات السهم
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
@@ -53,7 +53,7 @@ export const SidebarSelection = () => {
               to={`/companies/${sector}/${symbol}/dividend`}
               className={isActive("dividend") ? "bg-light" : ""}
             >
-              <FaMoneyBillAlt className="mr-2" /> Dividend
+              <FaMoneyBillAlt className="mr-2" /> التوزيعات
             </Nav.Link>
           </Nav.Item>
           {/* <Nav.Item>

@@ -40,6 +40,16 @@ const stockInformationSchema = new mongoose.Schema({
       book_value_per_share_ttm: String,
     },
   ],
+  capital: [
+    {
+      announceDate: String,
+      issueTypeDesc: String,
+      dueDate: String,
+      newCApital: String,
+      prevCApital: String,
+      dueDateCompare: String,
+    },
+  ],
 });
 
 const StockInformation = mongoose.model(

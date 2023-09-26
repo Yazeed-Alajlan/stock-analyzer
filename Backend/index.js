@@ -26,6 +26,7 @@ mongoose
 
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
+  saveStockCapital();
   // getSymbols();
   // saveStockPrices();
   // saveStockInformationData();
@@ -267,5 +268,55 @@ async function saveStockPrices() {
   } catch (error) {
     console.error("Error fetching and saving stock data:", error);
     res.status(500).json({ error: "Unable to fetch and save stock data" });
+  }
+}
+
+async function saveStockCapital() {
+  try {
+    const symbols = await getSymbols();
+    for (const stock of symbols) {
+      console.log(stock.symbol);
+      // if (stock.symbol !== "2222") continue;
+      const symbol = stock.symbol;
+      const response = await fetch(
+        `https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30w1EVGAQHmAIVBPga-xgEGbgbmOlHEaPfAAdwNCCsPwqvEndzdAVYnAhWgMcNXvpR6Tn5SZDwyCgpKbBSNVA1KElMSSwvzVEFujE5P7cgMa8yuDI3KR-oyMjA2EA_ODVPvyA3NMIgMyA3XNdREQAWgPPv/p0/IZ7_5A602H80O0VC4060O4GML81GV7=CZ6_5A602H80OGF2E0QF9BQDEG10K4=NJgetCorporateAction=/?indexSymbol=${stock.symbol}&language=en&issueType=Corporate%20Action`
+      );
+      const data = await response.json();
+      const extractedInfo = data.pastCorporateBeans.map(async (item) => {
+        const existingStock = await StockInformation.findOne({
+          symbol: symbol,
+        }).exec();
+        if (existingStock) {
+          // Check if the data already exists in the 'capital' array
+          const capitalExists = existingStock.capital.some((capitalData) => {
+            return (
+              capitalData.announceDate === item.announceDate &&
+              capitalData.issueTypeDesc === item.issueTypeDesc &&
+              capitalData.dueDate === item.dueDate &&
+              capitalData.newCApital === item.newCApital &&
+              capitalData.prevCApital === item.prevCApital &&
+              capitalData.dueDateCompare === item.dueDateCompare
+            );
+          });
+
+          if (!capitalExists) {
+            // Data does not exist, add it to the 'capital' array
+            const newCapitalData = {
+              announceDate: item.announceDate,
+              issueTypeDesc: item.issueTypeDesc,
+              dueDate: item.dueDate,
+              newCApital: item.newCApital,
+              prevCApital: item.prevCApital,
+              dueDateCompare: item.dueDateCompare,
+            };
+            existingStock.capital.push(newCapitalData);
+            await existingStock.save();
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
   }
 }
