@@ -1,19 +1,23 @@
 // Override default variables before the import
 // you can open the bootstrap.scss module and check any available variables.
-$primary: #8b3dff;
-$secondary: #9e77f3;
+$primary: #3f51b5;
+$primary-light: #757de8;
+$secondary: #003f8f;
+$secondary-light: #2196f3;
 // $secondary: #4c6b8b;
 $success: #198754;
 $info: #0dcaf0;
 $warning: #ffc107;
 $danger: #dc3545;
-$light: #f8f9fa;
-$dark: #212529;
+$light: #f5f5f5;
+$dark: #333333;
 
 // this is used to map colors. change accordingly.
 $theme-colors: (
   primary: $primary,
+  primary-light: $primary-light,
   secondary: $secondary,
+  secondary-light: $secondary-light,
   success: $success,
   info: $info,
   warning: $warning,
@@ -21,6 +25,29 @@ $theme-colors: (
   light: $light,
   dark: $dark,
 );
+
+/* Add this to your CSS file */
+.nav-link {
+  position: relative;
+  padding-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: $primary;
+  bottom: 0;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+  left: 0;
+}
 
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
