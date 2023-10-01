@@ -26,17 +26,17 @@ mongoose
 
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
-  saveStockCapital();
+  // saveStockCapital();
   // getSymbols();
   // saveStockPrices();
   // saveStockInformationData();
-  // runScript()
-  //   .then(() => {
-  //     console.log("Script completed successfully");
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error:", error);
-  //   });
+  runScript()
+    .then(() => {
+      console.log("Script completed successfully");
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 });
 
 app.get("/api/StockFinancialData/:symbol", (req, res) => {

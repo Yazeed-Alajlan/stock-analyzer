@@ -50,6 +50,16 @@ const stockInformationSchema = new mongoose.Schema({
       dueDateCompare: String,
     },
   ],
+  profile: [
+    {
+      authorizedCapital: String,
+      issuedShares: String,
+      paidCapital: String,
+      parValueShare: String,
+      paidUpValueShare: String,
+      lastUpdate: String,
+    },
+  ],
 });
 
 const StockInformation = mongoose.model(

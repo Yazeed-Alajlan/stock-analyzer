@@ -18,7 +18,7 @@ const StockInformation = () => {
           <Container className="py-4">
             <Row>
               <Col xs={6}>
-                <Table responsive>
+                <Table className="table-light" responsive>
                   <tbody>
                     <tr>
                       <th>القيمة السوقية</th>
@@ -51,7 +51,7 @@ const StockInformation = () => {
                 </Table>
               </Col>
               <Col xs={6}>
-                <Table className="" responsive>
+                <Table className="table-light" responsive>
                   <tbody>
                     <tr>
                       <th>مضاعف القيمة الدفترية</th>

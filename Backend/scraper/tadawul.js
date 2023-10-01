@@ -32,7 +32,7 @@ async function runScript() {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
-          stock.symbol == "3004" &&
+          // stock.symbol == "2222" &&
           !stock.companyNameEN.includes("REIT")
         ) {
           var url =
@@ -44,8 +44,9 @@ async function runScript() {
             timeout: 60000,
           });
 
-          await getFinancialsDataForStocks(stock, browser, page);
+          // await getFinancialsDataForStocks(stock, browser, page);
           await getForeignOwnership(stock, browser, page);
+          // await getStockProfile(stock, browser, page);
         }
       } catch (error) {
         console.error("Error in loop iteration:", error);
@@ -75,12 +76,13 @@ async function getForeignOwnership(stock, browser, page) {
     }, selector);
     await page.waitForTimeout(1500);
     await page.click(
-      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(11) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
     );
+
     await page.waitForTimeout(1500);
 
     const data = await page.$eval(
-      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(11) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
       (element) => element.textContent
     );
     saveStockforeignOwnership(stock, data.trim());
@@ -158,7 +160,53 @@ async function getFinancialsDataForStocks(stock, browser, page) {
     console.error("scrape faild!: \n", e);
   }
 }
+async function getStockProfile(stock, browser, page) {
+  try {
+    // Extract data
+    const selector = ".inspectionBox";
+    await page.waitForSelector(selector);
+    await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollTop = element.offsetHeight;
+        console.error(`Scrolled to selector ${selector}`);
+      } else {
+        console.error(`cannot find selector ${selector}`);
+      }
+    }, selector);
 
+    // Extract data from the page
+    const companyInfo = await page.evaluate(() => {
+      const ul = document.querySelector(".inspectionBox ul");
+      const items = ul.querySelectorAll("li");
+
+      const data = {};
+      items.forEach((item) => {
+        const key = item.querySelector("span").textContent.trim();
+        const value = item.querySelector("strong").textContent.trim();
+        data[key] = value;
+      });
+
+      return data;
+    });
+    const extractedData = await page.evaluate(() => {
+      const element = document.querySelector(
+        "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(14) > div.fundInfo > div.inspectionBox > p"
+      );
+      let textContent = element.textContent.trim();
+
+      // Remove "Last Update :" prefix
+      textContent = textContent.replace("Last Update :", "").trim();
+
+      return textContent;
+    });
+    companyInfo["Last Update"] = extractedData;
+
+    saveStockProfile(stock, companyInfo);
+  } catch (e) {
+    console.error("scrape faild!: \n", e);
+  }
+}
 async function runStockInformationScript() {
   try {
     //English Data
@@ -368,6 +416,34 @@ async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
     console.error("Error retrieving stock:", error);
   }
 }
+async function saveStockProfile(stockData, stockProfileData) {
+  console.log(stockProfileData);
+
+  try {
+    const stock = await StockInformation.findOne({
+      symbol: stockData.symbol,
+    }).exec();
+    if (stock) {
+      stock.profile.push({
+        authorizedCapital: stockProfileData["Authorized Capital (SAR)"],
+        issuedShares: stockProfileData["Issued Shares"],
+        paidCapital: stockProfileData["Paid Capital (SAR)"],
+        parValueShare: stockProfileData["Par Value/Share"],
+        paidUpValueShare: stockProfileData["Paid Up Value/Share"],
+        lastUpdate: stockProfileData["Last Update"],
+      });
+      await stock.save();
+      console.log("New data added to existing record");
+    } else {
+      const newData = new StockInformation(stockData);
+      newData.profile.push(stockProfileData);
+      await newData.save();
+      console.log("First time");
+    }
+  } catch (error) {
+    console.error("Error retrieving stock:", error);
+  }
+}
 function createStockDividendsData(stock, dividendColumn) {
   const stockData = {
     symbol: stock.symbol,
@@ -461,6 +537,7 @@ function getQuarterlyAndAnnuallyData(data) {
 
   return { annually, quarterly };
 }
+
 export {
   getSymbols,
   getSymbolsWithSectors,

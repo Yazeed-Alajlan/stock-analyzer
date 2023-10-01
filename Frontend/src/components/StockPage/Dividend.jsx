@@ -13,7 +13,7 @@ const Dividend = () => {
         <CustomCard>
           <SelectionTitle title={"الأرباح و التوزيعات"} />
           <Container className="pt-3">
-            <Table className="fs-5 " responsive hover>
+            <Table className="fs-5 table-light" responsive hover>
               <thead>
                 <tr>
                   <th>تاريخ الإعلان </th>

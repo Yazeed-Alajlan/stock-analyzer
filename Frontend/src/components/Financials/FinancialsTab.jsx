@@ -12,7 +12,7 @@ const FinancialsTab = ({ title, data }) => {
 
   return (
     <Container>
-      <Table className="fs-5 " responsive hover>
+      <Table className="fs-5 table-light" responsive hover>
         <thead>
           <tr>
             <th>{title}</th>

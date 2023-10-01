@@ -8,13 +8,18 @@ import logo from "../../assets/logo.png";
 export const Header = ({ sideBar, setSideBar }) => {
   const navigate = useNavigate();
   const { stocksData, selectedStock, setSelectedStock } = useStocksData();
+  console.log(selectedStock);
 
   const handleStockSelect = (selectedOption) => {
-    if (selectedOption != null) {
+    console.log("MEEEEEEEEEEEEEEEETHODDDDDDDDDDDDDD");
+    console.log(selectedStock);
+    if (selectedOption.value != null) {
       setSelectedStock(selectedOption);
       navigate(
         `/companies/${selectedOption.sector}/${selectedOption.value}/information`
       );
+    } else {
+      setSelectedStock("");
     }
   };
 
