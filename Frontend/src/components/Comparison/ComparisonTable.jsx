@@ -1,17 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomCard } from "../utils/CustomCard";
 import { useOutletContext } from "react-router-dom";
 import FinancialsTab from "../Financials/FinancialsTab";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import CustomButton from "../utils/CustomButton";
-import SelectionTitle from "./utils/SelectionTitle";
 import { BsCalendar3 } from "react-icons/bs";
 import { Container } from "react-bootstrap";
+import { useStocksData } from "../../contexts/StocksDataContext";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
-const FinancialsTable = () => {
-  const { stockFinancialData } = useOutletContext();
+const ComparisonTable = () => {
+  const { getStockFinancialData, getStockInformationData, stocksData } =
+    useStocksData();
+
+  const [stockInformationData, setStockInformationData] = useState();
+  const [stockFinancialData, setStockFinancialData] = useState();
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const maxSelected = 2; // Change this to your desired maximum limit
+  const animatedComponents = makeAnimated();
+
   const [selectedTab, setSelectedTab] = useState("Balance Sheet");
   const [displayAnnual, setDisplayAnnual] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedDataPromises = selectedOptions.map(async (option) => {
+          const symbol = option.value;
+          const financialData = await getStockFinancialData(symbol);
+          // You can also fetch stock information data here if needed
+          // const informationData = await getStockInformationData(symbol);
+          return financialData;
+        });
+
+        const fetchedData = await Promise.all(fetchedDataPromises);
+        // Combine the first elements of each specified array from the fetchedData array
+        const combinedObject = {
+          balanceSheet: [
+            fetchedData[0].balanceSheet[0],
+            fetchedData[1].balanceSheet[0],
+          ],
+          balanceSheetQuarterly: [
+            fetchedData[0].balanceSheetQuarterly[0],
+            fetchedData[1].balanceSheetQuarterly[0],
+          ],
+          cashFlow: [fetchedData[0].cashFlow[0], fetchedData[1].cashFlow[0]],
+          cashFlowQuarterly: [
+            fetchedData[0].cashFlowQuarterly[0],
+            fetchedData[1].cashFlowQuarterly[0],
+          ],
+          incomeSheet: [
+            fetchedData[0].incomeSheet[0],
+            fetchedData[1].incomeSheet[0],
+          ],
+          incomeSheetQuarterly: [
+            fetchedData[0].incomeSheetQuarterly[0],
+            fetchedData[1].incomeSheetQuarterly[0],
+          ],
+        };
+
+        // Set stock financial data
+        setStockFinancialData(combinedObject);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (selectedOptions.length > 0) {
+      fetchData();
+    }
+  }, [selectedOptions]);
 
   const handleTabClick = (tabKey) => {
     setSelectedTab(tabKey);
@@ -23,9 +81,29 @@ const FinancialsTable = () => {
 
   return (
     <div>
+      <Select
+        isMulti
+        options={
+          stocksData &&
+          stocksData.map((stock) => ({
+            value: stock.symbol,
+            label: `${stock.tradingNameAr} (${stock.symbol})`,
+            sector: stock.sectorNameEn,
+          }))
+        }
+        className="basic-multi-select"
+        classNamePrefix="select"
+        components={animatedComponents}
+        maxMenuHeight={200} // Adjust this value to set the maximum number of options displayed in the dropdown menu
+        value={selectedOptions}
+        onChange={(selected) => {
+          if (selected.length <= maxSelected) {
+            setSelectedOptions(selected);
+          }
+        }}
+      />
       {stockFinancialData ? (
         <CustomCard>
-          <SelectionTitle title={"القوائم المالية"} />
           <Container className="py-4">
             <div className="d-flex justify-content-between align-items-center pb-5">
               <ButtonGroup className="gap-2">
@@ -116,4 +194,4 @@ const FinancialsTable = () => {
   );
 };
 
-export default FinancialsTable;
+export default ComparisonTable;

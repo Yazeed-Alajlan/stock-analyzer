@@ -15,6 +15,7 @@ import FinancialesTable from "./components/StockPage/FinancialsTable";
 import axios from "axios";
 import StockChart from "./components/StockPage/StockChart";
 import Dividend from "./components/StockPage/Dividend";
+import ComparisonPage from "./pages/ComparisonPage";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -57,16 +58,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/companies/:sector" element={<CompaniesPage />} />
-
-          {/* <Route path="/companies/symbol/:symbol" element={<StockPage />} />
-          <Route
-            path="/companies/symbol/:symbol/information"
-            element={<StockInformation />}
-          />
-          <Route
-            path="/companies/symbol/:symbol/financials"
-            element={<FinancialesTable />}
-          /> */}
+          <Route path="/comparison" element={<ComparisonPage />} />
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />
@@ -74,8 +66,6 @@ function App() {
             <Route path="chart" element={<StockChart />} />
             <Route path="dividend" element={<Dividend />} />
           </Route>
-
-          <Route path="/market-summary" element={<MarketSummary />} />
         </Routes>
       </motion.div>
       <CustomSidebar {...{ sideBar, setSideBar }} />

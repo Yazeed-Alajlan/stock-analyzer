@@ -48,6 +48,9 @@ export const Header = ({ sideBar, setSideBar }) => {
               >
                 السوق
               </Nav.Link>
+              <Nav.Link as={Link} to="/comparison" onClick={handleStockSelect}>
+                قارن
+              </Nav.Link>
               {/* <Nav.Link as={Link} to="/market-summary">
                 Market Summary
               </Nav.Link> */}
