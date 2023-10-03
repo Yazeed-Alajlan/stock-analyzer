@@ -22,6 +22,27 @@
   left: 0;
 }
 
+.selected-link {
+  position: relative;
+  color: #757de8; /* Text color for the selected link */
+}
+
+.selected-link::after {
+  content: "";
+  position: absolute;
+  width: 100%; /* Full width */
+  height: 2px; /* Height of the line indicator */
+  background-color: #757de8; /* Color of the line indicator */
+  bottom: 0;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.selected-link:hover::after {
+  width: 100%; /* Keep the line indicator at full width on hover */
+  left: 0;
+}
+
 /*!
  * Bootstrap  v5.3.0 (https://getbootstrap.com/)
  * Copyright 2011-2023 The Bootstrap Authors

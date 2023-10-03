@@ -48,6 +48,25 @@ $theme-colors: (
   width: 100%;
   left: 0;
 }
+.selected-link {
+  position: relative;
+  color: $primary-light; /* Text color for the selected link */
+}
 
+.selected-link::after {
+  content: "";
+  position: absolute;
+  width: 100%; /* Full width */
+  height: 2px; /* Height of the line indicator */
+  background-color: $primary-light; /* Color of the line indicator */
+  bottom: 0;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.selected-link:hover::after {
+  width: 100%; /* Keep the line indicator at full width on hover */
+  left: 0;
+}
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
