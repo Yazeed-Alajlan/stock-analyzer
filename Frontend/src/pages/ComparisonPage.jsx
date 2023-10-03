@@ -5,7 +5,6 @@ const ComparisonPage = () => {
   return (
     <PageLayout>
       <ComparisonTable />
-      <div>adsads</div>
     </PageLayout>
   );
 };

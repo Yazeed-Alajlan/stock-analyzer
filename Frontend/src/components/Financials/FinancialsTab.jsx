@@ -1,7 +1,7 @@
 import HoverGraph from "./HoverGraph";
 import { Container, Table } from "react-bootstrap";
 
-const FinancialsTab = ({ title, data }) => {
+const FinancialsTab = ({ title, data, header }) => {
   const keys = data.length > 0 ? Object.keys(data[0]) : [];
   // Transpose the data
   const transposedData = keys.map((key) => ({
@@ -14,6 +14,19 @@ const FinancialsTab = ({ title, data }) => {
     <Container>
       <Table className="fs-5 table-light" responsive hover>
         <thead>
+          {header ? (
+            <tr>
+              <th>الشركة</th>
+              <th className="text-center" colSpan={2}>
+                {header[0]}
+              </th>
+              <th className="text-center" colSpan={2}>
+                {header[1]}
+              </th>
+            </tr>
+          ) : (
+            <></>
+          )}
           <tr>
             <th>{title}</th>
             {firstRowValues.map((value, index) => (

@@ -73,7 +73,7 @@ const StockInformation = () => {
                     </tr>
                     <tr>
                       <th>رأس المال</th>
-                      <th>{stockInformationData.capital[0].newCApital}</th>
+                      {/* <th>{stockInformationData.capital[0].newCApital}</th> */}
                     </tr>
                   </tbody>
                 </Table>

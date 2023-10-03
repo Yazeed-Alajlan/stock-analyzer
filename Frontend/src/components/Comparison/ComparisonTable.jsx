@@ -38,27 +38,46 @@ const ComparisonTable = () => {
         const combinedObject = {
           balanceSheet: [
             fetchedData[0].balanceSheet[0],
+            fetchedData[0].balanceSheet[1],
             fetchedData[1].balanceSheet[0],
+            fetchedData[1].balanceSheet[1],
           ],
           balanceSheetQuarterly: [
             fetchedData[0].balanceSheetQuarterly[0],
+            fetchedData[0].balanceSheetQuarterly[1],
             fetchedData[1].balanceSheetQuarterly[0],
+            fetchedData[1].balanceSheetQuarterly[1],
           ],
-          cashFlow: [fetchedData[0].cashFlow[0], fetchedData[1].cashFlow[0]],
+          cashFlow: [
+            fetchedData[0].cashFlow[0],
+            fetchedData[0].cashFlow[1],
+            fetchedData[1].cashFlow[0],
+            fetchedData[1].cashFlow[1],
+          ],
           cashFlowQuarterly: [
             fetchedData[0].cashFlowQuarterly[0],
+            fetchedData[0].cashFlowQuarterly[1],
             fetchedData[1].cashFlowQuarterly[0],
+            fetchedData[1].cashFlowQuarterly[1],
           ],
           incomeSheet: [
             fetchedData[0].incomeSheet[0],
+            fetchedData[0].incomeSheet[1],
             fetchedData[1].incomeSheet[0],
+            fetchedData[1].incomeSheet[1],
           ],
           incomeSheetQuarterly: [
             fetchedData[0].incomeSheetQuarterly[0],
+            fetchedData[0].incomeSheetQuarterly[1],
             fetchedData[1].incomeSheetQuarterly[0],
+            fetchedData[1].incomeSheetQuarterly[1],
+          ],
+          tradingNameAr: [
+            fetchedData[0].tradingNameAr,
+            fetchedData[1].tradingNameAr,
           ],
         };
-
+        console.log(combinedObject);
         // Set stock financial data
         setStockFinancialData(combinedObject);
       } catch (error) {
@@ -81,29 +100,47 @@ const ComparisonTable = () => {
 
   return (
     <div>
-      <Select
-        isMulti
-        options={
-          stocksData &&
-          stocksData.map((stock) => ({
-            value: stock.symbol,
-            label: `${stock.tradingNameAr} (${stock.symbol})`,
-            sector: stock.sectorNameEn,
-          }))
-        }
-        className="basic-multi-select"
-        classNamePrefix="select"
-        components={animatedComponents}
-        maxMenuHeight={200} // Adjust this value to set the maximum number of options displayed in the dropdown menu
-        value={selectedOptions}
-        onChange={(selected) => {
-          if (selected.length <= maxSelected) {
-            setSelectedOptions(selected);
-          }
-        }}
-      />
-      {stockFinancialData ? (
-        <CustomCard>
+      <CustomCard>
+        <p className="fs-4 fw-bold">اختر شركتين للمقارنة من نفس القطاع :</p>
+        <div className="w-50">
+          <Select
+            isMulti
+            options={
+              stocksData &&
+              stocksData
+                .filter((stock) => {
+                  // Filter out stocks that do not match the sector of selectedOptions
+                  if (
+                    selectedOptions.length === 0 ||
+                    selectedOptions.every(
+                      (selectedOption) =>
+                        selectedOption.sector === stock.sectorNameEn
+                    )
+                  ) {
+                    return true;
+                  }
+                  return false;
+                })
+                .map((stock) => ({
+                  value: stock.symbol,
+                  label: `${stock.tradingNameAr} (${stock.symbol})`,
+                  sector: stock.sectorNameEn,
+                }))
+            }
+            className="basic-multi-select"
+            classNamePrefix="select"
+            components={animatedComponents}
+            maxMenuHeight={200}
+            value={selectedOptions}
+            onChange={(selected) => {
+              if (selected.length <= maxSelected) {
+                setSelectedOptions(selected);
+              }
+            }}
+          />
+        </div>
+
+        {stockFinancialData && selectedOptions.length == 2 ? (
           <Container className="py-4">
             <div className="d-flex justify-content-between align-items-center pb-5">
               <ButtonGroup className="gap-2">
@@ -157,6 +194,10 @@ const ComparisonTable = () => {
               {selectedTab === "Balance Sheet" && (
                 <FinancialsTab
                   title={"المركز المالي"}
+                  header={
+                    (stockFinancialData.tradingNameAr,
+                    stockFinancialData.tradingNameAr)
+                  }
                   data={
                     displayAnnual
                       ? stockFinancialData.balanceSheet
@@ -167,6 +208,10 @@ const ComparisonTable = () => {
               {selectedTab === "Statment of Income" && (
                 <FinancialsTab
                   title={"قائمة الدخل"}
+                  header={
+                    (stockFinancialData.tradingNameAr,
+                    stockFinancialData.tradingNameAr)
+                  }
                   data={
                     displayAnnual
                       ? stockFinancialData.incomeSheet
@@ -177,6 +222,10 @@ const ComparisonTable = () => {
               {selectedTab === "Cash Flow" && (
                 <FinancialsTab
                   title={"التدفق النقدي"}
+                  header={
+                    (stockFinancialData.tradingNameAr,
+                    stockFinancialData.tradingNameAr)
+                  }
                   data={
                     displayAnnual
                       ? stockFinancialData.cashFlow
@@ -186,10 +235,12 @@ const ComparisonTable = () => {
               )}
             </div>
           </Container>
-        </CustomCard>
-      ) : (
-        <p>Loading...</p>
-      )}
+        ) : selectedOptions.length != 2 ? (
+          <></>
+        ) : (
+          <p>loading</p>
+        )}
+      </CustomCard>
     </div>
   );
 };
