@@ -21,7 +21,7 @@ async function runScript() {
     console.log("Script is Running");
     const data = await getSymbols();
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       defaultViewport: null,
     });
     const page = await browser.newPage();
@@ -32,7 +32,7 @@ async function runScript() {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
-          // stock.symbol == "2222" &&
+          stock.symbol == "4321" &&
           !stock.companyNameEN.includes("REIT")
         ) {
           var url =
@@ -74,15 +74,15 @@ async function getForeignOwnership(stock, browser, page) {
         console.error(`cannot find selector ${selector}`);
       }
     }, selector);
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(2500);
     await page.click(
-      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(13) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
     );
 
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(2500);
 
     const data = await page.$eval(
-      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(13) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
       (element) => element.textContent
     );
     saveStockforeignOwnership(stock, data.trim());
