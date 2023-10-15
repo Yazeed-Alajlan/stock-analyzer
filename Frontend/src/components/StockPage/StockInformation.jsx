@@ -72,8 +72,8 @@ const StockInformation = () => {
                       </th>
                     </tr>
                     <tr>
-                      <th>رأس المال</th>
-                      {/* <th>{stockInformationData.capital[0].newCApital}</th> */}
+                      <th> رأس المال المصرّح</th>
+                      <th>{stockInformationData.capital[0].newCApital}</th>
                     </tr>
                   </tbody>
                 </Table>
