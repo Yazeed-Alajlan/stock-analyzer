@@ -4,16 +4,17 @@ import StockInformation from "../models/stockInformation.js";
 
 async function runScript() {
   try {
-    console.log("Script is Running");
-    const data = await getSymbols();
     const browser = await puppeteer.launch({
       headless: true,
       defaultViewport: null,
     });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(2 * 60 * 1000);
+    console.log("Script is Running");
 
-    for (const stock of data) {
+    const stocksData = await getStocksInformation();
+
+    for (const stock of stocksData) {
       try {
         if (
           stock.symbol.length == 4 &&
@@ -26,13 +27,10 @@ async function runScript() {
             stock.symbol;
           console.log(stock.symbol);
           await page.goto(url);
-          await page.waitForSelector("#statementofincome", {
-            timeout: 60000,
-          });
 
-          // await getFinancialsDataForStocks(stock, browser, page);
-          await getForeignOwnership(stock, browser, page);
-          // await getStockProfile(stock, browser, page);
+          await getFinancials(stock, page);
+          await getForeignOwnership(stock, page);
+          await getStockProfile(stock, page);
         }
       } catch (error) {
         console.error("Error in loop iteration:", error);
@@ -46,37 +44,7 @@ async function runScript() {
     console.error("Error:", error);
   }
 }
-async function getForeignOwnership(stock, browser, page) {
-  try {
-    // Extract data
-    const selector = ".shareholding";
-    await page.waitForSelector(selector);
-    await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      if (element) {
-        element.scrollTop = element.offsetHeight;
-        console.error(`Scrolled to selector ${selector}`);
-      } else {
-        console.error(`cannot find selector ${selector}`);
-      }
-    }, selector);
-    await page.waitForTimeout(1500);
-    await page.click(
-      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
-    );
-
-    await page.waitForTimeout(1500);
-
-    const data = await page.$eval(
-      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
-      (element) => element.textContent
-    );
-    saveStockforeignOwnership(stock, data.trim());
-  } catch (e) {
-    console.error("scrape faild!: \n", e);
-  }
-}
-async function getFinancialsDataForStocks(stock, browser, page) {
+async function getFinancials(stock, page) {
   try {
     // Extract data
     const selector = "#statementofincome";
@@ -85,9 +53,8 @@ async function getFinancialsDataForStocks(stock, browser, page) {
       const element = document.querySelector(selector);
       if (element) {
         element.scrollTop = element.offsetHeight;
-        console.error(`Scrolled to selector ${selector}`);
       } else {
-        console.error(`cannot find selector ${selector}`);
+        console.log(`cannot find selector ${selector}`);
       }
     }, selector);
     await page.waitForTimeout(1500);
@@ -140,13 +107,42 @@ async function getFinancialsDataForStocks(stock, browser, page) {
       incomeStatementData,
       cashFlowData,
     });
-
-    // fs.writeFileSync("data.json", JSON.stringify(data));
   } catch (e) {
     console.error("scrape faild!: \n", e);
   }
 }
-async function getStockProfile(stock, browser, page) {
+async function getForeignOwnership(stock, page) {
+  try {
+    // Extract data
+    const selector = ".shareholding";
+    await page.waitForSelector(selector);
+    await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollTop = element.offsetHeight;
+        console.error(`Scrolled to selector ${selector}`);
+      } else {
+        console.error(`cannot find selector ${selector}`);
+      }
+    }, selector);
+    await page.waitForTimeout(1500);
+    await page.click(
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
+    );
+
+    await page.waitForTimeout(1500);
+
+    const data = await page.$eval(
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(12) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
+      (element) => element.textContent
+    );
+    saveStockforeignOwnership(stock, data.trim());
+  } catch (e) {
+    console.error("scrape faild!: \n", e);
+  }
+}
+
+async function getStockProfile(stock, page) {
   try {
     // Extract data
     const selector = ".inspectionBox";
@@ -240,12 +236,12 @@ async function runStockInformationScript() {
     throw error;
   }
 }
-async function getSymbols() {
+async function getStocksInformation() {
   try {
-    const data = await StockInformation.find({
-      companyNameEN: { $not: { $regex: /REIT/i } }, // Case-insensitive check for "REIT"
-    });
-    return data;
+    // const data = await StockInformation.find({
+    //   companyNameEN: { $not: { $regex: /REIT/i } }, // Case-insensitive check for "REIT"
+    // });
+    return StockInformation.find();
   } catch (error) {
     console.error("Error:", error);
     throw error;
