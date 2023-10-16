@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { runScript, getSymbols } from "./scraper/tadawul.js";
+import { runScript, getStocksInformation } from "./scraper/tadawul.js";
 import StockFinancials from "./models/stockFinancials.js";
 import StockInformation from "./models/stockInformation.js";
 import yahooFinance from "yahoo-finance2";
@@ -106,6 +106,16 @@ app.get("/companies/:sectorName?", async (req, res) => {
     } else {
       res.json(symbolsWithSectors);
     }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the symbols." });
+  }
+});
+app.get("/api/companies", async (req, res) => {
+  try {
+    const stocksInformationData = await getStocksInformation();
+    res.json(stocksInformationData);
   } catch (error) {
     res
       .status(500)

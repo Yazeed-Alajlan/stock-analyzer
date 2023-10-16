@@ -5,7 +5,7 @@ import StockInformation from "../models/stockInformation.js";
 async function runScript() {
   try {
     console.log("Script is Running");
-    const data = await getSymbols();
+    const stocksData = await getStocksInformation();
     const browser = await puppeteer.launch({
       headless: false,
       defaultViewport: null,
@@ -13,7 +13,7 @@ async function runScript() {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(2 * 60 * 1000);
 
-    for (const stock of data) {
+    for (const stock of stocksData) {
       try {
         if (
           stock.symbol.length == 4 &&
@@ -240,7 +240,7 @@ async function runStockInformationScript() {
     throw error;
   }
 }
-async function getSymbols() {
+async function getStocksInformation() {
   try {
     const data = await StockInformation.find({
       companyNameEN: { $not: { $regex: /REIT/i } }, // Case-insensitive check for "REIT"
@@ -524,13 +524,6 @@ function getQuarterlyAndAnnuallyData(data) {
   return { annually, quarterly };
 }
 
-export {
-  getSymbols,
-  getSymbolsWithSectors,
-  runScript,
-  runStockInformationScript,
-};
-
 function extractHeadersAsColumns(data) {
   // No data available in table
   if (data.length == 1) return;
@@ -558,3 +551,10 @@ function extractHeadersAsColumns(data) {
     return columnData;
   }
 }
+
+export {
+  getStocksInformation,
+  getSymbolsWithSectors,
+  runScript,
+  runStockInformationScript,
+};
