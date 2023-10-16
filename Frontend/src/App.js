@@ -2,10 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Route, Routes } from "react-router-dom";
 
-import CustomSidebar from "./components/utils/CustomSidebar";
+import Sidebar from "./components/routing/Sidebar";
 import CusotmModal from "./components/utils/CusotmModal";
 import StockPage from "./components/StockPage/StockPage";
-import { Header } from "./components/utils/Header";
+import { Header } from "./components/routing/Header";
 import { Container } from "react-bootstrap";
 import HomePage from "./pages/HomePage";
 import MarketSummary from "./pages/MarketSummary";
@@ -68,7 +68,7 @@ function App() {
           </Route>
         </Routes>
       </motion.div>
-      <CustomSidebar {...{ sideBar, setSideBar }} />
+      <Sidebar {...{ sideBar, setSideBar }} />
       <CusotmModal {...{ modal, setModal }} />
     </Container>
   );

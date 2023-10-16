@@ -1,7 +1,7 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const CustomSidebar = ({ sideBar = false, setSideBar = () => {} }) => {
+const Sidebar = ({ sideBar = false, setSideBar = () => {} }) => {
   return (
     <AnimatePresence>
       {sideBar && (
@@ -45,4 +45,4 @@ const CustomSidebar = ({ sideBar = false, setSideBar = () => {} }) => {
   );
 };
 
-export default CustomSidebar;
+export default Sidebar;

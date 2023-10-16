@@ -79,13 +79,14 @@ export const Header = ({ sideBar, setSideBar }) => {
             </Nav>
           </div>
 
+          {/* 
           <button
             onClick={() => {
               setSideBar(!sideBar);
             }}
           >
             SideBar
-          </button>
+          </button> */}
 
           <Select
             className="w-25"
