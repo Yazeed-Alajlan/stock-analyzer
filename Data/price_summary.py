@@ -4,7 +4,7 @@ import numpy as np
 
 # Define the stock symbol and date range
 stock_symbol = '2222.SR'  
-start_date = '2020-01-01'
+start_date = '2022-06-01'
 end_date = '2022-12-31'  
 
 # Fetch stock data from Yahoo Finance
@@ -42,21 +42,28 @@ print(average_monthly_changes)
 #------------------------------------------------------------------------------------------------------------------------
 
 
-# Extract the year and day of the week from the Date index
-df['Year'] = df.index.year
-df['DayOfWeek'] = df.index.dayofweek  # 0 = Monday, 1 = Tuesday, ..., 6 = Sunday
+# df['Day_Name'] = df.index.day_name()
+# historical_data=df
+# # Add a new column for the day names
 
-# Filter out data for Fridays (dayofweek == 4) and Saturdays (dayofweek == 5)
-df = df[(df['DayOfWeek'] != 4) & (df['DayOfWeek'] != 5)]
+# # Group the data by both month and day of the week and calculate the average close price
+# monthly_daily_avg = historical_data.groupby([historical_data.index.year, historical_data.index.month, historical_data['Day_Name']])['Close'].mean()
 
-# Calculate the average close price for each day of the week for each year
-average_prices = df.groupby(['Year', 'DayOfWeek'])['Close'].mean().reset_index()
+# # Print the average close price for each day of the week for every month
+# print(monthly_daily_avg)
 
-# Define a dictionary to map day numbers to day names
-day_names = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 6: 'Sunday'}
 
-# Iterate through each year and day of the week to print the average close price
-for _, row in average_prices.iterrows():
-    year, day_of_week, avg_price = int(row['Year']), int(row['DayOfWeek']), row['Close']
-    day_name = day_names.get(day_of_week, 'Unknown')
-    print(f"Year: {year}, Day: {day_name}, Average Close Price: {avg_price:.2f}")
+# # Calculate the percentage change
+# historical_data['Percentage_Change'] = ((historical_data['Close'] - historical_data['Open']) / historical_data['Open']) * 100
+
+# # Calculate the average percentage change
+# average_percentage_change = historical_data['Percentage_Change'].mean()
+
+# # Print the average percentage change
+# print(f"The average percentage change is {average_percentage_change:.2f}%")
+
+# # Group the data by both month and day of the week and calculate the average percentage change
+# monthly_daily_avg_percentage_change = historical_data.groupby([historical_data.index.year, historical_data.index.month, historical_data['Day_Name']])['Percentage_Change'].mean()
+
+# # Print the average percentage change for each day of the week within each month
+# print(monthly_daily_avg_percentage_change)
