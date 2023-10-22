@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 def is_consolidating(df, percentage=2):
     # Get last "n" candlesticks closes
     recent_candlesticks = df[-15:]
-    print(recent_candlesticks)
+    # print(recent_candlesticks)
     max_close = recent_candlesticks['Close'].max()
     min_close = recent_candlesticks['Close'].min()
 
@@ -25,7 +25,7 @@ def is_consolidating(df, percentage=2):
 
 def is_breaking_out(df, percentage=2.5):
     last_close = df[-1:]['Close'].values[0]
-
+    print(last_close)
     if is_consolidating(df[:-1], percentage=percentage):
         recent_closes = df[-16:-1]
 
@@ -69,14 +69,11 @@ def pattern_recognition(df,m,k):
     plt.show()
 
 def prepData():
-    df=yf.download("2222.SR", start="2020-01-1", end="2023-10-12")
+    df=yf.download("2222.SR", start="2020-01-1", end="2023-07-7")
     df.reset_index(inplace=True)
     ## Start index with 1
     # df.index = np.arange(1, len(df) + 1)
     return df
 
 df=prepData()
-pattern_recognition(df,90,2)
-pattern_recognition(df,40,2)
-pattern_recognition(df,20,2)
-pattern_recognition(df,60,2)
+print(is_breaking_out(df, percentage=3))
