@@ -7,7 +7,7 @@ import mplfinance as mpf
 import yfinance as yf
 
 
-def vsa_indicator(data: pd.DataFrame, norm_lookback: int = 168):
+def vsa_indicator(data: pd.DataFrame, norm_lookback: int = 680):
     # Norm lookback should be fairly large
 
     atr = ta.atr(data['High'], data['Low'], data['Close'], norm_lookback)
@@ -32,7 +32,7 @@ def vsa_indicator(data: pd.DataFrame, norm_lookback: int = 168):
        
         pred_range = intercept + slope * norm_vol[i]
         range_dev[i] = norm_range[i] - pred_range
-        
+    print(range_dev)
     return pd.Series(range_dev, index=data.index)
 
 
@@ -41,10 +41,12 @@ def plot_around(data: pd.DataFrame, i: int, above: bool, threshold: float = 0.90
         extremes = data[data['dev'] > threshold]
     else:
         extremes = data[data['dev'] < -threshold]
+    print(extremes)
     if i >= len(extremes):
         raise ValueError(f"i is too big, use less than {len(extremes)}")
     t =  extremes.index[i]
-    td = pd.Timedelta(hours=24)
+    td = pd.Timedelta(hours=680)
+    print(td,t)
     surrounding = data.loc[t - td: t + td]
     
     plt.style.use('dark_background')
@@ -61,14 +63,13 @@ def plot_around(data: pd.DataFrame, i: int, above: bool, threshold: float = 0.90
 # data['date'] = data['date'].astype('datetime64[s]')
 # data = data.set_index('date')
 
-data = yf.download('2222.SR', start='2023-01-01', end='2023-10-01', interval='1h')
+data = yf.download('2222.SR', start='2022-01-01', end='2023-10-01',interval="1h")
 data['Datetime'] = data.index  # Create a new column with the datetime index
 data['Datetime'] = pd.to_datetime(data['Datetime'])  # Convert the 'Datetime' column to a datetime data type
-
 data = data.set_index('Datetime')
+
 print(data)
 data['dev'] = vsa_indicator(data, 168)
-
-plot_around(data, 3, False, 1.0)
+plot_around(data, 21, True, 1.0)
 
 
