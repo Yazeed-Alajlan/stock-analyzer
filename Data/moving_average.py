@@ -5,9 +5,15 @@ import matplotlib.pyplot as plt
 def prepData(sma_period):
     df = yf.download("2222.SR", start="2020-01-1", end="2023-10-19")
     df.reset_index(inplace=True)
+
+    atr_period = 14
+    df['ATR'] = talib.ATR(df['High'], df['Low'], df['Close'], timeperiod=atr_period)
     df[f'SMA_{sma_period}'] = talib.SMA(df['Close'], timeperiod=sma_period)
-    df['Upper_Bound'] = df[f'SMA_{sma_period}'] + 0.025 * df['Close']
-    df['Lower_Bound'] = df[f'SMA_{sma_period}'] - 0.025 * df['Close']
+
+    # Calculate upper and lower bounds
+    df['Upper_Bound'] = df[f'SMA_{sma_period}'] + 0.5 * df['ATR']
+    df['Lower_Bound'] = df[f'SMA_{sma_period}'] - 0.5 * df['ATR']
+
     return df
 
 def calculateBreakouts(df, sma_period):
@@ -40,15 +46,16 @@ def calculatePenetrations(df, sma_period):
             
     return penetration_count, penetration_indices
 
+
 def findBestSMA(max_period):
     best_sma = 0
     best_count = 0
 
-    for sma_period in range(2,max_period ):
+    for sma_period in range(2, max_period):
         data = prepData(sma_period)
         breakout_count, _ = calculateBreakouts(data, sma_period)
         penetration_count, _ = calculatePenetrations(data, sma_period)
-        total_count = breakout_count + penetration_count
+        total_count = breakout_count + penetration_count 
         print(f"SMA_{sma_period} Breakouts: {breakout_count}, Penetrations: {penetration_count}")
         if total_count > best_count:
             best_count = total_count
@@ -56,7 +63,9 @@ def findBestSMA(max_period):
 
     return best_sma, best_count
 
-max_sma_period = 20
+
+
+max_sma_period = 5
 best_sma, best_count = findBestSMA(max_sma_period)
 
 data = prepData(best_sma)
@@ -85,6 +94,8 @@ penetration_dates = data['Date'][penetration_indices]
 penetration_prices = data['Close'][penetration_indices]
 ax.scatter(penetration_dates, penetration_prices, marker='v', color='red', label='Penetration')
 
+
+
 # Set labels and title
 ax.set_xlabel('Date')
 ax.set_ylabel('Price')
@@ -96,4 +107,4 @@ ax.legend()
 # Show the plot
 plt.show()
 
-print(f"The best SMA period is {best_sma} with a total count of {best_count} breakouts and penetrations.")
+print(f"The best SMA period is {best_sma} with a total count of {best_count} breakouts, {penetration_count} penetrations, and {bounce_count} bounces.")
