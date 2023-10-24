@@ -3,39 +3,69 @@ import yfinance as yf
 import pandas as pd
 
 
+import talib
+import yfinance as yf
+import pandas as pd
 
-def analyze_candlestick_pattern(symbol, pattern):
-    data = yf.download(symbol, start="2020-01-01", end="2020-08-01")
-    try:
-        pattern_function = getattr(talib, pattern)
-        results = pattern_function(data['Open'], data['High'], data['Low'], data['Close'])
-        last = results.tail(1).values[0]
+# Replace this code to get symbols from your preferred source
 
-        if last > 0:
-            return 'bullish'
-        elif last < 0:
-            return 'bearish'
-        else:
-            return None
-    except Exception as e:
-        return 'Failed'
+def analyze_patterns(pattern,symbols):
+    print(results[results !=0])
 
-def main():
-    # Specify the stock symbols and candlestick pattern to analyze
-    symbols = ['SPY', 'GOOGL', 'MSFT']  # Add more symbols as needed
-    pattern = 'CDLENGULFING'  # Change this to the pattern you want to analyze
-
-    results = {}
-
+    stocks = {}
     for symbol in symbols:
-        result = analyze_candlestick_pattern(symbol, pattern)
-        results[symbol] = result
+        data = yf.download(symbol, start="2020-01-01", end="2020-03-24")
+        pattern_function = getattr(talib, pattern)
 
-    for symbol, result in results.items():
-        print(f"Symbol: {symbol}, {pattern}: {result}")
+        try:
+            results = pattern_function(data['Open'], data['High'], data['Low'], data['Close'])
+            last = results.iloc[-1]
+            if last > 0:
+                stocks[symbol] = 'bullish'
+            elif last < 0:
+                stocks[symbol] = 'bearish'
+            else:
+                stocks[symbol] = None
+        except Exception as e:
+            print('Failed for symbol: ', symbol)
+
+    return stocks
+
+def find_patterns(pattern,symbols):
+    patter_days = {}
+    for symbol in symbols:
+        data = yf.download(symbol, start="2020-01-01", end="2020-08-01")
+        pattern_function = getattr(talib, pattern)
+
+        try:
+            results = pattern_function(data['Open'], data['High'], data['Low'], data['Close'])
+            patter_days[symbol] = results[results !=0]
+        except Exception as e:
+            print('Failed for symbol: ', symbol)
+
+    return patter_days
+
 
 if __name__ == "__main__":
-    main()
+    patterns = ["CDLDOJI", "CDLENGULFING", "CDLHAMMER"]  # Replace with your list of patterns to test
+    symbols = ['AAPL', 'SPY', 'TSLA']  # Replace with your list of stock symbols
+    # stocks = analyze_patterns(pattern[0],symbols)
+
+    
+    print(f"Results for the following patterns:")
+    for pattern in patterns:
+        print(f"Pattern: {pattern}")
+        for symbol in symbols:
+            result = find_patterns(pattern,symbols)
+            # print(f"Symbol: {symbol}, {pattern}: {result}")
+            print(result)
+
+
+    # print(f"Results for {pattern} pattern:")
+    # for symbol, pattern_result in stocks.items():
+    #     print(f"Symbol: {symbol}, Pattern: {pattern_result}")
+
+
 
 candlestick_patterns = {
     'CDL2CROWS':'Two Crows',
