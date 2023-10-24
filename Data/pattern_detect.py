@@ -76,4 +76,5 @@ def prepData():
     return df
 
 df=prepData()
+print(is_consolidating(df, percentage=3))
 print(is_breaking_out(df, percentage=3))
