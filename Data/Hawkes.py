@@ -4,6 +4,7 @@ import pandas_ta as ta
 import matplotlib.pyplot as plt
 import scipy 
 import yfinance as yf
+import seaborn as sns
 
 def plot_two_axes(series1, *ex_series):
     plt.style.use('dark_background')
@@ -106,15 +107,50 @@ def get_trades_from_signal(data: pd.DataFrame, signal: np.array):
 def prepData():
     df = yf.download('2222.SR', start='2022-01-01', end='2023-10-01',interval="1h")
     df = df.rename(columns={col: col.lower() for col in df.columns})
-
-    original_timezone = 'Etc/GMT-3'
-    desired_timezone = 'Etc/GMT'  
     df.index = df.index.strftime('%Y-%m-%d %H:%M:%S')
     print(df)
 
     return df
 
-data = prepData()
+def plot_price_and_hawkes(data):
+    data['q05'] = data['v_hawk'].rolling(168).quantile(0.05)
+    data['q95'] = data['v_hawk'].rolling(168).quantile(0.95)
+    plt.style.use('dark_background')
+    plt.figure(figsize=(12, 6))
+    data = data['2020-01-01':'2020-12-31']
+
+    # Create the first y-axis for price data
+    ax1 = plt.gca()
+    ax1.plot(data.index, np.log(data['close']), color='blue', label='Price Data')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Log Price', color='blue')
+
+    # Create the second y-axis for the Hawkes Process
+    ax2 = ax1.twinx()
+    ax2.plot(data.index, data['v_hawk'], color='green', label='Hawkes Process')
+    ax2.set_ylabel('Hawkes Process Value', color='green')
+
+    # Create the third y-axis for q05 and q95
+    ax1.fill_between(data.index, data['q05'], data['q95'], color='orange', alpha=0.5, label='Q05-Q95 Range')
+
+    # Set a common title
+    plt.title('Price Data, Hawkes Process, and Quantiles Chart')
+    plt.grid(True)
+
+    # Show a legend for all series
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+
+    # Show the plot
+    plt.show()
+
+
+# data = prepData()
+
+data = pd.read_csv('BTCUSDT3600.csv')
+data['date'] = data['date'].astype('datetime64[s]')
+data = data.set_index('date')
 
 # Normalize volume
 norm_lookback = 336
@@ -133,6 +169,7 @@ signal_pf = win_returns / lose_returns
 plt.style.use('dark_background')
 data['signal_return'].cumsum().plot()
 
+plot_price_and_hawkes(data)
 
 
 
@@ -155,29 +192,27 @@ print("Time In Market", time_in_market)
 
 
 
-'''
+
 # Code for the heatmap
-kappa_vals = [0.5, 0.25, 0.1, 0.05, 0.01]
-lookback_vals = [24, 48, 96, 168, 336] 
-pf_df = pd.DataFrame(index=lookback_vals, columns=kappa_vals)
+# kappa_vals = [0.5, 0.25, 0.1, 0.05, 0.01]
+# lookback_vals = [24, 48, 96, 168, 336] 
+# pf_df = pd.DataFrame(index=lookback_vals, columns=kappa_vals)
 
-for lb in lookback_vals:
-    for k in kappa_vals:
-        data['v_hawk'] = hawkes_process(data['norm_range'], k)
-        data['sig'] = vol_signal(data['close'], data['v_hawk'], lb)
+# for lb in lookback_vals:
+#     for k in kappa_vals:
+#         data['v_hawk'] = hawkes_process(data['norm_range'], k)
+#         data['sig'] = vol_signal(data['close'], data['v_hawk'], lb)
 
-        data['next_return'] = np.log(data['close']).diff().shift(-1)
-        data['signal_return'] = data['sig'] * data['next_return']
-        win_returns = data[data['signal_return'] > 0]['signal_return'].sum()
-        lose_returns = data[data['signal_return'] < 0]['signal_return'].abs().sum()
-        signal_pf = win_returns / lose_returns
+#         data['next_return'] = np.log(data['close']).diff().shift(-1)
+#         data['signal_return'] = data['sig'] * data['next_return']
+#         win_returns = data[data['signal_return'] > 0]['signal_return'].sum()
+#         lose_returns = data[data['signal_return'] < 0]['signal_return'].abs().sum()
+#         signal_pf = win_returns / lose_returns
 
-        pf_df.loc[lb, k] = float(signal_pf)
+#         pf_df.loc[lb, k] = float(signal_pf)
     
-plt.style.use('dark_background')
-import seaborn as sns
-pf_df = pf_df.astype(float)
-sns.heatmap(pf_df, annot=True, fmt='f')
-plt.xlabel('Hawkes Kappa')
-plt.ylabel('Threshold Lookback')
-'''
+# plt.style.use('dark_background')
+# pf_df = pf_df.astype(float)
+# sns.heatmap(pf_df, annot=True, fmt='f')
+# plt.xlabel('Hawkes Kappa')
+# plt.ylabel('Threshold Lookback')
