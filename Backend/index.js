@@ -38,23 +38,52 @@ app.post("/api/predict", async (req, res) => {
     // pythonPath: "C:/Users/Yazee/Desktop/stock-analyzer/venv/Scripts/python.exe",
     // scriptPath: "C:/Users/Yazee/Desktop/stock-analyzer/Data", // Replace with the path to your Python scripts
     // args: [JSON.stringify(data)],
-    args: ["fjdjfkjfdfd", "sadsadsadsad"],
+    args: ["getMonthSummary"],
   };
-  console.log("hiiiiii");
-  console.log(
-    await PythonShell.run("test.py", options, (err, result) => {
+  console.log(data);
+
+  const pythonData = await PythonShell.run(
+    "price_summary.py",
+    options,
+    (err, result) => {
       console.log("heheheh");
       if (err) {
         console.error(err);
         res.status(500).json({ error: "Error in Python script" });
       } else {
-        console.log("hi from res");
         console.log(res);
         const prediction = JSON.parse(result[0]);
         res.json({ prediction });
       }
-    })
+    }
   );
+  console.log(pythonData);
+  res.json(pythonData);
+});
+app.get("/api/predict", async (req, res) => {
+  const options = {
+    //DESKTOP
+    pythonPath:
+      "C:/Users/Yazeed/AppData/Local/Programs/Python/Python310/python.exe",
+    scriptPath: "../Data/",
+    args: ["getMonthSummary"],
+  };
+  const pythonData = await PythonShell.run(
+    "price_summary.py",
+    options,
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error in Python script" });
+      } else {
+        console.log(res);
+        const prediction = JSON.parse(result[0]);
+        res.json({ prediction });
+      }
+    }
+  );
+  console.log(pythonData[5]);
+  res.json(pythonData[5]);
 });
 
 app.post("/api/register", async (req, res) => {

@@ -2,7 +2,6 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import sys
-import json
 
 
 def fetch_stock_data(stock_symbol, start_date, end_date):
@@ -52,44 +51,41 @@ if __name__ == "__main__":
     end_date = '2022-12-31'
 
     df = fetch_stock_data(stock_symbol, start_date, end_date)
-    try:
-        for arg in sys.argv:
-            #print(arg)
-                
-            if arg == "getMonthSummary":
-                print(json.dumps(calculate_monthly_price_changes(df).to_list()))
+    monthly_price_changes = calculate_monthly_price_changes(df)
 
-            # elif arg == "datetime":
-            #     use_datetime()
+    best_month_to_trade, highest_monthly_price_change = find_highest_monthly_price_change(monthly_price_changes)
+    print("\nHighest Monthly Price Change:")
+    print(f"Month: {best_month_to_trade.strftime('%B %Y')}")
+    print(f"Price Change: {highest_monthly_price_change:.2f}%")
 
-            else:
-                print("An arg passed: ", arg)
+    best_month_percentage_changes = find_best_month_percentage_changes(monthly_price_changes)
+    print("Best Month and Percentage Change for Each Year:")
+    print(best_month_percentage_changes)
 
-    except Exception as error:
-        print(f"Error: {str(error)}") 
+    average_monthly_changes = calculate_average_monthly_changes(monthly_price_changes)
+    print("Average Price Change for Each Month:")
+    print(average_monthly_changes)
 
+    df['Day_Name'] = df.index.day_name()
+    average_percentage_change = calculate_average_percentage_change(df)
+    print(f"The average percentage change is {average_percentage_change:.2f}%")
 
-
-    # monthly_price_changes = calculate_monthly_price_changes(df)
-
-    # best_month_to_trade, highest_monthly_price_change = find_highest_monthly_price_change(monthly_price_changes)
-    # print("\nHighest Monthly Price Change:")
-    # print(f"Month: {best_month_to_trade.strftime('%B %Y')}")
-    # print(f"Price Change: {highest_monthly_price_change:.2f}%")
-
-    # best_month_percentage_changes = find_best_month_percentage_changes(monthly_price_changes)
-    # print("Best Month and Percentage Change for Each Year:")
-    # print(best_month_percentage_changes)
-
-    # average_monthly_changes = calculate_average_monthly_changes(monthly_price_changes)
-    # print("Average Price Change for Each Month:")
-    # print(average_monthly_changes)
-
-    # df['Day_Name'] = df.index.day_name()
-    # average_percentage_change = calculate_average_percentage_change(df)
-    # print(f"The average percentage change is {average_percentage_change:.2f}%")
-
-    # monthly_daily_avg_percentage_change = calculate_monthly_daily_avg_percentage_change(df)
-    # print(monthly_daily_avg_percentage_change)
+    monthly_daily_avg_percentage_change = calculate_monthly_daily_avg_percentage_change(df)
+    print(monthly_daily_avg_percentage_change)
 
 
+# try:
+#     for arg in sys.argv:
+#         #print(arg)
+            
+#         if arg == "time":
+#             use_time()
+
+#         elif arg == "datetime":
+#             use_datetime()
+
+#         else:
+#             print("An arg passed: ", arg)
+
+# except Exception as error:
+#     print(f"Error: {str(error)}") 

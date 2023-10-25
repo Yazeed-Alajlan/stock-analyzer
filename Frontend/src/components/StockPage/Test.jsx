@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 function Test() {
   const [data, setData] = useState({ inputFeature: 0 });
@@ -11,12 +12,26 @@ function Test() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data }),
+      body: JSON.stringify({ data: data.inputFeature }), // Send the inputFeature value
     })
       .then((response) => response.json())
       .then((data) => setPrediction(data.prediction))
       .catch((error) => console.error(error));
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = "http://localhost:5000/api/predict";
+        const response = await axios.get(url);
+        console.log("fetch data");
+        setPrediction(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -27,6 +42,7 @@ function Test() {
       />
       <button onClick={handlePredict}>Predict</button>
       {prediction && <p>Prediction: {prediction}</p>}
+      <div>adssad</div>
     </div>
   );
 }
