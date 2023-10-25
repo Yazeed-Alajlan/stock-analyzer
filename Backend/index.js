@@ -30,6 +30,11 @@ app.post("/api/predict", async (req, res) => {
   const { data } = req.body;
   // Use PythonShell to run the Python script
   const options = {
+    //DESKTOP
+    pythonPath:
+      "C:/Users/Yazeed/AppData/Local/Programs/Python/Python310/python.exe",
+    scriptPath: "../Data/",
+
     // pythonPath: "C:/Users/Yazee/Desktop/stock-analyzer/venv/Scripts/python.exe",
     // scriptPath: "C:/Users/Yazee/Desktop/stock-analyzer/Data", // Replace with the path to your Python scripts
     // args: [JSON.stringify(data)],
@@ -50,18 +55,6 @@ app.post("/api/predict", async (req, res) => {
       }
     })
   );
-  await PythonShell.run("test.py", options, (err, result) => {
-    console.log("heheheh");
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Error in Python script" });
-    } else {
-      console.log("hi from res");
-      console.log(res);
-      const prediction = JSON.parse(result[0]);
-      res.json({ prediction });
-    }
-  });
 });
 
 app.post("/api/register", async (req, res) => {

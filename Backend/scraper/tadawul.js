@@ -30,7 +30,7 @@ async function runScript() {
             timeout: 60000,
           });
 
-          // await getFinancialsDataForStocks(stock, browser, page);
+          await getFinancialsDataForStocks(stock, browser, page);
           await getForeignOwnership(stock, browser, page);
           // await getStockProfile(stock, browser, page);
         }
