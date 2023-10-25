@@ -7,6 +7,7 @@ import StockInformation from "./models/stockInformation.js";
 import yahooFinance from "yahoo-finance2";
 import fs from "fs";
 import StockPrices from "./models/stockPrices.js";
+import { PythonShell } from "python-shell"; // Use import for PythonShell
 
 const app = express();
 const port = 5000;
@@ -23,6 +24,45 @@ mongoose
   .catch((error) => {
     console.log("Error connecting to MongoDB:", error);
   });
+
+// Define an endpoint for making predictions
+app.post("/api/predict", async (req, res) => {
+  const { data } = req.body;
+  // Use PythonShell to run the Python script
+  const options = {
+    // pythonPath: "C:/Users/Yazee/Desktop/stock-analyzer/venv/Scripts/python.exe",
+    // scriptPath: "C:/Users/Yazee/Desktop/stock-analyzer/Data", // Replace with the path to your Python scripts
+    // args: [JSON.stringify(data)],
+    args: ["fjdjfkjfdfd", "sadsadsadsad"],
+  };
+  console.log("hiiiiii");
+  console.log(
+    await PythonShell.run("test.py", options, (err, result) => {
+      console.log("heheheh");
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error in Python script" });
+      } else {
+        console.log("hi from res");
+        console.log(res);
+        const prediction = JSON.parse(result[0]);
+        res.json({ prediction });
+      }
+    })
+  );
+  await PythonShell.run("test.py", options, (err, result) => {
+    console.log("heheheh");
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error in Python script" });
+    } else {
+      console.log("hi from res");
+      console.log(res);
+      const prediction = JSON.parse(result[0]);
+      res.json({ prediction });
+    }
+  });
+});
 
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
@@ -93,9 +133,10 @@ app.get("/api/StockPrice/:symbol", (req, res) => {
 });
 
 app.get("/companies/:sectorName?", async (req, res) => {
+  console.log("hii");
   const sectorName = req.params.sectorName;
   try {
-    const symbolsWithSectors = await getSymbols();
+    const symbolsWithSectors = await getStocksInformation();
 
     if (sectorName) {
       const filteredSymbols = symbolsWithSectors.filter(
@@ -219,7 +260,7 @@ const saveStockInformationData = async () => {
 
 async function saveStockPrices() {
   try {
-    const symbols = await getSymbols();
+    const symbols = await getStocksInformation();
     for (const stock of symbols) {
       console.log(stock.symbol);
       const symbol = stock.symbol;
@@ -283,7 +324,7 @@ async function saveStockPrices() {
 
 async function saveStockCapital() {
   try {
-    const symbols = await getSymbols();
+    const symbols = await getStocksInformation();
     for (const stock of symbols) {
       console.log(stock.symbol);
       // if (stock.symbol !== "2222") continue;
