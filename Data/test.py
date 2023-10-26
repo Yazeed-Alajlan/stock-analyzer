@@ -1,19 +1,22 @@
-import sys
-import json
-import random
-import os
-
-file_path = os.path.realpath(__file__)
-print("SDSDASDSD")
-
-# print("23112312323"+sys.argv[1])
-# print(sys.argv[2])
-
-# # Generate a list of 10 random numbers between 0 and 1
-# random_data = [random.uniform(0, 1) for _ in range(10)]
-
-# # Return the random data as a JSON string
-# print(json.dumps(random_data))
+import sys, json
+import pandas as pd
 
 
-# print(sys.executable)
+def read_in():
+    lines = sys.stdin.readlines()
+    return json.loads(lines[0])
+
+def main():
+    lines = read_in()
+    array1=[1,2,3,4,5]
+    array2=["a","b","c","d","e"]
+
+    df=pd.DataFrame({"onecolumn": lines,
+    "second":array1,
+    "third": array2
+    })
+
+    print (df)
+
+if __name__ == '__main__':
+    main()

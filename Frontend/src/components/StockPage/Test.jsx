@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 function Test() {
   const [data, setData] = useState({ inputFeature: 0 });
-  const [prediction, setPrediction] = useState(null);
+  const [prediction, setPrediction] = useState("");
 
   const handlePredict = () => {
     // Make a POST request to the Node.js backend

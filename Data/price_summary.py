@@ -2,7 +2,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import sys
-import json
+import sys, json
 
 
 def fetch_stock_data(stock_symbol, start_date, end_date):
@@ -52,12 +52,14 @@ if __name__ == "__main__":
     end_date = '2022-12-31'
 
     df = fetch_stock_data(stock_symbol, start_date, end_date)
+    print(calculate_monthly_price_changes(df))
+
     try:
         for arg in sys.argv:
             #print(arg)
                 
             if arg == "getMonthSummary":
-                print(json.dumps(calculate_monthly_price_changes(df).to_list()))
+                print(calculate_monthly_price_changes(df))
 
             # elif arg == "datetime":
             #     use_datetime()
@@ -67,6 +69,7 @@ if __name__ == "__main__":
 
     except Exception as error:
         print(f"Error: {str(error)}") 
+
 
 
 

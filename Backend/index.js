@@ -31,8 +31,8 @@ app.post("/api/predict", async (req, res) => {
   // Use PythonShell to run the Python script
   const options = {
     //DESKTOP
-    pythonPath:
-      "C:/Users/Yazeed/AppData/Local/Programs/Python/Python310/python.exe",
+    // pythonPath:
+    //   "C:/Users/Yazeed/AppData/Local/Programs/Python/Python310/python.exe",
     scriptPath: "../Data/",
 
     // pythonPath: "C:/Users/Yazee/Desktop/stock-analyzer/venv/Scripts/python.exe",
@@ -61,29 +61,47 @@ app.post("/api/predict", async (req, res) => {
   res.json(pythonData);
 });
 app.get("/api/predict", async (req, res) => {
-  const options = {
-    //DESKTOP
-    pythonPath:
-      "C:/Users/Yazeed/AppData/Local/Programs/Python/Python310/python.exe",
-    scriptPath: "../Data/",
-    args: ["getMonthSummary"],
-  };
-  const pythonData = await PythonShell.run(
-    "price_summary.py",
-    options,
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error in Python script" });
-      } else {
-        console.log(res);
-        const prediction = JSON.parse(result[0]);
-        res.json({ prediction });
-      }
+  var pyshell = new PythonShell("../Data/price_summary.py");
+  var jsonData = "";
+
+  // pyshell.send(JSON.stringify([1, 1, 1, 1, 1]));
+  pyshell.on("message", function (message) {
+    jsonData += message;
+    console.log(message);
+  });
+
+  pyshell.end(function (err) {
+    if (err) {
+      throw err;
     }
-  );
-  console.log(pythonData[5]);
-  res.json(pythonData[5]);
+
+    console.log("finished");
+  });
+  console.log(jsonData);
+
+  // const options = {
+  //   // mode: "json",
+
+  //   scriptPath: "../Data/",
+  //   args: ["getMonthSummary"],
+  // };
+
+  // const pythonData = await PythonShell.run(
+  //   "price_summary.py",
+  //   options,
+  //   (err, result) => {
+  //     if (err) {
+  //       console.error(err);
+  //       res.status(500).json({ error: "Error in Python script" });
+  //     } else {
+  //       console.log(res);
+  //       const prediction = JSON.parse(result[0]);
+  //       res.json({ prediction });
+  //     }
+  //   }
+  // );
+  // console.log(pythonData);
+  // res.json(pythonData[5]);
 });
 
 app.post("/api/register", async (req, res) => {
