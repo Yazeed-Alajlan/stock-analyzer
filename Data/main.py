@@ -1,6 +1,6 @@
 import pandas as pd
 import flask 
-from price_summary import calculate_monthly_price_changes
+from price_summary import calculate_monthly_returns
 import yfinance as yf
 
 def fetch_stock_data(stock_symbol, start_date, end_date):
@@ -16,7 +16,7 @@ def get_price_summary():
     start_date = '2020-01-01'
     end_date = '2022-12-31'
     df = fetch_stock_data(stock_symbol, start_date, end_date)
-    price_summary = calculate_monthly_price_changes(df)
+    price_summary = calculate_monthly_returns(df)
 
     # Convert the date index to ISO 8601 format
     price_summary.index = price_summary.index.strftime('%Y-%m')

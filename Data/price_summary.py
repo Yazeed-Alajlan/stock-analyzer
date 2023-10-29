@@ -6,18 +6,41 @@ import sys, json
 
 
 def fetch_stock_data(stock_symbol, start_date, end_date):
-    # Fetch stock data from Yahoo Finance
     df = yf.download(stock_symbol, start=start_date, end=end_date)
     return df
 
-def calculate_monthly_price_changes(df):
-    # Resample data to calculate monthly price changes
+def calculate_monthly_returns(df):
     monthly_data = df['Close'].resample('M').ffill()
-    monthly_price_changes = monthly_data.pct_change() * 100
-    print(monthly_data)
+    monthly_returns = (monthly_data / monthly_data.shift(1) - 1) * 100
+    monthly_returns.iloc[0] = 0  
+    return monthly_returns
 
-    return monthly_price_changes
+def calculate_monthly_average_returns(df):
+    monthly_returns = calculate_monthly_returns(df)
+    monthly_average_returns = monthly_returns.groupby(monthly_returns.index.strftime('%b')).mean()
+    month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    monthly_average_returns = monthly_average_returns.reindex(month_order)
 
+    return monthly_average_returns
+
+
+def calculate_weekly_returns(df):
+    weekly_data = df['Close'].resample('W').ffill()
+    weekly_returns = (weekly_data / weekly_data.shift(1) - 1) * 100
+    weekly_returns.iloc[0] = 0  # Set the first weekly return to 0
+    return weekly_returns
+
+
+def calculate_daily_average_returns(df):
+    # Calculate daily returns
+    daily_returns = (df['Close'] / df['Close'].shift(1) - 1) * 100
+    daily_returns.iloc[0] = 0  # Set the first daily return to 0
+
+    # Group by day name and calculate daily average returns
+    daily_average_returns = daily_returns.groupby(df.index.strftime('%A')).mean()
+
+    return daily_average_returns
+    
 def find_highest_monthly_price_change(monthly_price_changes):
     # Find the month with the highest price change
     highest_monthly_price_change = monthly_price_changes.max()
@@ -54,23 +77,9 @@ if __name__ == "__main__":
     end_date = '2022-12-31'
 
     df = fetch_stock_data(stock_symbol, start_date, end_date)
-    print(calculate_monthly_price_changes(df))
+    print(calculate_daily_average_returns(df))
 
-    try:
-        for arg in sys.argv:
-            #print(arg)
-                
-            if arg == "getMonthSummary":
-                print(calculate_monthly_price_changes(df))
-
-            # elif arg == "datetime":
-            #     use_datetime()
-
-            else:
-                print("An arg passed: ", arg)
-
-    except Exception as error:
-        print(f"Error: {str(error)}") 
+    
 
 
 
