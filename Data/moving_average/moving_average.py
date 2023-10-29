@@ -3,7 +3,7 @@ import talib
 import matplotlib.pyplot as plt
 
 def prepData(sma_period):
-    df = yf.download("2222.SR", start="2020-01-1", end="2023-10-19")
+    df = yf.download("LCID", start="2020-01-1", end="2023-10-19")
     df.reset_index(inplace=True)
 
     atr_period = 14
@@ -81,7 +81,7 @@ def findBestSMA(max_period):
     best_sma = 0
     best_count = 0
 
-    for sma_period in range(19, max_period):
+    for sma_period in range(2, max_period):
         data = prepData(sma_period)
         breakout_count, _ = calculateBreakouts(data, sma_period)
         penetration_count, _ = calculatePenetrations(data, sma_period)
@@ -135,7 +135,7 @@ ax.scatter(bounce_dates, bounce_prices, marker='v', color='black', label='Bounce
 #     ax.annotate(f'{breakout_prices.iloc[i]:.2f}', (breakout_dates.iloc[i], breakout_prices.iloc[i]), textcoords="offset points", xytext=(0, 10), ha='center')
 
 # Add circles for the close price without displaying the value
-ax.scatter(data['Date'], data['Close'], s=20, marker='o', color='black')
+ax.scatter(data['Date'], data['Close'], s=20, marker='o', color='yellow')
 
 # for i in range(len(data)):
 #     ax.annotate(f'{data["Close"].iloc[i]:.2f}', (data["Date"].iloc[i], data["Close"].iloc[i]), textcoords="offset points", xytext=(0, 10), ha='center')

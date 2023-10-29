@@ -6,17 +6,7 @@ function Test() {
   const [prediction, setPrediction] = useState("");
 
   const handlePredict = () => {
-    // Make a POST request to the Node.js backend
-    fetch("http://localhost:5000/api/predict", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data: data.inputFeature }), // Send the inputFeature value
-    })
-      .then((response) => response.json())
-      .then((data) => setPrediction(data.prediction))
-      .catch((error) => console.error(error));
+    console.log(prediction);
   };
 
   useEffect(() => {
@@ -41,7 +31,7 @@ function Test() {
         onChange={(e) => setData({ inputFeature: e.target.value })}
       />
       <button onClick={handlePredict}>Predict</button>
-      {prediction && <p>Prediction: {prediction}</p>}
+      {prediction && <p>Prediction: </p>}
       <div>adssad</div>
     </div>
   );

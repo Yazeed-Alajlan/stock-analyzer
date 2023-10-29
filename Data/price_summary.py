@@ -14,6 +14,8 @@ def calculate_monthly_price_changes(df):
     # Resample data to calculate monthly price changes
     monthly_data = df['Close'].resample('M').ffill()
     monthly_price_changes = monthly_data.pct_change() * 100
+    print(monthly_data)
+
     return monthly_price_changes
 
 def find_highest_monthly_price_change(monthly_price_changes):

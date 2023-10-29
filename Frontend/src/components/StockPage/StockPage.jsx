@@ -7,6 +7,7 @@ import SmCardInformaiton from "../utils/SmCardInformaiton";
 import StockPriceCard from "./utils/StockPriceCard";
 import { useStocksData } from "../../contexts/StocksDataContext";
 import Test from "./Test";
+import MonthlyReturnTable from "./MonthlyReturnTable";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 
@@ -30,7 +31,7 @@ const StockPage = () => {
     <Container>
       {stockInformationData ? (
         <Row className="pb-4 border-bottom border-2">
-          <Test />
+          <MonthlyReturnTable />
           <Col xs={"8"}>
             <Row>
               <Container className="d-flex gap-2">

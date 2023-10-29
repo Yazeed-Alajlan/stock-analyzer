@@ -4,7 +4,7 @@ from plotly.subplots import make_subplots
 import numpy as np
 
 def prepData():
-    df = yf.download('USDT-BTC', start='2022-01-01', end='2022-12-31', interval='1h')
+    df = yf.download('ETH-USD', start='2022-01-01', end='2022-12-31', interval='1h')
     df = df[df["Volume"] > 0]
     df["vol_norm"] = np.log(df["Volume"] / df["Volume"].rolling(168).median())
     return df

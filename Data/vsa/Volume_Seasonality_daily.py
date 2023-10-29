@@ -28,7 +28,7 @@ line_colors = ['blue', 'red', 'green', 'purple', 'orange']
 fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.1)
 
 # Plot the volume data using Plotly Express (line chart)
-line_chart = go.Scatter(x=df.index, y=df['vol_norm'], mode='lines', name='Volume Data')
+line_chart = go.Scatter(x=df.index, y=df['Volume'], mode='lines', name='Volume Data')
 fig.add_trace(line_chart, row=1, col=1)
 
 # Add horizontal lines for the annual average volume with different colors

@@ -7,7 +7,7 @@ import StockInformation from "./models/stockInformation.js";
 import yahooFinance from "yahoo-finance2";
 import fs from "fs";
 import StockPrices from "./models/stockPrices.js";
-import { PythonShell } from "python-shell"; // Use import for PythonShell
+import axios from "axios";
 
 const app = express();
 const port = 5000;
@@ -25,83 +25,18 @@ mongoose
     console.log("Error connecting to MongoDB:", error);
   });
 
-// Define an endpoint for making predictions
-app.post("/api/predict", async (req, res) => {
-  const { data } = req.body;
-  // Use PythonShell to run the Python script
-  const options = {
-    //DESKTOP
-    // pythonPath:
-    //   "C:/Users/Yazeed/AppData/Local/Programs/Python/Python310/python.exe",
-    scriptPath: "../Data/",
-
-    // pythonPath: "C:/Users/Yazee/Desktop/stock-analyzer/venv/Scripts/python.exe",
-    // scriptPath: "C:/Users/Yazee/Desktop/stock-analyzer/Data", // Replace with the path to your Python scripts
-    // args: [JSON.stringify(data)],
-    args: ["getMonthSummary"],
-  };
-  console.log(data);
-
-  const pythonData = await PythonShell.run(
-    "price_summary.py",
-    options,
-    (err, result) => {
-      console.log("heheheh");
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error in Python script" });
-      } else {
-        console.log(res);
-        const prediction = JSON.parse(result[0]);
-        res.json({ prediction });
-      }
-    }
-  );
-  console.log(pythonData);
-  res.json(pythonData);
-});
 app.get("/api/predict", async (req, res) => {
-  var pyshell = new PythonShell("../Data/price_summary.py");
-  var jsonData = "";
-
-  // pyshell.send(JSON.stringify([1, 1, 1, 1, 1]));
-  pyshell.on("message", function (message) {
-    jsonData += message;
-    console.log(message);
-  });
-
-  pyshell.end(function (err) {
-    if (err) {
-      throw err;
-    }
-
-    console.log("finished");
-  });
-  console.log(jsonData);
-
-  // const options = {
-  //   // mode: "json",
-
-  //   scriptPath: "../Data/",
-  //   args: ["getMonthSummary"],
-  // };
-
-  // const pythonData = await PythonShell.run(
-  //   "price_summary.py",
-  //   options,
-  //   (err, result) => {
-  //     if (err) {
-  //       console.error(err);
-  //       res.status(500).json({ error: "Error in Python script" });
-  //     } else {
-  //       console.log(res);
-  //       const prediction = JSON.parse(result[0]);
-  //       res.json({ prediction });
-  //     }
-  //   }
-  // );
-  // console.log(pythonData);
-  // res.json(pythonData[5]);
+  axios
+    .get("//localhost:4000/api/get_price_summary")
+    .then((response) => {
+      response.data;
+      console.log(response.data);
+      console.log(response.data);
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 app.post("/api/register", async (req, res) => {
