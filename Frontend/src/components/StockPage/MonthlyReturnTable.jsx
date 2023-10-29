@@ -24,7 +24,7 @@ const MonthlyReturnTable = () => {
   ];
 
   return (
-    <Table bordered hover>
+    <Table hover>
       <thead>
         <tr>
           <th>Year</th>
@@ -54,13 +54,13 @@ const MonthlyReturnTable = () => {
               if (value !== null) {
                 cellClass =
                   value < 0
-                    ? "bg-dark-red text-dark-red"
+                    ? "bg-dark-red text-light-red"
                     : "bg-dark-green text-light-green";
               }
-
+              console.log(value);
               return (
                 <td key={key} className={cellClass}>
-                  {value !== undefined ? value : key}
+                  {value !== null ? value.toFixed(2) : "-"}
                 </td>
               );
             })}
