@@ -1,6 +1,7 @@
 import pandas as pd
 import flask 
 from price_summary import calculate_monthly_returns
+from Volume_Seasonality_daily  import  volume_seasonality_daily
 import yfinance as yf
 
 def fetch_stock_data(stock_symbol, start_date, end_date):

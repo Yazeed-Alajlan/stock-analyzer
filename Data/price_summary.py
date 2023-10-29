@@ -32,14 +32,38 @@ def calculate_weekly_returns(df):
 
 
 def calculate_daily_average_returns(df):
-    # Calculate daily returns
     daily_returns = (df['Close'] / df['Close'].shift(1) - 1) * 100
-    daily_returns.iloc[0] = 0  # Set the first daily return to 0
-
-    # Group by day name and calculate daily average returns
+    daily_returns.iloc[0] = 0  
     daily_average_returns = daily_returns.groupby(df.index.strftime('%A')).mean()
-
     return daily_average_returns
+
+def count_price_change(df):
+    df['PriceChange'] = ((df['Close'] - df['Open']) / df['Open']) * 100
+    count_dict = {
+        '0_to_3': 0,
+        '3_to_6': 0,
+        '6_to_10': 0,
+        'neg_0_to_3': 0,
+        'neg_3_to_6': 0,
+        'neg_6_to_10': 0,
+    }
+    for row in df.iterrows():
+        price_change = row[1]['PriceChange']
+        if price_change >=0:
+            if price_change >= 0 and price_change <=3:
+                    count_dict['0_to_3'] += 1        
+            elif price_change > 3 and price_change <=6:
+                    count_dict['3_to_6'] += 1
+            else:
+                    count_dict['6_to_10'] += 1
+        else:
+            if price_change >= -3 and price_change < 0:
+                count_dict['neg_0_to_3'] += 1
+            elif price_change >=-6 and price_change < -3:
+                    count_dict['neg_3_to_6'] += 1
+            else:
+                count_dict['neg_6_to_10'] += 1
+    return count_dict
     
 def find_highest_monthly_price_change(monthly_price_changes):
     # Find the month with the highest price change
@@ -77,7 +101,7 @@ if __name__ == "__main__":
     end_date = '2022-12-31'
 
     df = fetch_stock_data(stock_symbol, start_date, end_date)
-    print(calculate_daily_average_returns(df))
+    print(count_price_change(df))
 
     
 
