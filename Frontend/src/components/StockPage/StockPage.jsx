@@ -46,13 +46,20 @@ const StockPage = () => {
     <Container>
       {stockInformationData ? (
         <Row className="pb-4 border-bottom border-2">
-          {/* {data && (
-            <CustomChart
-              title="My Chart Title"
-              x_axis={Object.keys(data.result.daily_avg_volume_norm)}
-              y_axis={Object.values(data.result.daily_avg_volume_norm)}
-            />
-          )} */}
+          {data && (
+            <>
+              <CustomChart
+                title="My Chart Title"
+                x_axis={Object.keys(data.result.daily_avg_volume_norm)}
+                y_axis={Object.values(data.result.daily_avg_volume_norm)}
+              />
+              <CustomChart
+                title="My Chart Title"
+                x_axis={Object.keys(data.daily_avg_volume_per_day)}
+                y_axis={Object.values(data.daily_avg_volume_per_day)}
+              />
+            </>
+          )}
           <button onClick={() => console.log(data)}>sssssssssssssss</button>
           <Col xs={"8"}>
             <Row>
