@@ -8,11 +8,13 @@ import StockPriceCard from "./utils/StockPriceCard";
 import { useStocksData } from "../../contexts/StocksDataContext";
 import Test from "./Test";
 import MonthlyReturnTable from "./MonthlyReturnTable";
+import { CustomChart } from "../utils/CustomChart";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 
   const [stockInformationData, setStockInformationData] = useState();
   const [stockFinancialData, setStockFinancialData] = useState();
+  const [data, setData] = useState();
   const { getStockFinancialData, getStockInformationData } = useStocksData();
 
   useEffect(() => {
@@ -27,11 +29,31 @@ const StockPage = () => {
     fetchData();
   }, [symbol]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = "http://localhost:5000/api/volumeSeasonalityDaily";
+        const response = await axios.get(url);
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <Container>
       {stockInformationData ? (
         <Row className="pb-4 border-bottom border-2">
-          <MonthlyReturnTable />
+          {/* {data && (
+            <CustomChart
+              title="My Chart Title"
+              x_axis={Object.keys(data.result.daily_avg_volume_norm)}
+              y_axis={Object.values(data.result.daily_avg_volume_norm)}
+            />
+          )} */}
+          <button onClick={() => console.log(data)}>sssssssssssssss</button>
           <Col xs={"8"}>
             <Row>
               <Container className="d-flex gap-2">

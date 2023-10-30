@@ -27,11 +27,22 @@ mongoose
 
 app.get("/api/predict", async (req, res) => {
   axios
-    .get("//localhost:4000/api/get_price_summary")
+    .get("//localhost:4000/api/price_summary")
     .then((response) => {
       response.data;
       console.log(response.data);
       console.log(response.data);
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+app.get("/api/volumeSeasonalityDaily", async (req, res) => {
+  axios
+    .get("//localhost:4000/api/volume_seasonality_daily")
+    .then((response) => {
+      response.data;
       res.json(response.data);
     })
     .catch((error) => {
