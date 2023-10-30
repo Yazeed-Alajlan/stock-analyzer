@@ -29,8 +29,6 @@ app.get("/api/predict", async (req, res) => {
   axios
     .get("//localhost:4000/api/price_summary")
     .then((response) => {
-      response.data;
-      console.log(response.data);
       console.log(response.data);
       res.json(response.data);
     })
@@ -40,10 +38,13 @@ app.get("/api/predict", async (req, res) => {
 });
 app.get("/api/volumeSeasonalityDaily", async (req, res) => {
   axios
-    .get("//localhost:4000/api/volume_seasonality_daily")
+    .get("http://127.0.0.1:4000/api/volume_seasonality_daily")
     .then((response) => {
-      response.data;
-      res.json(response.data);
+      const data = response.data;
+      const parsedString = JSON.parse(data.result);
+
+      // Send both 'data' and 'parsedString' in the JSON response
+      res.json({ data, parsedString });
     })
     .catch((error) => {
       console.log(error);

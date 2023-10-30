@@ -4,7 +4,8 @@ import flask
 from price_summary import calculate_monthly_returns
 import yfinance as yf
 import sys
-sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
+# sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
+sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer\Data/vsa')
 from Volume_Seasonality_daily  import  volume_seasonality_daily
 
 
@@ -36,17 +37,19 @@ def get_volume_seasonality_daily():
     df = fetch_stock_data(stock_symbol, start_date, end_date)
     result,annual_avg_volume_norm,daily_avg_volume_per_day =  volume_seasonality_daily(df)
     result.index = result.index.strftime('%Y-%m-%d')
-
-    # Create a dictionary to store the results
+    annual_avg_volume_norm.index = annual_avg_volume_norm.index.strftime('%Y-%m-%d')
+    print(type(result))
     result_dict = {
         "result": result.to_json(),
-        "annual_avg_volume_norm": annual_avg_volume_norm.to_json(),
-        "daily_avg_volume_per_day": daily_avg_volume_per_day.to_json()
+        "annual_avg_volume_norm": annual_avg_volume_norm.to_dict(),
+        "daily_avg_volume_per_day": daily_avg_volume_per_day.to_dict()
     }
 
-    # return flask.jsonify(result_dict)  # Return the results as JSON
-    return result.to_json() 
+    # return {
+    #     "result": result.to_json(),
 
+    # }  
+    return result_dict
 if __name__=="__main__":
     app.run(debug=True,port=4000)
 
