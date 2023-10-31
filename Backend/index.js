@@ -58,7 +58,7 @@ app.get("/api/japanese_candlestick_patterns/:pattern", async (req, res) => {
   const pattern = req.params.pattern;
 
   axios
-    .get(`//localhost:4000/api/japanese_candlestick_patterns/${pattern}`, {
+    .get(`http://127.0.0.1:4000/api/japanese_candlestick_patterns/${pattern}`, {
       headers: {
         "Content-Type": "application/json",
       },

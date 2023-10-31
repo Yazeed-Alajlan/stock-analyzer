@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Select from "react-select";
 import candlestick_patterns from "../Data/candlestickPatterns";
 import StockChart from "../StockPage/StockChart";
+import { CustomCard } from "../utils/CustomCard";
+import { Card, Container } from "react-bootstrap";
 const TechnicalAnalysisPage = () => {
   const options = Object.entries(candlestick_patterns).map(([key, value]) => ({
     value: key,
@@ -37,34 +39,41 @@ const TechnicalAnalysisPage = () => {
   };
 
   return (
-    <div>
+    <Container>
+      <Card>
+        <Card.Header className="d-flex  justify-content-between">
+          <Select
+            options={options}
+            value={selectedPattern}
+            onChange={handleChange}
+            placeholder="Select a Candlestick Pattern"
+            className="z-2"
+          />
+          <button onClick={sendSelectedPattern}>Filter</button>
+        </Card.Header>
+        <Card.Body>
+          {filteredData && (
+            <CustomCard>
+              {/* Iterate over the outer dictionary */}
+              {Object.keys(filteredData).map((outerKey) => (
+                <div key={outerKey}>
+                  {/* <p>Key: {outerKey}</p> */}
+                  {/* Iterate over the inner dictionary */}
+                  {Object.entries(filteredData[outerKey]).map(
+                    ([innerKey, value]) => (
+                      <div key={innerKey}>
+                        <StockChart symbol={innerKey} />
+                      </div>
+                    )
+                  )}
+                </div>
+              ))}
+            </CustomCard>
+          )}
+        </Card.Body>
+      </Card>
       <h1>Technical Analysis Page</h1>
-      <Select
-        options={options}
-        value={selectedPattern}
-        onChange={handleChange}
-        placeholder="Select a Candlestick Pattern"
-      />
-      <button onClick={sendSelectedPattern}>Filter</button>
-      {filteredData && (
-        <div>
-          {/* Iterate over the outer dictionary */}
-          {Object.keys(filteredData).map((outerKey) => (
-            <div key={outerKey}>
-              {/* <p>Key: {outerKey}</p> */}
-              {/* Iterate over the inner dictionary */}
-              {Object.entries(filteredData[outerKey]).map(
-                ([innerKey, value]) => (
-                  <div key={innerKey}>
-                    <StockChart symbol={innerKey} />
-                  </div>
-                )
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    </Container>
   );
 };
 

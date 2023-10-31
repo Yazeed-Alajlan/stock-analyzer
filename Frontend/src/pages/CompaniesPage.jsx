@@ -85,7 +85,7 @@ const CompaniesPage = () => {
       <h1>الشركات</h1>
       <Card>
         <Card.Header>
-          <Row className=" align-items-center">
+          <Row className="align-items-center">
             <Col xs={8} xl={4}>
               <div className="d-flex">
                 <p className="my-auto mx-2">الشركة</p>

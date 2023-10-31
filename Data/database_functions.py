@@ -48,7 +48,7 @@ def get_price_data(symbol):
     # Example: Query all documents in the collection
     document = collection.find_one({"symbol": symbol})
 
-
+    print(document)
     quotes = document.get("quotes")
     df =  pd.DataFrame(quotes)
     

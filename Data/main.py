@@ -1,7 +1,7 @@
 import sys
 
-sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
-# sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/vsa')
+# sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
+sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/vsa')
 # sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/patterns')
 import pandas as pd
 import flask 
@@ -50,6 +50,7 @@ def get_volume_seasonality_daily():
 
 @app.route("/api/japanese_candlestick_patterns/<pattern>")
 def japanese_candlestick_patterns(pattern):
+    print("HIIIIIIIIIII")
     stock_data=get_all_stocks_symbols()  # Replace "mycollection" with your collection name
     data=analyze_patterns(stock_data,pattern)
     # Remove all 'None' values from the nested dictionary
