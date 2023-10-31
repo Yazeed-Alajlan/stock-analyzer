@@ -76,6 +76,16 @@ export const Header = ({ sideBar, setSideBar }) => {
               >
                 قارن
               </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/technical-analysis"
+                onClick={handleStockSelect}
+                className={
+                  selectedLink === "/technical-analysis" ? "selected-link" : ""
+                }
+              >
+                تحليل فني
+              </Nav.Link>
             </Nav>
           </div>
 

@@ -1,63 +1,58 @@
 import talib
 import yfinance as yf
 import pandas as pd
+import sys
+sys.path.append('C:/Users/Yazee/Desktop/stock-analyzer/Data/')
+from database_functions import get_price_data
+def find_patterns(pattern,symbols):
+    stocks = {}
+    # print(symbols)
+    for symbol in symbols:
+        data = get_price_data(symbol)
+        # yf.download(symbol, start="2020-01-01", end="2020-03-24")
+        pattern_function = getattr(talib, pattern)
+        try:
+            results = pattern_function(data['open'], data['high'], data['low'], data['close'])
+            last = results.iloc[-1]
+            if last > 0:
+                stocks[symbol] = 'bullish'
+            elif last < 0:
+                stocks[symbol] = 'bearish'
+            else:
+                stocks[symbol] = None
+        except Exception as e:
+            print('Failed for symbol: ', e)
 
+    return stocks
 
-import talib
-import yfinance as yf
-import pandas as pd
-
-# Replace this code to get symbols from your preferred source
-
-# def analyze_patterns(pattern,symbols):
-#     print(results[results !=0])
-
-#     stocks = {}
+# def find_patterns(pattern,symbols):
+#     patter_days = {}
 #     for symbol in symbols:
-#         data = yf.download(symbol, start="2020-01-01", end="2020-03-24")
+#         data = yf.download(symbol, start="2020-01-01", end="2020-08-01")
 #         pattern_function = getattr(talib, pattern)
 
 #         try:
 #             results = pattern_function(data['Open'], data['High'], data['Low'], data['Close'])
-#             last = results.iloc[-1]
-#             if last > 0:
-#                 stocks[symbol] = 'bullish'
-#             elif last < 0:
-#                 stocks[symbol] = 'bearish'
-#             else:
-#                 stocks[symbol] = None
+#             patter_days[symbol] = results[results !=0]
 #         except Exception as e:
 #             print('Failed for symbol: ', symbol)
 
-#     return stocks
-
-def find_patterns(pattern,symbols):
-    patter_days = {}
-    for symbol in symbols:
-        data = yf.download(symbol, start="2020-01-01", end="2020-08-01")
-        pattern_function = getattr(talib, pattern)
-
-        try:
-            results = pattern_function(data['Open'], data['High'], data['Low'], data['Close'])
-            patter_days[symbol] = results[results !=0]
-        except Exception as e:
-            print('Failed for symbol: ', symbol)
-
-    return patter_days
+#     return patter_days
 
 
-def analyze_patterns(symbols):
-    patterns = ["CDLDOJI", "CDLENGULFING", "CDLHAMMER"]  # Replace with your list of patterns to test
-    symbols = ['AAPL', 'SPY', 'TSLA']  # Replace with your list of stock symbols
-    # stocks = analyze_patterns(pattern[0],symbols)
-
-    print(f"Results for the following patterns:")
+def analyze_patterns(symbols,pattern):
+    # patterns = ["CDLDOJI", "CDLENGULFING", "CDLHAMMER"] 
+    # patterns = ["CDLDOJI"] 
+    patterns = [pattern]  # Replace with your list of patterns to test
+    print("----------------------------------------------------")
+    # print(patterns)
+    results={}
+    # print(f"Results for the following patterns:")
     for pattern in patterns:
-        print(f"Pattern: {pattern}")
         result = find_patterns(pattern,symbols)
-        print(result)
-    return "Hello"
-
+        results[pattern]=result
+    # print(results)
+    return results
 
 
 

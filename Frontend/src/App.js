@@ -16,6 +16,7 @@ import axios from "axios";
 import StockChart from "./components/StockPage/StockChart";
 import Dividend from "./components/StockPage/Dividend";
 import ComparisonPage from "./pages/ComparisonPage";
+import TechnicalAnalysisPage from "./components/TechnicalAnalysis/TechnicalAnalysisPage";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -59,6 +60,10 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/companies/:sector" element={<CompaniesPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
+          <Route
+            path="/technical-analysis"
+            element={<TechnicalAnalysisPage />}
+          />
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />

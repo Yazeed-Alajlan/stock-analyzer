@@ -1,7 +1,7 @@
 import sys
 
-# sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
-sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/vsa')
+sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
+# sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/vsa')
 # sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/patterns')
 import pandas as pd
 import flask 
@@ -10,51 +10,12 @@ from Volume_Seasonality_daily  import  volume_seasonality_daily
 from price_summary import calculate_monthly_returns
 from patterns.pattern_detect import analyze_patterns
 from pymongo import MongoClient
-
+from database_functions import *
 
 def fetch_stock_data(stock_symbol, start_date, end_date):
     # Fetch stock data from Yahoo Finance
     df = yf.download(stock_symbol, start=start_date, end=end_date)
     return df
-
-def database_connect():
-    # Database connection parameters
-    host  = "127.0.0.1"
-    port  = 27017
-    database_name  = "stockDB"
-
-    # Connect to the MongoDB server
-    client = MongoClient(host, port)
-
-    # Access the specified database
-    db = client[database_name]
-    return db,client
-
-def getAllStocksInformation():
-    db,client = database_connect()
-    collection = db["stockinformations"]
-
-    # Example: Query all documents in the collection
-    documents = list(collection.find({}))
-    print("Documents in the collection:", documents)
-
-    # Close the MongoDB client when done
-    client.close()
-    return documents
-
-def getStockPriceData(symbol):
-    db,client = database_connect()
-    collection = db["stockprices"]
-
-    # Example: Query all documents in the collection
-    document = list(collection.find({"symbol": symbol}))
-    print("Document is:", document)
-
-    # Close the MongoDB client when done
-    client.close()
-    return document
-
-
 
 app = flask.Flask(__name__)
 
@@ -87,12 +48,18 @@ def get_volume_seasonality_daily():
     } 
     return result_dict
 
-@app.route("/api/japanese_candlestick_patterns")
-def japanese_candlestick_patterns():
-    stock_data=getAllStocksInformation()  # Replace "mycollection" with your collection name
-    analyze_patterns(stock_data)
- 
-    return "Heelo"
+@app.route("/api/japanese_candlestick_patterns/<pattern>")
+def japanese_candlestick_patterns(pattern):
+    stock_data=get_all_stocks_symbols()  # Replace "mycollection" with your collection name
+    data=analyze_patterns(stock_data,pattern)
+    # Remove all 'None' values from the nested dictionary
+    data = {
+        pattern: {key: value for key, value in pattern_data.items() if value is not None}
+        for pattern, pattern_data in data.items()
+    }
+    print(data)
+
+    return data
 if __name__=="__main__":
     app.run(debug=True,port=4000)
 

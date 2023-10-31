@@ -54,6 +54,25 @@ app.get("/api/volumeSeasonalityDaily", async (req, res) => {
     });
 });
 
+app.get("/api/japanese_candlestick_patterns/:pattern", async (req, res) => {
+  const pattern = req.params.pattern;
+
+  axios
+    .get(`//localhost:4000/api/japanese_candlestick_patterns/${pattern}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      var data = response.data;
+      console.log(data);
+      res.json(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
   // saveStockCapital();

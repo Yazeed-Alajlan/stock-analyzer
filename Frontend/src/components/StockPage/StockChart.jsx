@@ -6,10 +6,10 @@ import { CustomCard } from "../utils/CustomCard";
 import SelectionTitle from "./utils/SelectionTitle";
 import { Container } from "react-bootstrap";
 
-const StockChart = () => {
+const StockChart = ({ symbol }) => {
   const [stockData, setStockData] = useState(null);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("max"); // Default to 1 month
-  const { symbol } = useOutletContext();
+  // const { symbol } = useOutletContext();
 
   console.log(symbol);
   useEffect(() => {
@@ -149,7 +149,7 @@ const StockChart = () => {
           <option value="max">Max</option>
         </select>
       </Container>
-      <div id="chart-container"></div>
+      <div className="p-4" id="chart-container"></div>
     </CustomCard>
   );
 };
