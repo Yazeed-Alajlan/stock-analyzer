@@ -17,8 +17,9 @@ def fetch_stock_data(stock_symbol, start_date, end_date):
 
 app = flask.Flask(__name__)
 
-@app.route("/api/price_summary")
-def get_price_summary():
+
+@app.route("/api/stocks/<symbol>/price-summary")
+def get_price_summary(symbol):
     stock_symbol = '2222.SR'
     start_date = '2020-01-01'
     end_date = '2022-12-31'
@@ -30,8 +31,8 @@ def get_price_summary():
 
     return price_summary.to_json()
 ##api/volume_seasonality_daily
-@app.route("/api/volume_seasonality_daily")
-def get_volume_seasonality_daily():
+@app.route("/api/stocks/<symbol>/volume-seasonality-daily")
+def get_volume_seasonality_daily(symbol):
     stock_symbol = '2222.SR'
     start_date = '2020-01-01'
     end_date = '2022-12-31'
@@ -46,7 +47,7 @@ def get_volume_seasonality_daily():
     } 
     return result_dict
 
-@app.route("/api/japanese_candlestick_patterns/<pattern>")
+@app.route("/api/stocks/japanese-candlestick-patterns/<pattern>")
 def japanese_candlestick_patterns(pattern):
     stock_data=get_all_stocks_symbols()  
     data=find_japanese_candlestick_patterns(stock_data,pattern)

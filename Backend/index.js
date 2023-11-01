@@ -37,12 +37,16 @@ app.get("/api/predict", async (req, res) => {
     });
 });
 app.get("/api/volumeSeasonalityDaily", async (req, res) => {
-  axios
-    .get("http://127.0.0.1:4000/api/volume_seasonality_daily", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+  axios;
+  const symbol = (4321)
+    .get(
+      `http://127.0.0.1:4000/api/stocks/${symbol}/volume-seasonality-daily`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
     .then((response) => {
       var data = response.data;
       data.result = JSON.parse(response.data.result);
@@ -58,11 +62,14 @@ app.get("/api/japanese_candlestick_patterns/:pattern", async (req, res) => {
   const pattern = req.params.pattern;
 
   axios
-    .get(`http://127.0.0.1:4000/api/japanese_candlestick_patterns/${pattern}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    .get(
+      `http://127.0.0.1:4000/api/stocks/japanese-candlestick-patterns/${pattern}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
     .then((response) => {
       var data = response.data;
       console.log(data);
