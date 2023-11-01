@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { CustomCard } from "../utils/CustomCard";
+import { CustomCard } from "../../../components/utils/CustomCard";
 import { useOutletContext } from "react-router-dom";
-import FinancialsTab from "../Financials/FinancialsTab";
+import FinancialsTab from "../../StockPage/components/financials/FinancialsTab";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import CustomButton from "../utils/CustomButton";
+import CustomButton from "../../../components/utils/CustomButton";
 import { BsCalendar3 } from "react-icons/bs";
 import { Container } from "react-bootstrap";
-import { useStocksData } from "../../contexts/StocksDataContext";
+import { useStocksData } from "../../../contexts/StocksDataContext";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 

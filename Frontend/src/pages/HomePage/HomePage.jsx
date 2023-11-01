@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
-import { useStocksData } from "../contexts/StocksDataContext";
+import { useStocksData } from "../../contexts/StocksDataContext";
 
 const HomePage = () => {
   const navigate = useNavigate();

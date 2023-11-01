@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { Card, Container, Table, Button, Col, Row } from "react-bootstrap";
 import Select from "react-select";
-import { useStocksData } from "../contexts/StocksDataContext";
+import { useStocksData } from "../../contexts/StocksDataContext";
 
 const CompaniesPage = () => {
   let { sector } = useParams();

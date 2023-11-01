@@ -3,11 +3,11 @@ import { Row, Col, Container } from "react-bootstrap";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { SidebarSelection } from "./utils/SidebarSelection";
 import axios from "axios";
-import SmCardInformaiton from "../utils/SmCardInformaiton";
-import StockPriceCard from "./utils/StockPriceCard";
-import { useStocksData } from "../../contexts/StocksDataContext";
-import { CustomChart } from "../utils/CustomChart";
-import MonthlyReturnTable from "components/StockPage/MonthlyReturnTable";
+import SmCardInformaiton from "components/utils/SmCardInformaiton";
+import StockPriceCard from "./components/StockPriceCard";
+import { useStocksData } from "contexts/StocksDataContext";
+import { CustomChart } from "components/utils/CustomChart";
+import MonthlyReturnTable from "pages/StockPage/MonthlyReturnTable";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 

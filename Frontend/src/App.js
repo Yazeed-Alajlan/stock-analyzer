@@ -4,19 +4,18 @@ import { Route, Routes } from "react-router-dom";
 
 import Sidebar from "components/routing/Sidebar";
 import CusotmModal from "components/utils/CusotmModal";
-import StockPage from "components/StockPage/StockPage";
+import StockPage from "pages/StockPage/StockPage";
 import { Header } from "components/routing/Header";
 import { Container } from "react-bootstrap";
-import HomePage from "pages/HomePage";
-import MarketSummary from "pages/MarketSummary";
-import CompaniesPage from "pages/CompaniesPage";
-import StockInformation from "components/StockPage/StockInformation";
-import FinancialesTable from "components/StockPage/FinancialsTable";
+import HomePage from "pages/HomePage/HomePage";
+import CompaniesPage from "pages/StocksPage/CompaniesPage";
+import StockInformation from "pages/StockPage/StockInformation";
+import FinancialesTable from "pages/StockPage/FinancialsTable";
 import axios from "axios";
-import StockChart from "components/StockPage/StockChart";
-import Dividend from "components/StockPage/Dividend";
-import ComparisonPage from "pages/ComparisonPage";
-import TechnicalAnalysisPage from "components/TechnicalAnalysis/TechnicalAnalysisPage";
+import StockChart from "pages/StockPage/StockChart";
+import Dividend from "pages/StockPage/components/Dividend";
+import ComparisonPage from "pages/ComparisonPage/ComparisonPage";
+import TechnicalAnalysisPage from "pages/TechnicalAnalysisPage/TechnicalAnalysisPage";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);

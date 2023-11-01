@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isEqual } from "lodash";
-import CustomButton from "../../utils/CustomButton";
+import CustomButton from "../../../../../components/utils/CustomButton";
 import HoverGraph from "../HoverGraph";
 
 import { Table } from "react-bootstrap";

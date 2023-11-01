@@ -1,4 +1,4 @@
-import { CustomCard } from "../../utils/CustomCard";
+import { CustomCard } from "../../../components/utils/CustomCard";
 import { Container, Nav } from "react-bootstrap";
 import {
   FaInfoCircle,

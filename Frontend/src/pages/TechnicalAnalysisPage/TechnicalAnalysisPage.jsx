@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import candlestick_patterns from "../Data/candlestickPatterns";
+import candlestick_patterns from "./candlestickPatterns";
 import StockChart from "../StockPage/StockChart";
-import { CustomCard } from "../utils/CustomCard";
+import { CustomCard } from "components/utils/CustomCard";
 import { Card, Container } from "react-bootstrap";
 const TechnicalAnalysisPage = () => {
   const options = Object.entries(candlestick_patterns).map(([key, value]) => ({
