@@ -22,7 +22,7 @@ const TechnicalAnalysisPage = () => {
       console.log(selectedPattern);
       try {
         const response = await fetch(
-          `http://localhost:5000/api/japanese_candlestick_patterns/${selectedPattern.value}`
+          `http://localhost:5000/python-api/japanese-candlestick-patterns/${selectedPattern.value}`
         );
 
         if (response.ok) {

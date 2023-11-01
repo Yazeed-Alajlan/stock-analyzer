@@ -40,10 +40,11 @@ def pattern_recognition(df,m,k):
     plt.show()
 
 def prepData():
-    df=yfinance.download("2222.SR", start="2020-01-1", end="2023-07-7")
+    df=yfinance.download("2222.SR", start="2021-01-1", end="2023-07-7")
     df.reset_index(inplace=True)
     ## Start index with 1
     # df.index = np.arange(1, len(df) + 1)
     return df
 
 df=prepData()
+pattern_recognition(df,8,6)

@@ -179,7 +179,7 @@ import mplfinance as mpf
 
 
 
-candles = data.iloc[-360:] # Last 30 candles in data
+candles = data.iloc[-60:] # Last 30 candles in data
 support_coefs_c, resist_coefs_c = fit_trendlines_single(candles['Close'])
 support_coefs, resist_coefs = fit_trendlines_high_low(candles['High'], candles['Low'], candles['Close'])
 

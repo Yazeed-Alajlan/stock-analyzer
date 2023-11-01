@@ -1,3 +1,4 @@
+import yfinance
 
 def is_consolidating(df, candles=14,percentage=2.5):
     # Get last "n" candlesticks closes
@@ -13,7 +14,7 @@ def is_consolidating(df, candles=14,percentage=2.5):
 
     return False
 
-def is_breaking_out(df, candles,percentage=2.5):
+def is_breaking_out(df, candles=14,percentage=2.5):
     last_close = df[-1:]['Close'].values[0]
     if is_consolidating(df[:-1], candles=candles,percentage=percentage):
         recent_closes = df[-candles-1:-1]
@@ -25,3 +26,12 @@ def is_breaking_out(df, candles,percentage=2.5):
 
 
 
+def prepData():
+    df=yfinance.download("2222.SR", start="2021-01-1", end="2023-08-08")
+    df.reset_index(inplace=True)
+    ## Start index with 1
+    # df.index = np.arange(1, len(df) + 1)
+    return df
+
+df=prepData()
+print(is_breaking_out(df))
