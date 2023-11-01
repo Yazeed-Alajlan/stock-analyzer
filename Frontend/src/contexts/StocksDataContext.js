@@ -14,7 +14,7 @@ export function StocksDataProvider({ children }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = "http://localhost:5000/companies";
+        const url = "http://localhost:5000/api/companies";
         const response = await axios.get(url);
         console.log("fetch data");
         setStocksData(response.data);
@@ -27,7 +27,7 @@ export function StocksDataProvider({ children }) {
 
   function getStockFinancialData(symbol) {
     return axios
-      .get(`http://localhost:5000/api/StockFinancialData/${symbol}`)
+      .get(`http://localhost:5000/api/stock-financials/${symbol}`)
       .then((response) => response.data)
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -38,7 +38,7 @@ export function StocksDataProvider({ children }) {
     let response;
     try {
       response = await axios.get(
-        `http://localhost:5000/api/StockInformation/${symbol}`
+        `http://localhost:5000/api/stock-inforamtion/${symbol}`
       );
       console.log(response.data);
     } catch (error) {

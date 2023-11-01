@@ -6,9 +6,8 @@ import axios from "axios";
 import SmCardInformaiton from "../utils/SmCardInformaiton";
 import StockPriceCard from "./utils/StockPriceCard";
 import { useStocksData } from "../../contexts/StocksDataContext";
-import Test from "./Test";
-import MonthlyReturnTable from "./MonthlyReturnTable";
 import { CustomChart } from "../utils/CustomChart";
+import MonthlyReturnTable from "components/StockPage/MonthlyReturnTable";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 
@@ -60,7 +59,7 @@ const StockPage = () => {
               />
             </>
           )}
-          <button onClick={() => console.log(data)}>sssssssssssssss</button>
+          <MonthlyReturnTable symbols={symbol} />
           <Col xs={"8"}>
             <Row>
               <Container className="d-flex gap-2">

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { StocksDataProvider } from "./contexts/StocksDataContext";
+import { StocksDataProvider } from "contexts/StocksDataContext";
 import "./style/custom.scss";
 import "./style/main.css";
 

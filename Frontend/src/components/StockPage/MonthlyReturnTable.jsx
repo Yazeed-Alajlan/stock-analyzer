@@ -2,14 +2,15 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
-const MonthlyReturnTable = () => {
+const MonthlyReturnTable = ({ symbols }) => {
   const [data, setData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = "http://localhost:5000/api/predict";
+        const url = `http://localhost:5000/python-api/${symbols}/price-summary`;
         const response = await axios.get(url);
+
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);

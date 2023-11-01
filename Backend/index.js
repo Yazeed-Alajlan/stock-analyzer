@@ -8,11 +8,16 @@ import yahooFinance from "yahoo-finance2";
 import fs from "fs";
 import StockPrices from "./models/stockPrices.js";
 import axios from "axios";
+import stockAPI from "./services/stocks.js";
+import pytohnStockAPI from "./services-python/services-python.js";
 
 const app = express();
 const port = 5000;
 app.use(cors());
 app.use(express.json());
+app.use("/api", stockAPI);
+app.use("/python-api", pytohnStockAPI);
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/stockDB", {
     useNewUrlParser: true,
@@ -24,61 +29,6 @@ mongoose
   .catch((error) => {
     console.log("Error connecting to MongoDB:", error);
   });
-
-app.get("/api/predict", async (req, res) => {
-  axios
-    .get("//localhost:4000/api/price_summary")
-    .then((response) => {
-      console.log(response.data);
-      res.json(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-app.get("/api/volumeSeasonalityDaily", async (req, res) => {
-  axios;
-  const symbol = (4321)
-    .get(
-      `http://127.0.0.1:4000/api/stocks/${symbol}/volume-seasonality-daily`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-    .then((response) => {
-      var data = response.data;
-      data.result = JSON.parse(response.data.result);
-      // Send both 'data' and 'parsedString' in the JSON response
-      res.json(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-app.get("/api/japanese_candlestick_patterns/:pattern", async (req, res) => {
-  const pattern = req.params.pattern;
-
-  axios
-    .get(
-      `http://127.0.0.1:4000/api/stocks/japanese-candlestick-patterns/${pattern}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-    .then((response) => {
-      var data = response.data;
-      console.log(data);
-      res.json(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
 
 app.post("/api/register", async (req, res) => {
   console.log("hissdasd");
@@ -93,91 +43,6 @@ app.post("/api/register", async (req, res) => {
     .catch((error) => {
       console.error("Error:", error);
     });
-});
-
-app.get("/api/StockFinancialData/:symbol", (req, res) => {
-  const symbol = req.params.symbol;
-  StockFinancials.findOne({ symbol: symbol })
-    .then((stock) => {
-      if (!stock) {
-        return res.status(404).json({ error: "Stock not found" });
-      }
-      res.json(stock);
-    })
-    .catch((error) => {
-      console.error("Error retrieving stock:", error);
-      res.status(500).json({ error: "Internal server error" });
-    });
-});
-
-app.get("/api/StockInformation/:symbol", (req, res) => {
-  const symbol = req.params.symbol;
-  StockInformation.findOne({ symbol: symbol })
-    .then((stock) => {
-      if (!stock) {
-        return res.status(404).json({ error: "Stock not found" });
-      }
-      res.json(stock);
-    })
-    .catch((error) => {
-      console.error("Error retrieving stock:", error);
-      res.status(500).json({ error: "Internal server error" });
-    });
-});
-
-app.get("/api/StockPrice/:symbol", (req, res) => {
-  // const symbol = req.params.symbol;
-  // Define your date range
-  const symbol = "2222";
-  const startDate = new Date("2023-01-01T00:00:00.000Z");
-  const endDate = new Date("2023-01-04T23:59:59.999Z");
-
-  StockPrices.find({
-    symbol: symbolToFind,
-    "price.date": {
-      $gte: startDate,
-      $lte: endDate,
-    },
-  })
-    .then((result) => {
-      // Do something with the query result
-      console.log(result);
-    })
-    .catch((error) => {
-      console.error("Error querying data:", error);
-    });
-});
-
-app.get("/companies/:sectorName?", async (req, res) => {
-  console.log("hii");
-  const sectorName = req.params.sectorName;
-  try {
-    const symbolsWithSectors = await getStocksInformation();
-
-    if (sectorName) {
-      const filteredSymbols = symbolsWithSectors.filter(
-        (symbol) =>
-          symbol.sectorNameAr.toLowerCase() === sectorName.toLowerCase()
-      );
-      res.json(filteredSymbols);
-    } else {
-      res.json(symbolsWithSectors);
-    }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the symbols." });
-  }
-});
-app.get("/api/companies", async (req, res) => {
-  try {
-    const stocksInformationData = await getStocksInformation();
-    res.json(stocksInformationData);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the symbols." });
-  }
 });
 
 app.listen(port, () => {
@@ -197,16 +62,6 @@ const connectDB = async () => {
       console.log("Error connecting to MongoDB:", error);
     });
 };
-app.get("/api/stock-price/:symbol", async (req, res) => {
-  try {
-    const result = await StockPrices.find({
-      symbol: req.params.symbol,
-    });
-    res.json(result);
-  } catch (err) {
-    console.error("Error fetching data:", err);
-  }
-});
 
 const saveStockInformationData = async () => {
   const jsonData = fs.readFileSync("stockData.json", "utf8");
