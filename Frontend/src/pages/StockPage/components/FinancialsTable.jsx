@@ -6,7 +6,7 @@ import CustomButton from "components/utils/CustomButton";
 import SelectionTitle from "components/utils/SelectionTitle";
 import { BsCalendar3 } from "react-icons/bs";
 import { Container } from "react-bootstrap";
-import FinancialsTab from "./Financials/FinancialsTab";
+import FinancialsTab from "./financials/FinancialsTab";
 
 const FinancialsTable = () => {
   const { stockFinancialData } = useOutletContext();
