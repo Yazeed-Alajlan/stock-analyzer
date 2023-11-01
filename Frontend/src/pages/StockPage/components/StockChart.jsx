@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { createChart } from "lightweight-charts";
-import { CustomCard } from "../../components/utils/CustomCard";
-import SelectionTitle from "../../components/utils/SelectionTitle";
+import { CustomCard } from "components/utils/CustomCard";
+import SelectionTitle from "components/utils/SelectionTitle";
 import { ButtonGroup, Container } from "react-bootstrap";
-import CustomButton from "../../components/utils/CustomButton";
+import CustomButton from "components/utils/CustomButton";
 
 const StockChart = ({ symbol }) => {
   const [stockData, setStockData] = useState(null);
