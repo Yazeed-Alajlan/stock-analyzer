@@ -1,16 +1,14 @@
-import sys
-
-# sys.path.insert(1, 'C:/Users/Yazee/Desktop/stock-analyzer/Data/vsa')
-sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/vsa')
-# sys.path.insert(1, 'C:/Users/Yazeed/Desktop/react/stock-analyzer/Data/patterns')
+from scripts.price_analysis.main import *
+from scripts.patterns.main import *
+from scripts.vsa.main import *
+# from scripts.moving_average.main import *
+from database.main import *
+#------------------------------------------------------------------------------#
 import pandas as pd
 import flask 
 import yfinance as yf
-from Volume_Seasonality_daily  import  volume_seasonality_daily
-from price_summary import calculate_monthly_returns
-from patterns.pattern_detect import analyze_patterns
-from pymongo import MongoClient
-from database_functions import *
+
+
 
 def fetch_stock_data(stock_symbol, start_date, end_date):
     # Fetch stock data from Yahoo Finance
@@ -50,9 +48,8 @@ def get_volume_seasonality_daily():
 
 @app.route("/api/japanese_candlestick_patterns/<pattern>")
 def japanese_candlestick_patterns(pattern):
-    print("HIIIIIIIIIII")
-    stock_data=get_all_stocks_symbols()  # Replace "mycollection" with your collection name
-    data=analyze_patterns(stock_data,pattern)
+    stock_data=get_all_stocks_symbols()  
+    data=find_japanese_candlestick_patterns(stock_data,pattern)
     # Remove all 'None' values from the nested dictionary
     data = {
         pattern: {key: value for key, value in pattern_data.items() if value is not None}

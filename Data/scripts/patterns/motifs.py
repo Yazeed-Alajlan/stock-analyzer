@@ -1,38 +1,9 @@
-import talib
-import yfinance as yf
-import pandas as pd
+
+from matplotlib import pyplot as plt
 import numpy as np
-import ta
-import matplotlib.pyplot as plt 
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-from datetime import datetime
+import yfinance
 import stumpy
-import matplotlib.pyplot as plt
 
-def is_consolidating(df, percentage=2):
-    # Get last "n" candlesticks closes
-    recent_candlesticks = df[-15:]
-    # print(recent_candlesticks)
-    max_close = recent_candlesticks['Close'].max()
-    min_close = recent_candlesticks['Close'].min()
-
-    threshold = 1 - (percentage / 100)
-    if min_close > (max_close * threshold):
-        return True        
-
-    return False
-
-def is_breaking_out(df, percentage=2.5):
-    last_close = df[-1:]['Close'].values[0]
-    print(last_close)
-    if is_consolidating(df[:-1], percentage=percentage):
-        recent_closes = df[-16:-1]
-
-        if last_close > recent_closes['Close'].max():
-            return True
-
-    return False
 
 def pattern_recognition(df,m,k):
     # Assuming you already have your stock price data in a DataFrame named 'df'
@@ -69,12 +40,10 @@ def pattern_recognition(df,m,k):
     plt.show()
 
 def prepData():
-    df=yf.download("2222.SR", start="2020-01-1", end="2023-07-7")
+    df=yfinance.download("2222.SR", start="2020-01-1", end="2023-07-7")
     df.reset_index(inplace=True)
     ## Start index with 1
     # df.index = np.arange(1, len(df) + 1)
     return df
 
 df=prepData()
-print(is_consolidating(df, percentage=3))
-print(is_breaking_out(df, percentage=3))
