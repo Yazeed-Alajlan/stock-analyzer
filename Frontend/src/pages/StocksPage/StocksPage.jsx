@@ -5,7 +5,7 @@ import { Card, Container, Table, Button, Col, Row } from "react-bootstrap";
 import Select from "react-select";
 import { useStocksData } from "../../contexts/StocksDataContext";
 
-const CompaniesPage = () => {
+const StocksPage = () => {
   let { sector } = useParams();
   if (sector == "all") sector = "جميع القطاعات";
   const { stocksData, selectedStock, setSelectedStock } = useStocksData();
@@ -212,4 +212,4 @@ const CompaniesPage = () => {
   );
 };
 
-export default CompaniesPage;
+export default StocksPage;

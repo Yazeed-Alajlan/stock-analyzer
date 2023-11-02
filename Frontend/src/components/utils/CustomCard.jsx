@@ -1,10 +1,14 @@
 import { Card, Container } from "react-bootstrap";
 
-export const CustomCard = ({ children }) => {
+export const CustomCard = ({ children, header, subHeader }) => {
   return (
-    <Card className="bg-light border-0 shadow rounded-4 w-100 mb-5">
+    <Card className="bg-white border-0 shadow rounded-4 w-100 mb-5">
       <Card.Body>
-        <Container className="p-0">{children}</Container>
+        <Container className="p-0">
+          <h1 className="">{header}</h1>
+          <h2 className="">{subHeader}</h2>
+          {children}
+        </Container>
       </Card.Body>
     </Card>
   );

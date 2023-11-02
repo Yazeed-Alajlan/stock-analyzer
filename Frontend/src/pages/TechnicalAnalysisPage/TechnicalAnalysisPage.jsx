@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import candlestick_patterns from "./candlestickPatterns";
-import StockChart from "../StockPage/StockChart";
 import { CustomCard } from "components/utils/CustomCard";
 import { Card, Container } from "react-bootstrap";
+import StockChart from "pages/StockPage/components/StockChart";
 const TechnicalAnalysisPage = () => {
   const options = Object.entries(candlestick_patterns).map(([key, value]) => ({
     value: key,

@@ -8,14 +8,14 @@ import StockPage from "pages/StockPage/StockPage";
 import { Header } from "components/routing/Header";
 import { Container } from "react-bootstrap";
 import HomePage from "pages/HomePage/HomePage";
-import CompaniesPage from "pages/StocksPage/CompaniesPage";
-import StockInformation from "pages/StockPage/StockInformation";
-import FinancialesTable from "pages/StockPage/FinancialsTable";
+import StocksPage from "./pages/StocksPage/StocksPage";
 import axios from "axios";
-import StockChart from "pages/StockPage/StockChart";
-import Dividend from "pages/StockPage/components/Dividend";
 import ComparisonPage from "pages/ComparisonPage/ComparisonPage";
 import TechnicalAnalysisPage from "pages/TechnicalAnalysisPage/TechnicalAnalysisPage";
+import StockChart from "pages/StockPage/components/StockChart";
+import Dividend from "pages/StockPage/components/Dividend";
+import StockInformation from "pages/StockPage/components/StockInformation";
+import FinancialesTable from "pages/StockPage/components/FinancialsTable";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -57,7 +57,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<HomePage />} />
-          <Route path="/companies/:sector" element={<CompaniesPage />} />
+          <Route path="/companies/:sector" element={<StocksPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
           <Route
             path="/technical-analysis"

@@ -8,6 +8,7 @@ import StockPriceCard from "./components/StockPriceCard";
 import { useStocksData } from "contexts/StocksDataContext";
 import { CustomChart } from "components/utils/CustomChart";
 import MonthlyReturnTable from "./components/MonthlyReturnTable";
+import SelectionTabs from "./components/SelectionTabs";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 
@@ -89,6 +90,9 @@ const StockPage = () => {
           <Col className="d-flex  align-items-center" xs={"4"}>
             <StockPriceCard open={32} change={0.05} changePercentage={0.16} />
           </Col>
+          <Row>
+            <SelectionTabs />
+          </Row>
         </Row>
       ) : (
         <p>loading</p>

@@ -13,8 +13,8 @@ const StockInformation = () => {
   return (
     <div>
       {stockInformationData ? (
-        <CustomCard>
-          <SelectionTitle title={"معلومات السهم"} />
+        <CustomCard header={"معلومات السهم"} subHeader={"معلومات"}>
+          {/* <SelectionTitle title={"معلومات السهم"} /> */}
           <Container className="py-4">
             <Row>
               <Col xs={6}>

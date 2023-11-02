@@ -1,0 +1,21 @@
+.selection-tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.selection-tabs .tab-container {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+}
+.selection-tabs .tab-container .tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.selection-tabs .tab-container .indicator {
+  height: 3px;
+  background-color: blue;
+}/*# sourceMappingURL=SelectionTabs.css.map */
