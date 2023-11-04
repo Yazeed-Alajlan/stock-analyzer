@@ -1,6 +1,7 @@
 from scripts.price_analysis.main import *
 from scripts.patterns.main import *
 from scripts.vsa.main import *
+from scripts.trends.main import *
 # from scripts.moving_average.main import *
 from database.main import *
 #------------------------------------------------------------------------------#
@@ -10,20 +11,13 @@ import yfinance as yf
 
 
 
-def fetch_stock_data(stock_symbol, start_date, end_date):
-    # Fetch stock data from Yahoo Finance
-    df = yf.download(stock_symbol, start=start_date, end=end_date)
-    return df
 
 app = flask.Flask(__name__)
 
 
 @app.route("/api/stocks/<symbol>/price-summary")
 def get_price_summary(symbol):
-    stock_symbol = '2222.SR'
-    start_date = '2020-01-01'
-    end_date = '2022-12-31'
-    df = fetch_stock_data(stock_symbol, start_date, end_date)
+    df=get_price_data(symbol) 
     price_summary = calculate_monthly_returns(df)
 
     # Convert the date index to ISO 8601 format
@@ -33,10 +27,7 @@ def get_price_summary(symbol):
 ##api/volume_seasonality_daily
 @app.route("/api/stocks/<symbol>/volume-seasonality-daily")
 def get_volume_seasonality_daily(symbol):
-    stock_symbol = '2222.SR'
-    start_date = '2020-01-01'
-    end_date = '2022-12-31'
-    df = fetch_stock_data(stock_symbol, start_date, end_date)
+    df=get_price_data(symbol) 
     result,annual_avg_volume_norm,daily_avg_volume_per_day =  volume_seasonality_daily(df)
     result.index = result.index.strftime('%Y-%m-%d')
     annual_avg_volume_norm.index = annual_avg_volume_norm.index.strftime('%Y-%m-%d')
@@ -59,6 +50,13 @@ def japanese_candlestick_patterns(pattern):
     print(data)
 
     return data
+
+@app.route("/api/stocks/hawkes-process/<symbol>")
+def hawkes_process(symbol):
+    stock_data=get_price_data(symbol) 
+    data =find_hawkes_process(stock_data, kappa=0.1,norm_lookback=14,rolling=7)
+    return data.to_json()
+
 if __name__=="__main__":
     app.run(debug=True,port=4000)
 

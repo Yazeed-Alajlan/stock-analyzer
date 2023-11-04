@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { createChart } from "lightweight-charts";
-import { CustomCard } from "components/utils/CustomCard";
-import SelectionTitle from "components/utils/SelectionTitle";
-import { ButtonGroup, Container } from "react-bootstrap";
-import CustomButton from "components/utils/CustomButton";
+import { Container } from "react-bootstrap";
+import CompnentLayout from "components/CompnentLayout";
 
 const StockChart = ({ symbol }) => {
   const [stockData, setStockData] = useState(null);
-  const [legend, setLegend] = useState("");
-  // Generate a unique ID for the chart container based on the symbol
+  const [legend, setLegend] = useState(() => ({
+    close: "",
+    open: "",
+    high: "",
+    low: "",
+    changePercent: "",
+  }));
+
   const chartContainerId = `chart-container-${symbol}`;
 
   useEffect(() => {
@@ -55,18 +59,16 @@ const StockChart = ({ symbol }) => {
     chart.applyOptions({
       rightPriceScale: {
         scaleMargins: {
-          top: 0.4, // leave some space for the legend
+          top: 0.4,
           bottom: 0.15,
         },
       },
       crosshair: {
-        // hide the horizontal crosshair line
         horzLine: {
           visible: false,
           labelVisible: false,
         },
       },
-      // hide the grid lines
       grid: {
         vertLines: {
           visible: false,
@@ -79,16 +81,29 @@ const StockChart = ({ symbol }) => {
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(formatData());
     chart.subscribeCrosshairMove((param) => {
-      let priceFormatted = "";
+      let closePrice = "";
+      let openPrice = "";
+      let highPrice = "";
+      let lowPrice = "";
+
       if (param.time) {
         const data = param.seriesData.get(candlestickSeries);
-        const price = data.value !== undefined ? data.value : data.close;
-        priceFormatted = price.toFixed(2);
-        setLegend(priceFormatted);
-        console.log(priceFormatted);
+        closePrice = data.close.toFixed(2);
+        openPrice = data.open.toFixed(2);
+        highPrice = data.high.toFixed(2);
+        lowPrice = data.low.toFixed(2);
       }
+
+      setLegend({
+        close: closePrice,
+        open: openPrice,
+        high: highPrice,
+        low: lowPrice,
+        changePercent: (((closePrice - openPrice) / openPrice) * 100).toFixed(
+          2
+        ),
+      });
     });
-    chart.timeScale().fitContent();
 
     return () => {
       chart.remove();
@@ -96,12 +111,24 @@ const StockChart = ({ symbol }) => {
   }, [stockData]);
 
   return (
-    <CustomCard>
+    <CompnentLayout>
       <Container className="px-4">
-        {legend}
+        <div
+          className={`d-flex gap-4 text-${
+            legend.open > legend.close ? "danger" : "success"
+          }`}
+        >
+          <p>
+            التغيير (%): <span>{legend.changePercent}</span>
+          </p>
+          <p>الأدنى : {legend.low}</p>
+          <p>الأعلى : {legend.high}</p>
+          <p>الإفتتاح : {legend.open}</p>
+          <p>الإغلاق : {legend.close}</p>
+        </div>
         <div className="p-4" id={chartContainerId}></div>
       </Container>
-    </CustomCard>
+    </CompnentLayout>
   );
 };
 

@@ -47,11 +47,12 @@ def get_price_data(symbol):
     collection = db["stockprices"]
     # Example: Query all documents in the collection
     document = collection.find_one({"symbol": symbol})
-
-    print(document)
     quotes = document.get("quotes")
     df =  pd.DataFrame(quotes)
-    
+    df = df.drop('_id', axis=1)
+
+    df.set_index('date', inplace=True)
+
     # Close the MongoDB client when done
     client.close()
     return df

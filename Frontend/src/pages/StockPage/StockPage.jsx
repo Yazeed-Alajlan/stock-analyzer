@@ -90,13 +90,12 @@ const StockPage = () => {
           <Col className="d-flex  align-items-center" xs={"4"}>
             <StockPriceCard open={32} change={0.05} changePercentage={0.16} />
           </Col>
-          <Row>
-            <SelectionTabs />
-          </Row>
         </Row>
       ) : (
         <p>loading</p>
       )}
+      <SelectionTabs symbol={symbol} sector={sector} />
+
       <Row className="pt-4">
         <Col sm={2}>
           <SidebarSelection />
