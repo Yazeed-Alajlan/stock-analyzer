@@ -51,11 +51,28 @@ def japanese_candlestick_patterns(pattern):
 
     return data
 
-@app.route("/api/stocks/hawkes-process/<symbol>")
+@app.route("/api/stocks/<symbol>/hawkes-process")
 def hawkes_process(symbol):
     stock_data=get_price_data(symbol) 
     data =find_hawkes_process(stock_data, kappa=0.1,norm_lookback=14,rolling=7)
+    data.index = data.index.strftime('%Y-%m-%d')
+
     return data.to_json()
+
+@app.route("/api/stocks/consolidating-stocks")
+def consolidating():
+    stock_data=get_all_stocks_symbols()  
+    data=find_consolidating_stocks(stock_data)
+    return data
+
+
+
+
+
+
+
+
+
 
 if __name__=="__main__":
     app.run(debug=True,port=4000)

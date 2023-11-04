@@ -11,7 +11,7 @@ def find_hawkes_process(data, kappa= 0.1,norm_lookback=336,rolling=168):
     # Normalize volume
     data['atr'] = ta.atr(np.log(data['high']), np.log(data['low']), np.log(data['close']), norm_lookback) 
     data['norm_range'] = (np.log(data['high']) - np.log(data['low'])) / data['atr']
-
+    data['log_close']=np.log(data['close'])
     assert(kappa > 0.0)
     alpha = np.exp(-kappa)
     arr = data['norm_range'].to_numpy()
@@ -108,52 +108,6 @@ def get_trades_from_signal(data: pd.DataFrame, signal: np.array):
     return long_trades, short_trades
 
 
-
-def plot_price_and_hawkes(data):
-    data['q05'] = data['v_hawk'].rolling(168).quantile(0.05)
-    data['q95'] = data['v_hawk'].rolling(168).quantile(0.95)
-    plt.figure(figsize=(12, 6))
-
-    # data = data['2020-05-01':'2020-11-01']
-
-    # Create the first y-axis for price data
-    ax1 = plt.gca()
-    ax1.plot(data.index, (data['close']), color='blue', label='Price Data')
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel('Log Price', color='blue')
-
-    # Create the second y-axis for the Hawkes Process
-    ax2 = ax1.twinx()
-    ax2.plot(data.index, data['v_hawk'], color='green', label='Hawkes Process')
-    ax2.set_ylabel('Hawkes Process Value', color='green')
-
-    # Create the third y-axis for q05 and q95
-    # ax1.fill_between(data.index, data['q05'], data['q95'], color='orange', alpha=0.5, label='Q05-Q95 Range')
-
-    # Set a common title
-    plt.title('Price Data, Hawkes Process, and Quantiles Chart')
-    plt.grid(True)
-
-    # Show a legend for all series
-    lines1, labels1 = ax1.get_legend_handles_labels()
-    lines2, labels2 = ax2.get_legend_handles_labels()
-    ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
-
-    # Show the plot
-    plt.show()
-
-
-# data = pd.read_csv('BTCUSDT3600.csv')
-# data['date'] = data['date'].astype('datetime64[s]')
-# data = data.set_index('date')
-
-## norm_lookback and rolling for Daily (14, 7) ,Hourly (336, 168) respectively.
-# data =hawkes_process(data, kappa=0.1,norm_lookback=14,rolling=7)
-# data =hawkes_process(data, kappa=0.1,norm_lookback=336,rolling=168)
-# data['sig'] = vol_signal(data['close'], data['v_hawk'], 168)
-
-# print(data)
-# plot_price_and_hawkes(data)
 
 
 

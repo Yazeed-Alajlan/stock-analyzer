@@ -1,5 +1,5 @@
 import numpy as np
-import yfinance
+import yfinance as yf
 import pandas_ta as ta
 
 
@@ -14,8 +14,11 @@ def normlizeRange(df,norm_lookback=336):
     return df
 
 
-def prepData():
-    df = yfinance.download('USDT-BTC', start='2018-01-01', end='2022-12-31')
-    df = df[df["Volume"] > 0]
-    df["vol_norm"] = np.log(df["Volume"] / df["Volume"].rolling(30).median())
+def fetch_stock_data(symbol, start_date, end_date):
+    df = yf.download(symbol, start=start_date, end=end_date)
+    # df = df[df["Volume"] > 0]
+    # df["vol_norm"] = np.log(df["Volume"] / df["Volume"].rolling(30).median())
     return df
+
+
+
