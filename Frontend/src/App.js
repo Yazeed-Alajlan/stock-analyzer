@@ -16,6 +16,9 @@ import StockChart from "pages/StockPage/components/StockChart";
 import Dividend from "pages/StockPage/components/Dividend";
 import StockInformation from "pages/StockPage/components/StockInformation";
 import FinancialesTable from "pages/StockPage/components/FinancialsTable";
+import HawkesProcess from "pages/TechnicalAnalysisPage/components/HawkesProcess";
+import JapaneseCandlestick from "pages/TechnicalAnalysisPage/components/JapaneseCandlestick";
+import ConsolidatingStocks from "pages/TechnicalAnalysisPage/components/ConsolidatingStocks";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -59,9 +62,22 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/companies/:sector" element={<StocksPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
+
           <Route
             path="/technical-analysis"
             element={<TechnicalAnalysisPage />}
+          />
+          <Route
+            path="/technical-analysis/consolidating-stocks"
+            element={<ConsolidatingStocks />}
+          />
+          <Route
+            path="/technical-analysis/japanese-candlestick"
+            element={<JapaneseCandlestick />}
+          />
+          <Route
+            path="/technical-analysis/hawkes-process"
+            element={<HawkesProcess />}
           />
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>

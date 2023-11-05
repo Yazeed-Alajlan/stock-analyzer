@@ -19,7 +19,9 @@ const CardWithLink = ({ to, label, icon, color }) => {
       >
         <div className="d-flex flex-column align justify-content-center align-items-center">
           <div className="overlay" />
-          <div className="circle">{icon}</div>
+          <div className="circle ">
+            <div className="icon">{icon}</div>
+          </div>
         </div>
         <p>{label}</p>
       </Link>

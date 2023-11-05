@@ -1,28 +1,29 @@
 import React from "react";
-import FilterCard from "./components/FilterCard";
-import PageLayout from "components/PageLayout";
-import CardWithLink from "components/utils/CardWithLink";
-import HawkesProcess from "./components/HawkesProcess";
-import ConsolidatingStocks from "./components/ConsolidatingStocks";
 import { Container } from "react-bootstrap";
+import PageLayout from "components/PageLayout";
+import { FaChartBar, FaMoneyBillWave, FaSignal } from "react-icons/fa"; // Import FontAwesome icons
+import CardWithLink from "components/utils/CardWithLink";
 
 const TechnicalAnalysisPage = () => {
   return (
     <PageLayout>
-      <Container className="d-flex justify-contnet-center gap-4">
+      <Container className="d-flex justify-content-center flex-wrap gap-5">
         <CardWithLink
-          to={"/technical-analysis/hawkes-process"}
-          label={"Hawkes Process"}
+          to="consolidating-stocks"
+          label="Consolidating Stocks"
+          icon={<FaChartBar size={50} />} // Pass the icon as a prop
         />
         <CardWithLink
-          to={"/technical-analysis/consolidating-stocks"}
-          label={"Consolidating Stocks"}
+          to="japanese-candlestick"
+          label="Japanese Candlestick"
+          icon={<FaMoneyBillWave size={50} />} // Pass the icon as a prop
+        />
+        <CardWithLink
+          to="hawkes-process"
+          label="Hawkes Process"
+          icon={<FaSignal size={50} />} // Pass the icon as a prop
         />
       </Container>
-
-      {/* <FilterCard />
-      <HawkesProcess />
-      <ConsolidatingStocks /> */}
     </PageLayout>
   );
 };
