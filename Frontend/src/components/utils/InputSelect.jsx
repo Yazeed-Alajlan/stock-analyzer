@@ -21,6 +21,7 @@ const InputSelect = ({
           value={selectedOption}
           onChange={onChange}
           isDisabled={isDisabled}
+          isClearable
         />
       </div>
     </CompnentLayout>

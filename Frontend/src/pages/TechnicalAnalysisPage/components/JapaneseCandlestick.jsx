@@ -7,6 +7,7 @@ import { CustomCard } from "components/utils/CustomCard";
 import CustomButton from "components/utils/CustomButton";
 import InputSelect from "components/utils/InputSelect";
 import Input from "components/utils/Input";
+import FilterCard from "components/utils/FilterCard";
 
 const JapaneseCandlestick = () => {
   const candlestickOptions = Object.entries(candlestick_patterns).map(
@@ -16,13 +17,18 @@ const JapaneseCandlestick = () => {
     })
   );
   const [selectedPattern, setSelectedPattern] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState();
   const [filteredData, setFilteredData] = useState(null);
+
   const handleChange = (selectedOption) => {
     setSelectedPattern(selectedOption);
   };
+  const handleFilterData = (selectedOption) => {
+    setSelectedFilter(selectedOption);
+  };
+
   const sendSelectedPattern = async () => {
     if (selectedPattern) {
-      console.log(selectedPattern);
       try {
         const response = await fetch(
           `http://localhost:5000/python-api/japanese-candlestick-patterns/${selectedPattern.value}`
@@ -31,7 +37,6 @@ const JapaneseCandlestick = () => {
         if (response.ok) {
           const filteredData = await response.json(); // Assuming the response is JSON data
           setFilteredData(filteredData);
-          console.log(filteredData);
         } else {
           console.error("Failed to send pattern");
         }
@@ -41,42 +46,68 @@ const JapaneseCandlestick = () => {
     }
   };
 
+  const filteredDataByFilter = () => {
+    if (!filteredData || !selectedFilter) {
+      return filteredData;
+    }
+    console.log(selectedFilter);
+    const filteredByFilter = {};
+
+    // Iterate over the outer dictionary
+    Object.keys(filteredData).forEach((outerKey) => {
+      // Filter and create a new inner dictionary
+      const innerData = Object.entries(filteredData[outerKey])
+        .filter(([innerKey, value]) => value === selectedFilter.value)
+        .reduce((obj, [innerKey, value]) => {
+          obj[innerKey] = value;
+          return obj;
+        }, {});
+
+      // If there are items in the inner dictionary, add it to the result
+      if (Object.keys(innerData).length > 0) {
+        filteredByFilter[outerKey] = innerData;
+      }
+    });
+
+    return filteredByFilter;
+  };
+
   return (
     <CompnentLayout>
+      <FilterCard>
+        <Col xs={8} xl={5} className="d-flex">
+          <InputSelect
+            label={"النمط:"}
+            options={candlestickOptions}
+            value={selectedPattern}
+            onChange={handleChange}
+            placeholder="حدد النمط"
+          />
+        </Col>
+        <Col xs={8} xl={5} className="d-flex">
+          <InputSelect
+            label="النوع:"
+            options={[
+              { value: "bullish", label: "bullish" },
+              { value: "bearish", label: "bearish" },
+            ]}
+            value={selectedFilter}
+            onChange={handleFilterData}
+            placeholder="إيجابي أو سلبي"
+            isDisabled={filteredData === null}
+          />
+        </Col>
+        <Col xs={8} xl={2} className="d-flex justify-content-center">
+          <CustomButton title={"ابحث"} onClick={sendSelectedPattern} />
+        </Col>
+      </FilterCard>
       <CustomCard>
-        <Row className="d-flex border-1 border-bottom pb-4">
-          <Col xs={8} xl={5} className="d-flex">
-            <InputSelect
-              label={"النمط:"}
-              options={candlestickOptions}
-              value={selectedPattern}
-              onChange={handleChange}
-              placeholder="حدد النمط"
-            />
-          </Col>
-          <Col xs={8} xl={5} className="d-flex">
-            <InputSelect
-              label="النوع:"
-              options={candlestickOptions}
-              value={selectedPattern}
-              onChange={handleChange}
-              placeholder="إيجابي أو سلبي"
-              isDisabled={filteredData === null}
-            />
-          </Col>
-          <Col xs={8} xl={2} className="d-flex justify-content-center">
-            <CustomButton title={"ابحث"} onClick={sendSelectedPattern} />
-          </Col>
-        </Row>
         <Row>
-          {filteredData && (
+          {filteredDataByFilter() && (
             <>
-              {/* Iterate over the outer dictionary */}
-              {Object.keys(filteredData).map((outerKey) => (
+              {Object.keys(filteredDataByFilter()).map((outerKey) => (
                 <div className="d-flex flex-column gap-4" key={outerKey}>
-                  {/* <p>Key: {outerKey}</p> */}
-                  {/* Iterate over the inner dictionary */}
-                  {Object.entries(filteredData[outerKey]).map(
+                  {Object.entries(filteredDataByFilter()[outerKey]).map(
                     ([innerKey, value]) => (
                       <div
                         className="d-flex flex-column border-3 border-bottom"
