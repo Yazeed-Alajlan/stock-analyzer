@@ -21,6 +21,7 @@ const ConsolidatingStocks = () => {
   return (
     <div>
       <button onClick={() => console.log(data)}></button>
+
       <div>
         {Object.keys(data).map((symbol) => (
           <StockChart key={symbol} symbol={symbol} />

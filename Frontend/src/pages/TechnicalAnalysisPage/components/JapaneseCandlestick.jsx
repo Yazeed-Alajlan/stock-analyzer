@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import CompnentLayout from "components/CompnentLayout";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import candlestick_patterns from "../candlestickPatterns";
-import Select from "react-select";
 import StockChart from "pages/StockPage/components/StockChart";
 import { CustomCard } from "components/utils/CustomCard";
 import CustomButton from "components/utils/CustomButton";
+import InputSelect from "components/utils/InputSelect";
+import Input from "components/utils/Input";
 
-const FilterCard = () => {
+const JapaneseCandlestick = () => {
   const candlestickOptions = Object.entries(candlestick_patterns).map(
     ([key, value]) => ({
       value: key,
       label: value,
     })
   );
-  const [selectedPattern, setSelectedPattern] = useState();
+  const [selectedPattern, setSelectedPattern] = useState("");
   const [filteredData, setFilteredData] = useState(null);
   const handleChange = (selectedOption) => {
     setSelectedPattern(selectedOption);
@@ -39,25 +40,27 @@ const FilterCard = () => {
       }
     }
   };
+
   return (
     <CompnentLayout>
       <CustomCard>
         <Row className="d-flex border-1 border-bottom pb-4">
           <Col xs={8} xl={5} className="d-flex">
-            <p className="my-auto ms-3">النمط:</p>
-            <Select
+            <InputSelect
+              label={"النمط:"}
               options={candlestickOptions}
               value={selectedPattern}
               onChange={handleChange}
               placeholder="حدد النمط"
-              className="w-75 z-2"
             />
           </Col>
           <Col xs={8} xl={5} className="d-flex">
-            <p className="my-auto ms-3">النوع:</p>
-            <Select
+            <InputSelect
+              label="النوع:"
+              options={candlestickOptions}
+              value={selectedPattern}
+              onChange={handleChange}
               placeholder="إيجابي أو سلبي"
-              className="w-75 z-2"
               isDisabled={filteredData === null}
             />
           </Col>
@@ -97,4 +100,4 @@ const FilterCard = () => {
   );
 };
 
-export default FilterCard;
+export default JapaneseCandlestick;
