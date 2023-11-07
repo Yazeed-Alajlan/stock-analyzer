@@ -53,8 +53,8 @@ def get_price_data(symbol):
     df.set_index('date', inplace=True)
 
     # Convert numeric columns to float
-    numeric_columns = ['open', 'close', 'high', 'low', 'volume', 'adjclose']
-    df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
+    # numeric_columns = ['open', 'close', 'high', 'low', 'volume', 'adjclose']
+    # df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
 
 
     # Close the MongoDB client when done

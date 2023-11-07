@@ -1,4 +1,5 @@
 import axios from "axios";
+import CardFlip from "components/utils/CardFlip";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
@@ -26,6 +27,7 @@ const MonthlyReturnTable = ({ symbols }) => {
 
   return (
     <Table hover>
+      <CardFlip />
       <thead>
         <tr>
           <th>Year</th>

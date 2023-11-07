@@ -10,7 +10,7 @@ def fetch_stock_data(stock_symbol, start_date, end_date):
     return df
 
 def calculate_monthly_returns(df):
-    monthly_data = df['Close'].resample('M').ffill()
+    monthly_data = df['close'].resample('M').ffill()
     monthly_returns = (monthly_data / monthly_data.shift(1) - 1) * 100
     monthly_returns.iloc[0] = 0  
     return monthly_returns
