@@ -80,12 +80,18 @@ router.get("/:symbol/hawkes-process", async (req, res) => {
 });
 
 router.get("/consolidating-stocks", async (req, res) => {
+  const { numberOfCandles, percentageRange } = req.query;
+  console.log("numberOfCandles:", numberOfCandles);
+  console.log("percentageRange:", percentageRange);
   axios
-    .get(`http://127.0.0.1:4000/api/stocks/consolidating-stocks`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    .get(
+      `http://127.0.0.1:4000/api/stocks/consolidating-stocks?numberOfCandles=${numberOfCandles}&percentageRange=${percentageRange}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
     .then((response) => {
       var data = response.data;
       console.log(data);

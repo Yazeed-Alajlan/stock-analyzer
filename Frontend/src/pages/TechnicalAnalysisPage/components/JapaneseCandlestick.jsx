@@ -109,7 +109,7 @@ const JapaneseCandlestick = () => {
                 <div className="d-flex flex-column gap-4" key={outerKey}>
                   {Object.entries(filteredDataByFilter()[outerKey]).map(
                     ([innerKey, value]) => (
-                      <div
+                      <CustomCard
                         className="d-flex flex-column border-3 border-bottom"
                         key={innerKey}
                       >
@@ -118,7 +118,7 @@ const JapaneseCandlestick = () => {
                           <p>النوع: {value}</p>
                         </div>
                         <StockChart symbol={innerKey} />
-                      </div>
+                      </CustomCard>
                     )
                   )}
                 </div>

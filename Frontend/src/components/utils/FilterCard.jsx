@@ -7,7 +7,9 @@ import { CustomCard } from "./CustomCard";
 const FilterCard = ({ children }) => {
   return (
     <CustomCard>
-      <Row className="d-flex border-2 border-bottom pb-4">{children}</Row>
+      <Row className="d-flex align-items-center align-content-center border-2 border-bottom pb-4">
+        {children}
+      </Row>
     </CustomCard>
   );
 };

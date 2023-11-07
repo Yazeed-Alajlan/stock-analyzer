@@ -4,12 +4,13 @@ import CompnentLayout from "components/CompnentLayout";
 const Input = ({
   label,
   type,
-  inputContent,
+  value,
   placeholder,
   onChange,
   isDisabled,
   min,
   max,
+  ref,
 }) => {
   return (
     <CompnentLayout>
@@ -19,11 +20,12 @@ const Input = ({
           className="w-75 z-2"
           type={type}
           placeholder={placeholder}
-          value={inputContent}
+          value={value}
           onChange={onChange}
           isDisabled={isDisabled}
           min={min}
           max={max}
+          ref={ref}
         />
       </div>
     </CompnentLayout>

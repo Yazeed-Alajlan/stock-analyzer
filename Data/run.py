@@ -61,8 +61,10 @@ def hawkes_process(symbol):
 
 @app.route("/api/stocks/consolidating-stocks")
 def consolidating():
+    numberOfCandles = flask.request.args.get("numberOfCandles")
+    percentageRange = flask.request.args.get("percentageRange")
     stock_data=get_all_stocks_symbols()  
-    data=find_consolidating_stocks(stock_data)
+    data=find_consolidating_stocks(stock_data,candles=numberOfCandles,percentage=percentageRange)
     return data
 
 

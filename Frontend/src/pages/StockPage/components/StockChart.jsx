@@ -114,12 +114,15 @@ const StockChart = ({ symbol }) => {
     <CompnentLayout>
       <Container className="px-4">
         <div
-          className={`d-flex gap-4 text-${
+          className={`d-flex justify-content-end  gap-4 text-${
             legend.open > legend.close ? "danger" : "success"
           }`}
         >
           <p>
-            التغيير (%): <span>{legend.changePercent}</span>
+            التغيير (%):{" "}
+            <span>
+              {legend.changePercent === "NaN" ? "" : legend.changePercent}
+            </span>
           </p>
           <p>الأدنى : {legend.low}</p>
           <p>الأعلى : {legend.high}</p>

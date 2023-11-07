@@ -25,11 +25,13 @@ def is_breaking_out(df, candles=14,percentage=2.5):
 
 def find_consolidating_stocks(data, candles=14,percentage=2.5):
     stocks = {}
+    print(percentage)
+    print(candles)
     for symbol in data:
         stock_data = get_price_data(symbol)
         try:
-            if(is_consolidating(stock_data)):
-                if(is_breaking_out(stock_data)):
+            if(is_consolidating(stock_data,candles=int(candles),percentage=float(percentage))):
+                if(is_breaking_out(stock_data,candles=int(candles),percentage=float(percentage))):
                     stocks[symbol]="true"
                 else:
                     stocks[symbol]="flase"
