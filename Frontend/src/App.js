@@ -19,6 +19,7 @@ import FinancialesTable from "pages/StockPage/components/FinancialsTable";
 import HawkesProcess from "pages/TechnicalAnalysisPage/components/HawkesProcess";
 import JapaneseCandlestick from "pages/TechnicalAnalysisPage/components/JapaneseCandlestick";
 import ConsolidatingStocks from "pages/TechnicalAnalysisPage/components/ConsolidatingStocks";
+import MonthlyReturns from "pages/TechnicalAnalysisPage/components/MonthlyReturns";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -78,6 +79,10 @@ function App() {
           <Route
             path="/technical-analysis/hawkes-process"
             element={<HawkesProcess />}
+          />
+          <Route
+            path="/technical-analysis/monthly-returns"
+            element={<MonthlyReturns />}
           />
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>

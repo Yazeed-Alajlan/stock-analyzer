@@ -95,13 +95,13 @@ def calculate_monthly_daily_avg_percentage_change(df):
     monthly_daily_avg_percentage_change = df.groupby([df.index.year, df.index.month, df['Day_Name']])['Percentage_Change'].mean()
     return monthly_daily_avg_percentage_change
 
-if __name__ == "__main__":
-    stock_symbol = '2222.SR'
-    start_date = '2020-01-01'
-    end_date = '2022-12-31'
+# if __name__ == "__main__":
+#     stock_symbol = '2222.SR'
+#     start_date = '2020-01-01'
+#     end_date = '2022-12-31'
 
-    df = fetch_stock_data(stock_symbol, start_date, end_date)
-    print(count_price_change(df))
+#     df = fetch_stock_data(stock_symbol, start_date, end_date)
+#     print(count_price_change(df))
 
     
 

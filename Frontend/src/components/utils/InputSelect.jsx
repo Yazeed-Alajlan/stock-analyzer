@@ -9,6 +9,7 @@ const InputSelect = ({
   placeholder,
   onChange,
   isDisabled,
+  isSearchable,
 }) => {
   return (
     <CompnentLayout>
@@ -22,6 +23,7 @@ const InputSelect = ({
           onChange={onChange}
           isDisabled={isDisabled}
           isClearable
+          isSearchable
         />
       </div>
     </CompnentLayout>

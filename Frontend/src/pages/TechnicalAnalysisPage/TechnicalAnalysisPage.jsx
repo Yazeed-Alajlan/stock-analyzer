@@ -23,6 +23,11 @@ const TechnicalAnalysisPage = () => {
           label="Hawkes Process"
           icon={<FaSignal size={50} />} // Pass the icon as a prop
         />
+        <CardWithLink
+          to="monthly-returns"
+          label="Monthly Returns"
+          icon={<FaSignal size={50} />} // Pass the icon as a prop
+        />
       </Container>
     </PageLayout>
   );
