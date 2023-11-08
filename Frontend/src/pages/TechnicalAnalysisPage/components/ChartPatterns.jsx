@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import ReactApexChart from "react-apexcharts";
+import axios from "axios";
 
-const ChartPatterns = ({ candleData, pattern, pad }) => {
+const ChartPatterns = () => {
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -21,66 +21,81 @@ const ChartPatterns = ({ candleData, pattern, pad }) => {
     fetchData();
   }, []);
 
-  const start_i = pattern.base_x - pad;
-  const end_i = pattern.conf_x + 1 + pad;
+  if (data && data.data && data.bear_flags) {
+    const candleData = data.data;
+    const pattern = data.bear_flags[0];
+    const datesArray = Object.keys(candleData.close);
 
-  const chartData = {
-    labels: candleData.labels.slice(start_i, end_i),
-    datasets: candleData.datasets,
-  };
+    // Prepare the data for the candlestick chart
+    const chartData = Object.keys(candleData).map((item, index) => ({
+      x: datesArray[index],
+      y: [
+        candleData.open[index],
+        candleData.high[index],
+        candleData.low[index],
+        candleData.close[index],
+      ],
+    }));
 
-  const poleLine = {
-    type: "line",
-    x0: pattern.base_x,
-    x1: pattern.tip_x,
-    y0: pattern.base_y,
-    y1: pattern.tip_y,
-    borderColor: "white",
-    borderDash: [5, 5],
-  };
+    // Prepare data for the pattern lines
+    // const patternLines = [
+    //   {
+    //     x: new Date(candleData[pattern.base_x].date).getTime(),
+    //     label: "Pole Line",
+    //     borderColor: "white",
+    //     offsetY: -30,
+    //   },
+    //   {
+    //     x: new Date(candleData[pattern.tip_x].date).getTime(),
+    //     label: "Tip Line",
+    //     borderColor: "blue",
+    //     offsetY: -30,
+    //   },
+    //   // Add other pattern lines as needed
+    // ];
 
-  const upperLine = {
-    type: "line",
-    x0: pattern.tip_x,
-    x1: pattern.conf_x,
-    y0: pattern.resist_intercept,
-    y1: pattern.resist_intercept + pattern.resist_slope * pattern.flag_width,
-    borderColor: "blue",
-    borderDash: [5, 5],
-  };
-
-  const lowerLine = {
-    type: "line",
-    x0: pattern.tip_x,
-    x1: pattern.conf_x,
-    y0: pattern.support_intercept,
-    y1: pattern.support_intercept + pattern.support_slope * pattern.flag_width,
-    borderColor: "blue",
-    borderDash: [5, 5],
-  };
-
-  const alines = [poleLine, upperLine, lowerLine];
-
-  const options = {
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: true,
-          text: "Date",
-        },
+    const series = [
+      {
+        data: chartData,
+        type: "candlestick",
       },
-      y: {
-        display: true,
-        title: {
-          display: true,
-          text: "Price",
-        },
-      },
-    },
-  };
+      // {
+      //   data: patternLines,
+      //   type: "line",
+      //   name: "Pattern Lines",
+      //   color: "blue",
+      //   fill: {
+      //     type: "solid",
+      //     color: "blue",
+      //     opacity: 0.2,
+      //   },
+      // },
+    ];
 
-  return <Line data={chartData} options={options} alines={alines} />;
+    const options = {
+      chart: {
+        height: 400,
+        type: "candlestick",
+      },
+      title: {
+        text: "Candlestick Chart with Pattern Lines",
+      },
+      xaxis: {
+        type: "datetime",
+      },
+    };
+
+    return (
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="candlestick"
+        height={400}
+      />
+    );
+  }
+
+  return <div>Loading...</div>;
 };
 
 export default ChartPatterns;

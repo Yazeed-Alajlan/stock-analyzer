@@ -67,8 +67,10 @@ def consolidating():
 @app.route("/api/stocks/flags-pennants")
 def flags_pennants():
     data=find_flags_pennants()
+    data[0].index = data[0].index.strftime('%Y-%m-%d')
+
     result_dict = {
-        "data": data[0].to_json(),
+        "data": data[0].to_dict(),
         "bull_flags": data[1],
         "bear_flags": data[2],
         "bull_pennants": data[3],

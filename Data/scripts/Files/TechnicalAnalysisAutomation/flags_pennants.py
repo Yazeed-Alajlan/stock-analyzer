@@ -478,9 +478,7 @@ def find_flags_pennants():
             bear_pennant_df.loc[i, 'return'] = ret 
             # Plot the first detected bull flag as an example
 
-    return data,bull_flags, bear_flags, bull_pennants, bear_pennants
-
-    # print(data, bull_flags[0])
+    print(data, bull_flags[0])
     # if bull_flags:
     #     plot_flag(data, bull_flags[0], pad=2)
 
@@ -495,6 +493,9 @@ def find_flags_pennants():
     # # Plot the first detected bear pennant as an example
     # if bear_pennants:
     #     plot_flag(data, bear_pennants[0], pad=2)
+    return data,bull_flags, bear_flags, bull_pennants, bear_pennants
+
+
 
 
 
