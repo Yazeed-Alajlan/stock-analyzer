@@ -1,5 +1,5 @@
 import talib
-from database.database_functions import get_price_data
+from database.main import *
 
 ## Currently i get only one pattern ##
 def find_japanese_candlestick_patterns(symbols,patterns):

@@ -2,6 +2,7 @@ from scripts.price_analysis.main import *
 from scripts.patterns.main import *
 from scripts.vsa.main import *
 from scripts.trends.main import *
+from scripts.Files.TechnicalAnalysisAutomation.flags_pennants import *
 # from scripts.moving_average.main import *
 from database.main import *
 #------------------------------------------------------------------------------#
@@ -66,6 +67,12 @@ def consolidating():
     stock_data=get_all_stocks_symbols()  
     data=find_consolidating_stocks(stock_data,candles=numberOfCandles,percentage=percentageRange)
     return data
+
+@app.route("/api/stocks/flags-pennants")
+def flags_pennants():
+    find_flags_pennants()
+
+    return "data"
 
 
 
