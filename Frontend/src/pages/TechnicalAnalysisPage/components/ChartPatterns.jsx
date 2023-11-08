@@ -1,7 +1,26 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 const ChartPatterns = ({ candleData, pattern, pad }) => {
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const symbol = "2222";
+        const url = `http://localhost:5000/python-api/flags-pennants`;
+        const response = await axios.get(url);
+
+        setData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const start_i = pattern.base_x - pad;
   const end_i = pattern.conf_x + 1 + pad;
 

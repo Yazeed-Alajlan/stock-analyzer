@@ -408,12 +408,13 @@ def find_flags_pennants():
     # data = pd.read_csv('BTCUSDT3600.csv')
     # data['date'] = data['date'].astype('datetime64[s]')
     # data = data.set_index('date')
+
+
     # data = np.log(data)
 
     dat_slice = data['close'].to_numpy()
     #bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_pips(dat_slice, 12)
     bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_trendline(dat_slice, 10)
-
 
     bull_flag_df = pd.DataFrame()
     bull_pennant_df = pd.DataFrame()
@@ -477,21 +478,23 @@ def find_flags_pennants():
             bear_pennant_df.loc[i, 'return'] = ret 
             # Plot the first detected bull flag as an example
 
-    print(data, bull_flags[0])
-    if bull_flags:
-        plot_flag(data, bull_flags[0], pad=2)
+    return data,bull_flags, bear_flags, bull_pennants, bear_pennants
 
-    # Plot the first detected bear flag as an example
-    if bear_flags:
-        plot_flag(data, bear_flags[0], pad=2)
+    # print(data, bull_flags[0])
+    # if bull_flags:
+    #     plot_flag(data, bull_flags[0], pad=2)
 
-    # Plot the first detected bull pennant as an example
-    if bull_pennants:
-        plot_flag(data, bull_pennants[0], pad=2)
+    # # Plot the first detected bear flag as an example
+    # if bear_flags:
+    #     plot_flag(data, bear_flags[0], pad=2)
 
-    # Plot the first detected bear pennant as an example
-    if bear_pennants:
-        plot_flag(data, bear_pennants[0], pad=2)
+    # # Plot the first detected bull pennant as an example
+    # if bull_pennants:
+    #     plot_flag(data, bull_pennants[0], pad=2)
+
+    # # Plot the first detected bear pennant as an example
+    # if bear_pennants:
+    #     plot_flag(data, bear_pennants[0], pad=2)
 
 
 

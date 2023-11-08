@@ -10,11 +10,7 @@ import pandas as pd
 import flask 
 import yfinance as yf
 
-
-
-
 app = flask.Flask(__name__)
-
 
 @app.route("/api/stocks/<symbol>/price-summary")
 def get_price_summary(symbol):
@@ -25,7 +21,7 @@ def get_price_summary(symbol):
     price_summary.index = price_summary.index.strftime('%Y-%m')
 
     return price_summary.to_json()
-##api/volume_seasonality_daily
+
 @app.route("/api/stocks/<symbol>/volume-seasonality-daily")
 def get_volume_seasonality_daily(symbol):
     df=get_price_data(symbol) 
@@ -70,9 +66,15 @@ def consolidating():
 
 @app.route("/api/stocks/flags-pennants")
 def flags_pennants():
-    find_flags_pennants()
-
-    return "data"
+    data=find_flags_pennants()
+    result_dict = {
+        "data": data[0].to_json(),
+        "bull_flags": data[1],
+        "bear_flags": data[2],
+        "bull_pennants": data[3],
+        "bear_pennants": data[4]
+    } 
+    return result_dict
 
 
 
