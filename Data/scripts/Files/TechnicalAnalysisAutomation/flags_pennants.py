@@ -402,6 +402,23 @@ def plot_flag(candle_data: pd.DataFrame, pattern: FlagPattern, pad=2):
     mpf.plot(dat, alines=dict(alines=[pole_line, upper_line, lower_line], colors=['w', 'b', 'b']), type='candle', style='charles', ax=ax)
     plt.show()
 
+def plot_data(candle_data: pd.DataFrame, pattern: FlagPattern, pad=2):
+    if pad < 0:
+        pad = 0
+
+    start_i = pattern.base_x - pad
+    end_i = pattern.conf_x + 1 + pad
+    dat = candle_data.iloc[start_i:end_i]
+    idx = dat.index
+    tip_idx = idx[pattern.tip_x - start_i]
+    conf_idx = idx[pattern.conf_x - start_i]
+    pole_line = [(idx[pattern.base_x - start_i], pattern.base_y), (tip_idx, pattern.tip_y)]
+    upper_line = [(tip_idx, pattern.resist_intercept), (conf_idx, pattern.resist_intercept + pattern.resist_slope * pattern.flag_width)]
+    lower_line = [(tip_idx, pattern.support_intercept), (conf_idx, pattern.support_intercept + pattern.support_slope * pattern.flag_width)]
+    return {"pole_line":pole_line,"upper_line":upper_line,"lower_line":lower_line}
+
+
+
 def find_flags_pennants():
     data = get_price_data("2222")
 
@@ -478,7 +495,20 @@ def find_flags_pennants():
             bear_pennant_df.loc[i, 'return'] = ret 
             # Plot the first detected bull flag as an example
 
-    print(data, bull_flags[0])
+    if bull_flags:
+        bull_flags=plot_data(data, bull_flags[0], pad=2)
+
+    # Plot the first detected bear flag as an example
+    if bear_flags:
+        bear_flags=plot_data(data, bear_flags[0], pad=2)
+
+    # Plot the first detected bull pennant as an example
+    if bull_pennants:
+        bull_pennants=plot_data(data, bull_pennants[0], pad=2)
+
+    # Plot the first detected bear pennant as an example
+    if bear_pennants:
+        bear_pennants=plot_data(data, bear_pennants[0], pad=2)
     # if bull_flags:
     #     plot_flag(data, bull_flags[0], pad=2)
 
@@ -493,7 +523,12 @@ def find_flags_pennants():
     # # Plot the first detected bear pennant as an example
     # if bear_pennants:
     #     plot_flag(data, bear_pennants[0], pad=2)
-    return data,bull_flags, bear_flags, bull_pennants, bear_pennants
+    
+    return {"data": data,"bull_flags": bull_flags,"bear_flags": bear_flags,"bull_pennants": bull_pennants,"bear_pennants": bear_pennants}
+
+
+
+
 
 
 

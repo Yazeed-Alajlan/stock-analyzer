@@ -74,7 +74,7 @@ const TechnicalAnalysisPage = () => {
   return (
     <PageLayout>
       <Container className="d-flex justify-content-center flex-wrap gap-5">
-        <ChartPatterns candleData={candleData} pattern={pattern} pad={pad} />
+        <ChartPatterns />
 
         <CardWithLink
           to="consolidating-stocks"
