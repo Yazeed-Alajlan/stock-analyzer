@@ -420,7 +420,7 @@ def plot_data(candle_data: pd.DataFrame, pattern: FlagPattern, pad=2):
 
 
 def find_flags_pennants():
-    data = get_price_data("2222")
+    data = get_price_data("4321")
 
     # data = pd.read_csv('BTCUSDT3600.csv')
     # data['date'] = data['date'].astype('datetime64[s]')

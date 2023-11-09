@@ -71,7 +71,7 @@ def flags_pennants():
     data["data"].index = data["data"].index.strftime('%Y-%m-%d')
     
     result_dict = {
-        "data": data["data"].to_dict(),
+        # "data": data["data"].to_dict(),
         "bull_flags": data["bull_flags"],
         "bear_flags": data["bear_flags"],
         "bull_pennants": data["bull_pennants"],
