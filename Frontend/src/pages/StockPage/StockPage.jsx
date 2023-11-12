@@ -9,17 +9,19 @@ import { useStocksData } from "contexts/StocksDataContext";
 import { CustomChart } from "components/utils/CustomChart";
 import MonthlyReturnTable from "./components/MonthlyReturnTable";
 import SelectionTabs from "./components/SelectionTabs";
+import PageLayout from "components/PageLayout";
 const StockPage = () => {
   const { symbol, sector } = useParams();
 
   const [stockInformationData, setStockInformationData] = useState();
   const [stockFinancialData, setStockFinancialData] = useState();
-  const [data, setData] = useState();
   const { getStockFinancialData, getStockInformationData } = useStocksData();
+  const [data, setData] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(await getStockInformationData(symbol));
         setStockInformationData(await getStockInformationData(symbol));
         setStockFinancialData(await getStockFinancialData(symbol));
       } catch (error) {
@@ -29,39 +31,11 @@ const StockPage = () => {
     fetchData();
   }, [symbol]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = "http://localhost:5000/api/volumeSeasonalityDaily";
-        const response = await axios.get(url);
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
-    <Container>
+    <PageLayout>
       {stockInformationData ? (
         <Row className="pb-4 border-bottom border-2">
-          {data && (
-            <>
-              <CustomChart
-                title="My Chart Title"
-                x_axis={Object.keys(data.result.daily_avg_volume_norm)}
-                y_axis={Object.values(data.result.daily_avg_volume_norm)}
-              />
-              <CustomChart
-                title="My Chart Title"
-                x_axis={Object.keys(data.daily_avg_volume_per_day)}
-                y_axis={Object.values(data.daily_avg_volume_per_day)}
-              />
-            </>
-          )}
-          <MonthlyReturnTable symbols={symbol} />
-          <Col xs={"8"}>
+          <Col xs={"12"} lg={"8"}>
             <Row>
               <Container className="d-flex gap-2">
                 <Link to={"/companies/all"}>الشركات</Link>/
@@ -87,7 +61,7 @@ const StockPage = () => {
               </Container>
             </Row>
           </Col>
-          <Col className="d-flex  align-items-center" xs={"4"}>
+          <Col className="my-auto" xs={"12"} lg={"4"}>
             <StockPriceCard open={32} change={0.05} changePercentage={0.16} />
           </Col>
         </Row>
@@ -106,7 +80,7 @@ const StockPage = () => {
           />
         </Col>
       </Row>
-    </Container>
+    </PageLayout>
   );
 };
 

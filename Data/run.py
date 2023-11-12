@@ -66,10 +66,11 @@ def consolidating():
 
 @app.route("/api/stocks/flags-pennants")
 def flags_pennants():
-    data=find_flags_pennants()
-    print(data["data"])
-    data["data"].index = data["data"].index.strftime('%Y-%m-%d')
-    
+    symbol = flask.request.args.get("symbol")
+    order = flask.request.args.get("order")
+    data=find_flags_pennants(symbol,order)
+
+    # data["data"].index = data["data"].index.strftime('%Y-%m-%d')
     result_dict = {
         # "data": data["data"].to_dict(),
         "bull_flags": data["bull_flags"],

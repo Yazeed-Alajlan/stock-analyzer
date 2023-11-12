@@ -56,7 +56,7 @@ function App() {
         >
           OPEN MODAL
         </button> */}
-        <button onClick={handleClick}>Register</button>
+        {/* <button onClick={handleClick}>Register</button> */}
 
         <Routes>
           <Route path="/home" element={<HomePage />} />
@@ -82,6 +82,10 @@ function App() {
           />
           <Route
             path="/technical-analysis/monthly-returns"
+            element={<MonthlyReturns />}
+          />
+          <Route
+            path="/technical-analysis/technical-analysis-automation"
             element={<MonthlyReturns />}
           />
 

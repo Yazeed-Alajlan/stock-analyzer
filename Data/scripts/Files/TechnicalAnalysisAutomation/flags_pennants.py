@@ -419,8 +419,8 @@ def plot_data(candle_data: pd.DataFrame, pattern: FlagPattern, pad=2):
 
 
 
-def find_flags_pennants():
-    data = get_price_data("4321")
+def find_flags_pennants(symbol,order=10):
+    data = get_price_data(symbol)
 
     # data = pd.read_csv('BTCUSDT3600.csv')
     # data['date'] = data['date'].astype('datetime64[s]')
@@ -431,7 +431,7 @@ def find_flags_pennants():
 
     dat_slice = data['close'].to_numpy()
     #bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_pips(dat_slice, 12)
-    bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_trendline(dat_slice, 10)
+    bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_trendline(dat_slice, order)
 
     bull_flag_df = pd.DataFrame()
     bull_pennant_df = pd.DataFrame()
