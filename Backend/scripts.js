@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import StockInformation from "./models/stockInformation.js";
 import { runScript, getStocksInformation } from "./scraper/tadawul.js";
-
+import fs from "fs";
 mongoose
   .connect("mongodb://127.0.0.1:27017/stockDB", {
     useNewUrlParser: true,
@@ -13,12 +13,15 @@ mongoose
   .catch((error) => {
     console.log("Error connecting to MongoDB:", error);
   });
-
 async function updateStocksInfomrations() {
-  await updatedStocksSymbols();
-  await updatedStockSummary();
+  // await updatedStocksSymbols();
+  // await updatedStockSummary();
+  await updatedStocksCapital();
 }
-// Stocks Information
+
+updateStocksInfomrations();
+
+// Stocks Information ------------------------------------------------------------------------------------------------------------
 async function updatedStocksSymbols() {
   try {
     //English Data
@@ -68,23 +71,26 @@ async function updatedStocksSymbols() {
               { symbol: stockInformation.symbol },
               stockInformation
             ).exec();
-            console.log("Stock Information Updated" + symbol);
+            console.log(
+              "Stock Information Updated" + "-----" + stockInformation.symbol
+            );
           } else {
             console.log(
-              "Skipping Update, Stock Information is the same" + symbol
+              "Skipping Update, Stock Information is the same" +
+                "-----" +
+                stockInformation.symbol
             );
           }
         } else {
           // Stock does not exist, add new stock information
           const newStockInformation = new StockInformation(stockInformation);
           await newStockInformation.save();
-          console.log("New Stock Information Is Added" + symbol);
+          console.log(
+            "New Stock Information Is Added" + "-----" + stockInformation.symbol
+          );
         }
       } catch (error) {
-        console.error(
-          "Error retrieving/updating stock:",
-          error + "------" + symbol
-        );
+        console.error("Error retrieving/updating stock:", error);
       }
     }
   } catch (error) {
@@ -92,6 +98,7 @@ async function updatedStocksSymbols() {
     throw error;
   }
 }
+
 async function updatedStockSummary() {
   const jsonData = fs.readFileSync("stockData.json", "utf8");
   const data = JSON.parse(jsonData);
@@ -102,55 +109,66 @@ async function updatedStockSummary() {
         symbol: company.symbol_code,
       }).exec();
       if (stock) {
-        // Create an object with all the fields
-        const newSummaryData = {
-          trade_date: new Date(company.today_points.trade_date),
-          open: company.today_points.open.toString(),
-          close: company.today_points.close.toString(),
-          high: company.today_points.high.toString(),
-          low: company.today_points.low.toString(),
-          previous_close: company.today_points.previous_close.toString(),
-          change_value: company.today_points.change_value.toString(),
-          change_ratio: company.today_points.change_ratio.toString(),
-          trade_count: company.today_points.trade_count.toString(),
-          trade_value: company.today_points.trade_value.toString(),
-          trade_volume: company.today_points.trade_volume.toString(),
-          fifty_two_week_high:
-            company.today_points.fifty_two_week_high.toString(),
-          fifty_two_week_low:
-            company.today_points.fifty_two_week_low.toString(),
-          previous_close_7_days_back:
-            company.today_points.previous_close_7_days_back.toString(),
-          previous_close_30_days_back:
-            company.today_points.previous_close_30_days_back.toString(),
-          previous_close_365_days_back:
-            company.today_points.previous_close_365_days_back.toString(),
-          return_value_last_week:
-            company.today_points.return_value_last_week.toString(),
-          return_value_last_month:
-            company.today_points.return_value_last_month.toString(),
-          return_value_last_year:
-            company.today_points.return_value_last_year.toString(),
-          return_last_week: company.today_points.return_last_week.toString(),
-          return_last_month: company.today_points.return_last_month.toString(),
-          return_last_year: company.today_points.return_last_year.toString(),
-          daily_price_to_earnings:
-            company.today_points.daily_price_to_earnings.toString(),
-          daily_price_to_book_value:
-            company.today_points.daily_price_to_book_value.toString(),
-          daily_market_capitalization:
-            company.today_points.daily_market_capitalization.toString(),
-          basic_earnings_per_share_ttm:
-            company.today_points.basic_earnings_per_share_ttm.toString(),
-          book_value_per_share_ttm:
-            company.today_points.book_value_per_share_ttm.toString(),
-        };
+        // Check if a summary with the same trade_date already exists
+        const existingSummary = stock.summary.find(
+          (summary) =>
+            summary.trade_date.getTime() ===
+            new Date(company.today_points.trade_date).getTime()
+        );
 
-        // Push the new data to the "summary" array
-        stock.summary.push(newSummaryData);
+        if (!existingSummary) {
+          // Create an object with all the fields
+          const newSummaryData = {
+            trade_date: new Date(company.today_points.trade_date),
+            open: company.today_points.open.toString(),
+            close: company.today_points.close.toString(),
+            high: company.today_points.high.toString(),
+            low: company.today_points.low.toString(),
+            previous_close: company.today_points.previous_close.toString(),
+            change_value: company.today_points.change_value.toString(),
+            change_ratio: company.today_points.change_ratio.toString(),
+            trade_count: company.today_points.trade_count.toString(),
+            trade_value: company.today_points.trade_value.toString(),
+            trade_volume: company.today_points.trade_volume.toString(),
+            fifty_two_week_high:
+              company.today_points.fifty_two_week_high.toString(),
+            fifty_two_week_low:
+              company.today_points.fifty_two_week_low.toString(),
+            previous_close_7_days_back:
+              company.today_points.previous_close_7_days_back.toString(),
+            previous_close_30_days_back:
+              company.today_points.previous_close_30_days_back.toString(),
+            previous_close_365_days_back:
+              company.today_points.previous_close_365_days_back.toString(),
+            return_value_last_week:
+              company.today_points.return_value_last_week.toString(),
+            return_value_last_month:
+              company.today_points.return_value_last_month.toString(),
+            return_value_last_year:
+              company.today_points.return_value_last_year.toString(),
+            return_last_week: company.today_points.return_last_week.toString(),
+            return_last_month:
+              company.today_points.return_last_month.toString(),
+            return_last_year: company.today_points.return_last_year.toString(),
+            daily_price_to_earnings:
+              company.today_points.daily_price_to_earnings.toString(),
+            daily_price_to_book_value:
+              company.today_points.daily_price_to_book_value.toString(),
+            daily_market_capitalization:
+              company.today_points.daily_market_capitalization.toString(),
+            basic_earnings_per_share_ttm:
+              company.today_points.basic_earnings_per_share_ttm.toString(),
+            book_value_per_share_ttm:
+              company.today_points.book_value_per_share_ttm.toString(),
+            // Include other fields as needed
+          };
 
-        // Save the updated document back to the database
-        await stock.save();
+          // Push the new data to the "summary" array
+          stock.summary.push(newSummaryData);
+
+          // Save the updated document back to the database
+          await stock.save();
+        }
       }
     } catch (error) {
       console.error("Error retrieving stock:", error);
@@ -167,35 +185,48 @@ async function updatedStocksCapital() {
       );
       const data = await response.json();
       const extractedInfo = data.pastCorporateBeans.map(async (item) => {
-        const existingStock = await StockInformation.findOne({
-          symbol: symbol,
-        }).exec();
-        if (existingStock) {
-          // Check if the data already exists in the 'capital' array
-          const capitalExists = existingStock.capital.some((capitalData) => {
-            return (
-              capitalData.announceDate === item.announceDate &&
-              capitalData.issueTypeDesc === item.issueTypeDesc &&
-              capitalData.dueDate === item.dueDate &&
-              capitalData.newCApital === item.newCApital &&
-              capitalData.prevCApital === item.prevCApital &&
-              capitalData.dueDateCompare === item.dueDateCompare
-            );
-          });
+        try {
+          const existingStock = await StockInformation.findOne({
+            symbol: symbol,
+          }).exec();
 
-          if (!capitalExists) {
-            // Data does not exist, add it to the 'capital' array
-            const newCapitalData = {
-              announceDate: item.announceDate,
-              issueTypeDesc: item.issueTypeDesc,
-              dueDate: item.dueDate,
-              newCApital: item.newCApital,
-              prevCApital: item.prevCApital,
-              dueDateCompare: item.dueDateCompare,
-            };
-            existingStock.capital.push(newCapitalData);
-            await existingStock.save();
+          if (existingStock) {
+            // Check if the data already exists in the 'capital' array
+            const capitalExists = existingStock.capital.some((capitalData) => {
+              return (
+                capitalData.announceDate === item.announceDate &&
+                capitalData.issueTypeDesc === item.issueTypeDesc &&
+                capitalData.dueDate === item.dueDate &&
+                capitalData.newCApital === item.newCApital &&
+                capitalData.prevCApital === item.prevCApital &&
+                capitalData.dueDateCompare === item.dueDateCompare
+              );
+            });
+
+            if (!capitalExists) {
+              // Data does not exist, add it to the 'capital' array
+              const newCapitalData = {
+                announceDate: item.announceDate,
+                issueTypeDesc: item.issueTypeDesc,
+                dueDate: item.dueDate,
+                newCApital: item.newCApital,
+                prevCApital: item.prevCApital,
+                dueDateCompare: item.dueDateCompare,
+              };
+              existingStock.capital.push(newCapitalData);
+              await existingStock.save();
+              console.log(
+                `Added new capital data for ${symbol}:`,
+                newCapitalData
+              );
+            } else {
+              console.log(`Capital data already exists for ${symbol}:`, item);
+            }
+          } else {
+            console.log(`Stock not found for ${symbol}`);
           }
+        } catch (error) {
+          console.error("Error processing stock:", error);
         }
       });
     }

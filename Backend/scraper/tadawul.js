@@ -1,7 +1,18 @@
 import puppeteer from "puppeteer";
 import StockFinancials from "../models/stockFinancials.js";
 import StockInformation from "../models/stockInformation.js";
-
+import mongoose from "mongoose";
+mongoose
+  .connect("mongodb://127.0.0.1:27017/stockDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("Error connecting to MongoDB:", error);
+  });
 async function runScript() {
   try {
     console.log("Script is Running");
@@ -18,7 +29,7 @@ async function runScript() {
         if (
           stock.symbol.length == 4 &&
           stock.market_type == "M" &&
-          stock.symbol == "4321" &&
+          stock.symbol == "2030" &&
           !stock.companyNameEN.includes("REIT")
         ) {
           var url =
@@ -29,10 +40,9 @@ async function runScript() {
           await page.waitForSelector("#statementofincome", {
             timeout: 60000,
           });
-
-          await getFinancialsDataForStocks(stock, browser, page);
-          await getForeignOwnership(stock, browser, page);
-          // await getStockProfile(stock, browser, page);
+          // await getFinancialsDataForStocks(stock, browser, page);
+          // await getForeignOwnership(stock, browser, page);
+          await getStockProfile(stock, browser, page);
         }
       } catch (error) {
         console.error("Error in loop iteration:", error);
@@ -160,6 +170,7 @@ async function getStockProfile(stock, browser, page) {
         console.error(`cannot find selector ${selector}`);
       }
     }, selector);
+    await page.waitForTimeout(1500);
 
     // Extract data from the page
     const companyInfo = await page.evaluate(() => {
@@ -177,7 +188,7 @@ async function getStockProfile(stock, browser, page) {
     });
     const extractedData = await page.evaluate(() => {
       const element = document.querySelector(
-        "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(14) > div.fundInfo > div.inspectionBox > p"
+        "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(15) > div.fundInfo > div.inspectionBox > p"
       );
       let textContent = element.textContent.trim();
 
@@ -409,17 +420,29 @@ async function saveStockProfile(stockData, stockProfileData) {
     const stock = await StockInformation.findOne({
       symbol: stockData.symbol,
     }).exec();
+
     if (stock) {
-      stock.profile.push({
-        authorizedCapital: stockProfileData["Authorized Capital (SAR)"],
-        issuedShares: stockProfileData["Issued Shares"],
-        paidCapital: stockProfileData["Paid Capital (SAR)"],
-        parValueShare: stockProfileData["Par Value/Share"],
-        paidUpValueShare: stockProfileData["Paid Up Value/Share"],
-        lastUpdate: stockProfileData["Last Update"],
-      });
-      await stock.save();
-      console.log("New data added to existing record");
+      // Check if a profile with the same "Last Update" already exists
+      const existingProfile = stock.profile.find(
+        (profile) => profile.lastUpdate === stockProfileData["Last Update"]
+      );
+
+      if (existingProfile) {
+        console.log("Duplicate record found. Not adding new data.");
+      } else {
+        // If not, add the new profile
+        stock.profile.push({
+          authorizedCapital: stockProfileData["Authorized Capital (SAR)"],
+          issuedShares: stockProfileData["Issued Shares"],
+          paidCapital: stockProfileData["Paid Capital (SAR)"],
+          parValueShare: stockProfileData["Par Value/Share"],
+          paidUpValueShare: stockProfileData["Paid Up Value/Share"],
+          lastUpdate: stockProfileData["Last Update"],
+        });
+
+        await stock.save();
+        console.log("New data added to existing record");
+      }
     } else {
       const newData = new StockInformation(stockData);
       newData.profile.push(stockProfileData);
@@ -551,7 +574,7 @@ function extractHeadersAsColumns(data) {
     return columnData;
   }
 }
-
+runScript();
 export {
   getStocksInformation,
   getSymbolsWithSectors,
