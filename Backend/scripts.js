@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 import StockInformation from "./models/stockInformation.js";
+import StockPrices from "./models/stockPrices.js";
 import { runScript, getStocksInformation } from "./scraper/tadawul.js";
 import puppeteer from "puppeteer";
 import fs from "fs";
 import yahooFinance from "yahoo-finance2";
+import moment from "moment-timezone";
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/stockDB", {
@@ -18,47 +20,47 @@ mongoose
   });
 
 async function runStockInformatioScript() {
-  // await updatedStocksInformation();
-  // await updatedStockSummary();
-  // await updatedStocksCapital();
-  try {
-    console.log("Script is Running");
-    const stocksData = await getStocksInformation();
-    const browser = await puppeteer.launch({
-      headless: false,
-      defaultViewport: null,
-    });
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(2 * 60 * 1000);
+  await updatedStocksInformation();
+  await updatedStockSummary();
+  await updatedStocksCapital();
+  // try {
+  //   console.log("Script is Running");
+  //   const stocksData = await getStocksInformation();
+  //   const browser = await puppeteer.launch({
+  //     headless: false,
+  //     defaultViewport: null,
+  //   });
+  //   const page = await browser.newPage();
+  //   page.setDefaultNavigationTimeout(2 * 60 * 1000);
 
-    for (const stock of stocksData) {
-      try {
-        if (
-          stock.symbol.length == 4 &&
-          stock.market_type == "M" &&
-          // stock.symbol == "2030" &&
-          !stock.companyNameEN.includes("REIT")
-        ) {
-          var url =
-            "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
-            stock.symbol;
-          console.log(stock.symbol);
-          // await page.goto(url);
+  //   for (const stock of stocksData) {
+  //     try {
+  //       if (
+  //         stock.symbol.length == 4 &&
+  //         stock.market_type == "M" &&
+  //         // stock.symbol == "2030" &&
+  //         !stock.companyNameEN.includes("REIT")
+  //       ) {
+  //         var url =
+  //           "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
+  //           stock.symbol;
+  //         console.log(stock.symbol);
+  //         // await page.goto(url);
 
-          // await getForeignOwnership(stock, browser, page);
-          // await getStockProfile(stock, browser, page);
-        }
-      } catch (error) {
-        console.error("Error in loop iteration:", error);
-        continue; // Skip to the next iteration
-      }
-    }
+  //         // await getForeignOwnership(stock, browser, page);
+  //         // await getStockProfile(stock, browser, page);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error in loop iteration:", error);
+  //       continue; // Skip to the next iteration
+  //     }
+  //   }
 
-    await browser.close();
-    console.log("Script completed successfully");
-  } catch (error) {
-    console.error("Error:", error);
-  }
+  //   await browser.close();
+  //   console.log("Script completed successfully");
+  // } catch (error) {
+  //   console.error("Error:", error);
+  // }
 }
 
 // Stocks Information ------------------------------------------------------------------------------------------------------------
@@ -489,66 +491,53 @@ async function saveStockPricesHorly() {
     for (const stock of symbols) {
       console.log(stock.symbol);
       const symbol = stock.symbol;
-      if (symbol != "4321") continue;
-      // Adjust the period to fetch hourly data for the maximum available period
-      const period1 = "2000-01-01"; // Adjust the start date as needed
-      const period2 = new Date().toISOString().split("T")[0];
+      // if (symbol != "4321") continue;
 
-      // Adjust the query options for hourly data
+      const period1 = "2022-01-01";
+      const period2 = new Date().toISOString().split("T")[0];
       const queryOptions = { period1, period2, interval: "1h" };
 
       const result = await yahooFinance._chart(
         stock.symbol + ".SR",
         queryOptions
       );
-
+      // console.log(result);
       if (!result || !result.quotes || result.quotes.length === 0) {
         throw new Error("Invalid stock symbol or no data available.");
       }
 
-      // Check if a document with the same symbol already exists in the database
-      const existingDocument = await StockPrices.findOne({ symbol });
-      console.log(result.quotes);
-      if (existingDocument) {
-        // If the document exists, update it with the new data
-        for (const quote of result.quotes) {
-          const existingDataPoint = existingDocument.quotes.find(
-            (dataPoint) =>
-              dataPoint.date.toLocaleDateString("en-GB") ===
-              new Date(quote.date).toLocaleDateString("en-GB")
-          );
-          if (!existingDataPoint) {
-            existingDocument.quotes.push({
-              date: new Date(quote.date), // Convert the date string to a Date object
-              open: quote.open,
-              close: quote.close,
-              high: quote.high,
-              low: quote.low,
-              volume: quote.volume,
-              adjclose: quote.adjclose,
-            });
-          }
-        }
-        await existingDocument.save();
-      } else {
-        // If the document does not exist, create a new one with the new data
-        const stockPriceData = {
-          symbol: symbol,
-          quotes: result.quotes.map((quote) => ({
-            date: new Date(quote.date), // Convert the date string to a Date object
-            open: quote.open,
-            close: quote.close,
-            high: quote.high,
-            low: quote.low,
-            volume: quote.volume,
-            adjclose: quote.adjclose,
-          })),
-        };
-        const stockPrice = new StockPrices(stockPriceData);
-        await stockPrice.save();
+      const existingStockPrice = await StockPrices.findOne({
+        symbol: symbol,
+        "quotes.date": {
+          $in: result.quotes.map((quote) => new Date(quote.date)),
+        },
+      });
+
+      if (existingStockPrice) {
+        console.log("Data already exists for symbol:", symbol);
+        continue; // Skip saving data if it already exists
       }
+
+      const stockPriceData = {
+        symbol: symbol,
+        quotes: result.quotes.map((quote) => ({
+          date: new Date(quote.date),
+          open: quote.open,
+          close: quote.close,
+          high: quote.high,
+          low: quote.low,
+          volume: quote.volume,
+          adjclose: quote.adjclose,
+        })),
+      };
+
+      const stockPrice = new StockPrices(stockPriceData);
+      await stockPrice.save();
     }
   } catch (error) {
     console.error("Error fetching and saving stock data:", error);
   }
 }
+
+// saveStockPricesHorly();
+// runStockInformatioScript();

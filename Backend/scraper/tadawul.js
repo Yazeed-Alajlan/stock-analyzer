@@ -574,7 +574,6 @@ function extractHeadersAsColumns(data) {
     return columnData;
   }
 }
-runScript();
 export {
   getStocksInformation,
   getSymbolsWithSectors,
