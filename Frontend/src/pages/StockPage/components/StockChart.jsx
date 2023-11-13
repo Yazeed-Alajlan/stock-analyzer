@@ -26,7 +26,7 @@ const StockChart = ({ symbol }) => {
         if (!data) {
           throw new Error("Invalid stock symbol or no data available.");
         }
-        setStockData(data[0]);
+        setStockData(data);
       } catch (error) {
         console.error("Error fetching stock data:", error);
       }
@@ -36,14 +36,22 @@ const StockChart = ({ symbol }) => {
   }, [symbol]);
 
   const formatData = () => {
+    console.log(stockData);
     if (!stockData) return [];
-    return stockData.quotes.map((quote) => ({
-      time: quote.date.split("T")[0],
-      open: Number(quote.open.toFixed(2)),
-      high: Number(quote.high.toFixed(2)),
-      low: Number(quote.low.toFixed(2)),
-      close: Number(quote.close.toFixed(2)),
-    }));
+    return stockData
+      .map((quote) => {
+        if (!quote) return null; // Check if quote is null or undefined
+
+        return {
+          time: quote.date.split("T")[0],
+          open: Number(quote.open?.toFixed(2)), // Use optional chaining to avoid errors if open is null or undefined
+          high: Number(quote.high?.toFixed(2)),
+          low: Number(quote.low?.toFixed(2)),
+          close: Number(quote.close?.toFixed(2)),
+          volume: Number(quote.volume),
+        };
+      })
+      .filter((data) => data !== null); // Filter out null values
   };
 
   useEffect(() => {

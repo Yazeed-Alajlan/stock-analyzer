@@ -491,7 +491,7 @@ async function saveStockPricesHorly() {
     for (const stock of symbols) {
       console.log(stock.symbol);
       const symbol = stock.symbol;
-      // if (symbol != "4321") continue;
+      if (symbol != "4321") continue;
 
       const period1 = "2022-01-01";
       const period2 = new Date().toISOString().split("T")[0];
@@ -540,4 +540,5 @@ async function saveStockPricesHorly() {
 }
 
 // saveStockPricesHorly();
+saveStockPrices();
 // runStockInformatioScript();

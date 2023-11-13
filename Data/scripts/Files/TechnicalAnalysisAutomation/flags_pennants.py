@@ -428,10 +428,11 @@ def find_flags_pennants(symbol,order=10):
 
 
     # data = np.log(data)
-
     dat_slice = data['close'].to_numpy()
-    #bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_pips(dat_slice, 12)
-    bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_trendline(dat_slice, order)
+    print( dat_slice)
+
+    bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_pips(dat_slice, order)
+    # bull_flags, bear_flags, bull_pennants, bear_pennants  = find_flags_pennants_trendline(dat_slice, order)
 
     bull_flag_df = pd.DataFrame()
     bull_pennant_df = pd.DataFrame()
@@ -506,9 +507,9 @@ def find_flags_pennants(symbol,order=10):
     if bull_pennants:
         bull_pennants=plot_data(data, bull_pennants[0], pad=2)
 
-    # Plot the first detected bear pennant as an example
     if bear_pennants:
         bear_pennants=plot_data(data, bear_pennants[0], pad=2)
+
     # if bull_flags:
     #     plot_flag(data, bull_flags[0], pad=2)
 

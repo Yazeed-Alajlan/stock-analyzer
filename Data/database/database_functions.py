@@ -42,45 +42,40 @@ def get_all_stocks_symbols():
     client.close()
     return symbols
 
+
+
 def get_price_data(symbol):
     db,client = database_connect()
     collection = db["stockprices"]
     # Example: Query all documents in the collection
     document = collection.find_one({"symbol": symbol})
     quotes = document.get("quotes")
-    # pipeline = [
-    #     {"$match": {"symbol": symbol}},
-    #     {"$unwind": "$quotes"},
-    #     {
-    #         "$group": {
-    #             "_id": {
-    #                 "year": {"$year": "$quotes.date"},
-    #                 "month": {"$month": "$quotes.date"},
-    #                 "day": {"$dayOfMonth": "$quotes.date"}
-    #             },
-    #             "open": {"$first": "$quotes.open"},
-    #             "close": {"$last": "$quotes.close"},
-    #             "high": {"$max": "$quotes.high"},
-    #             "low": {"$min": "$quotes.low"},
-    #             "volume": {"$sum": "$quotes.volume"}
-    #         }
-    #     },
-    #     {"$sort": {"_id.year": 1, "_id.month": 1, "_id.day": 1}}
-    # ]
-    # result = list(collection.aggregate(pipeline))
     df =  pd.DataFrame(quotes)
     df = df.drop('_id', axis=1)
     df.set_index('date', inplace=True)
 
-   
-    
-    # print(result)
     # Convert numeric columns to float
     # numeric_columns = ['open', 'close', 'high', 'low', 'volume', 'adjclose']
     # df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    result = df.groupby(df.index.date).agg({'open': 'first', 'close': 'last', 'high': 'max', 'low': 'min', 'volume': 'sum'})
-
+    print(df)
     # Close the MongoDB client when done
     client.close()
-    return result
+    return df
+
+# def get_price_data_hourly(symbol):
+#     db,client = database_connect()
+#     collection = db["stockprices"]
+#     document = collection.find_one({"symbol": symbol})
+#     if document is None or document.get("quotes") is None:
+#         print("NONE")
+#         return []
+#     quotes = document.get("quotes")
+#     df =  pd.DataFrame(quotes)
+#     df = df.drop('_id', axis=1)
+#     df.set_index('date', inplace=True)
+#     result = df.groupby(df.index.date).agg({'open': 'first', 'close': 'last', 'high': 'max', 'low': 'min', 'volume': 'sum'})
+#     client.close()
+#     print(result)
+
+#     return result

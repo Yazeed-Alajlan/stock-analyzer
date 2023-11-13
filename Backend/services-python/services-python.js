@@ -103,18 +103,16 @@ router.get("/consolidating-stocks", async (req, res) => {
 });
 
 router.get("/flags-pennants", async (req, res) => {
+  const { symbol } = req.query;
+  console.log(symbol);
   axios
-    .get(
-      `http://127.0.0.1:4000/api/stocks/flags-pennants`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    .get(`http://127.0.0.1:4000/api/stocks/flags-pennants?symbol=${symbol}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
     .then((response) => {
       var data = response.data;
-      console.log(data);
       res.json(data);
     })
     .catch((error) => {

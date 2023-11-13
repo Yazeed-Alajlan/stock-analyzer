@@ -16,7 +16,7 @@ const ChartPatterns = () => {
   }));
   const [drawData, setDrawData] = useState();
 
-  const symbol = "4321";
+  const symbol = "2030";
 
   const chartContainerId = `chart-container-${symbol}`;
 
@@ -41,8 +41,7 @@ const ChartPatterns = () => {
 
     const fetchData2 = async () => {
       try {
-        const symbol = "2222";
-        const url = `http://localhost:5000/python-api/flags-pennants`;
+        const url = `http://localhost:5000/python-api/flags-pennants?symbol=${symbol}`;
         const response = await axios.get(url);
 
         setDrawData(response.data);
@@ -56,14 +55,20 @@ const ChartPatterns = () => {
   const formatData = () => {
     console.log(stockData);
     if (!stockData) return [];
-    return stockData.quotes.map((quote) => ({
-      time: quote.date.split("T")[0],
-      open: Number(quote.open.toFixed(2)),
-      high: Number(quote.high.toFixed(2)),
-      low: Number(quote.low.toFixed(2)),
-      close: Number(quote.close.toFixed(2)),
-      volume: Number(quote.volume),
-    }));
+    return stockData
+      .map((quote) => {
+        if (!quote) return null; // Check if quote is null or undefined
+
+        return {
+          time: quote.date.split("T")[0],
+          open: Number(quote.open?.toFixed(2)), // Use optional chaining to avoid errors if open is null or undefined
+          high: Number(quote.high?.toFixed(2)),
+          low: Number(quote.low?.toFixed(2)),
+          close: Number(quote.close?.toFixed(2)),
+          volume: Number(quote.volume),
+        };
+      })
+      .filter((data) => data !== null); // Filter out null values
   };
 
   useEffect(() => {
@@ -124,6 +129,7 @@ const ChartPatterns = () => {
     );
 
     if (drawData != null) {
+      console.log(drawData);
       var tldata = [];
       Object.keys(drawData).map((pattern) => {
         if (pattern == []) return;

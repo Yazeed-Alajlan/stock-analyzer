@@ -66,8 +66,10 @@ def consolidating():
 
 @app.route("/api/stocks/flags-pennants")
 def flags_pennants():
+    # symbol = flask.request.args.get("symbol")
+    # order = flask.request.args.get("order")
     symbol = flask.request.args.get("symbol")
-    order = flask.request.args.get("order")
+    order=12
     data=find_flags_pennants(symbol,order)
 
     # data["data"].index = data["data"].index.strftime('%Y-%m-%d')
