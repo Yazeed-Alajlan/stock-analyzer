@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import StockInformation from "./models/stockInformation.js";
 import { runScript, getStocksInformation } from "./scraper/tadawul.js";
+import puppeteer from "puppeteer";
 import fs from "fs";
+import yahooFinance from "yahoo-finance2";
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/stockDB", {
     useNewUrlParser: true,
@@ -13,16 +16,54 @@ mongoose
   .catch((error) => {
     console.log("Error connecting to MongoDB:", error);
   });
-async function updateStocksInfomrations() {
-  // await updatedStocksSymbols();
+
+async function runStockInformatioScript() {
+  // await updatedStocksInformation();
   // await updatedStockSummary();
-  await updatedStocksCapital();
+  // await updatedStocksCapital();
+  try {
+    console.log("Script is Running");
+    const stocksData = await getStocksInformation();
+    const browser = await puppeteer.launch({
+      headless: false,
+      defaultViewport: null,
+    });
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(2 * 60 * 1000);
+
+    for (const stock of stocksData) {
+      try {
+        if (
+          stock.symbol.length == 4 &&
+          stock.market_type == "M" &&
+          // stock.symbol == "2030" &&
+          !stock.companyNameEN.includes("REIT")
+        ) {
+          var url =
+            "https://www.saudiexchange.sa/wps/portal/saudiexchange/hidden/company-profile-main/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTR3NDIw8LAz83d2MXA0C3SydAl1c3Q0NvE30I4EKzBEKDMKcTQzMDPxN3H19LAzdTU31w8syU8v1wwkpK8hOMgUA-oskdg!!/?companySymbol=" +
+            stock.symbol;
+          console.log(stock.symbol);
+          // await page.goto(url);
+
+          // await getForeignOwnership(stock, browser, page);
+          // await getStockProfile(stock, browser, page);
+        }
+      } catch (error) {
+        console.error("Error in loop iteration:", error);
+        continue; // Skip to the next iteration
+      }
+    }
+
+    await browser.close();
+    console.log("Script completed successfully");
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
-updateStocksInfomrations();
-
 // Stocks Information ------------------------------------------------------------------------------------------------------------
-async function updatedStocksSymbols() {
+
+async function updatedStocksInformation() {
   try {
     //English Data
     const responseEn = await fetch(
@@ -98,7 +139,6 @@ async function updatedStocksSymbols() {
     throw error;
   }
 }
-
 async function updatedStockSummary() {
   const jsonData = fs.readFileSync("stockData.json", "utf8");
   const data = JSON.parse(jsonData);
@@ -233,5 +273,282 @@ async function updatedStocksCapital() {
   } catch (error) {
     console.error("Error:", error);
     throw error;
+  }
+}
+async function getStockProfile(stock, browser, page) {
+  try {
+    // Extract data
+    const selector = ".inspectionBox";
+    await page.waitForSelector(selector);
+    await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollTop = element.offsetHeight;
+        console.error(`Scrolled to selector ${selector}`);
+      } else {
+        console.error(`cannot find selector ${selector}`);
+      }
+    }, selector);
+    await page.waitForTimeout(1500);
+
+    // Extract data from the page
+    const companyInfo = await page.evaluate(() => {
+      const ul = document.querySelector(".inspectionBox ul");
+      const items = ul.querySelectorAll("li");
+
+      const data = {};
+      items.forEach((item) => {
+        const key = item.querySelector("span").textContent.trim();
+        const value = item.querySelector("strong").textContent.trim();
+        data[key] = value;
+      });
+
+      return data;
+    });
+    const extractedData = await page.evaluate(() => {
+      const element = document.querySelector(
+        "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(15) > div.fundInfo > div.inspectionBox > p"
+      );
+      let textContent = element.textContent.trim();
+
+      // Remove "Last Update :" prefix
+      textContent = textContent.replace("Last Update :", "").trim();
+
+      return textContent;
+    });
+    companyInfo["Last Update"] = extractedData;
+
+    saveStockProfile(stock, companyInfo);
+  } catch (e) {
+    console.error("scrape faild!: \n", e);
+  }
+}
+async function saveStockProfile(stockData, stockProfileData) {
+  console.log(stockProfileData);
+
+  try {
+    const stock = await StockInformation.findOne({
+      symbol: stockData.symbol,
+    }).exec();
+
+    if (stock) {
+      // Check if a profile with the same "Last Update" already exists
+      const existingProfile = stock.profile.find(
+        (profile) => profile.lastUpdate === stockProfileData["Last Update"]
+      );
+
+      if (existingProfile) {
+        console.log("Duplicate record found. Not adding new data.");
+      } else {
+        // If not, add the new profile
+        stock.profile.push({
+          authorizedCapital: stockProfileData["Authorized Capital (SAR)"],
+          issuedShares: stockProfileData["Issued Shares"],
+          paidCapital: stockProfileData["Paid Capital (SAR)"],
+          parValueShare: stockProfileData["Par Value/Share"],
+          paidUpValueShare: stockProfileData["Paid Up Value/Share"],
+          lastUpdate: stockProfileData["Last Update"],
+        });
+
+        await stock.save();
+        console.log("New data added to existing record");
+      }
+    } else {
+      const newData = new StockInformation(stockData);
+      newData.profile.push(stockProfileData);
+      await newData.save();
+      console.log("First time");
+    }
+  } catch (error) {
+    console.error("Error retrieving stock:", error);
+  }
+}
+async function getForeignOwnership(stock, browser, page) {
+  try {
+    // Extract data
+    const selector = ".shareholding";
+    await page.waitForSelector(selector);
+    await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollTop = element.offsetHeight;
+        console.error(`Scrolled to selector ${selector}`);
+      } else {
+        console.error(`cannot find selector ${selector}`);
+      }
+    }, selector);
+    await page.waitForTimeout(2500);
+    await page.click(
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(13) > div.shareholding > div > div.shareholding_tab > ul > li:nth-child(2)"
+    );
+
+    await page.waitForTimeout(2500);
+
+    const data = await page.$eval(
+      "#layoutContainers > div.wptheme1Col > div.component-container.wpthemeFull.wpthemeRow.id-Z7_5A602H80OGF2E0QF9BQDEG10K7 > div > section > section:nth-child(13) > div.shareholding > div > div.shareholding_tab_dtl > div:nth-child(2) > div.foreign_ownership > div.total_foreign_ownership > ul > li:nth-child(1) > div > div.actual > strong",
+      (element) => element.textContent
+    );
+    saveStockforeignOwnership(stock, data.trim());
+  } catch (e) {
+    console.error("scrape faild!: \n", e);
+  }
+}
+async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
+  console.log(foreignOwnershipData);
+  try {
+    const stock = await StockFinancials.findOne({
+      symbol: stockData.symbol,
+    }).exec();
+    if (stock) {
+      stock.foreignOwnership.push({
+        date: new Date().toLocaleDateString("en-GB"),
+        percentage: foreignOwnershipData,
+      });
+      await stock.save();
+      console.log("New data added to existing record");
+    } else {
+      const newData = new StockFinancials(stockData);
+      newData.foreignOwnership.push(foreignOwnershipData);
+      await newData.save();
+      console.log("First time");
+    }
+  } catch (error) {
+    console.error("Error retrieving stock:", error);
+  }
+}
+
+// Stocks Prices ------------------------------------------------------------------------------------------------------------
+
+async function saveStockPrices() {
+  try {
+    const symbols = await getStocksInformation();
+    for (const stock of symbols) {
+      console.log(stock.symbol);
+      const symbol = stock.symbol;
+      const period1 = "2022-01-01";
+      const period2 = new Date().toISOString().split("T")[0];
+      const queryOptions = { period1, period2 };
+      const result = await yahooFinance._chart(
+        stock.symbol + ".SR",
+        queryOptions
+      );
+      if (!result || !result.quotes || result.quotes.length === 0) {
+        throw new Error("Invalid stock symbol or no data available.");
+      }
+      // Check if a document with the same symbol already exists in the database
+      const existingDocument = await StockPrices.findOne({ symbol });
+      console.log(result.quotes);
+      if (existingDocument) {
+        // If the document exists, update it with the new data
+        for (const quote of result.quotes) {
+          const existingDataPoint = existingDocument.quotes.find(
+            (dataPoint) =>
+              dataPoint.date.toLocaleDateString("en-GB") ===
+              new Date(quote.date).toLocaleDateString("en-GB")
+          );
+          if (!existingDataPoint) {
+            existingDocument.quotes.push({
+              date: new Date(quote.date), // Convert the date string to a Date object
+              open: quote.open,
+              close: quote.close,
+              high: quote.high,
+              low: quote.low,
+              volume: quote.volume,
+              adjclose: quote.adjclose,
+            });
+          }
+        }
+        await existingDocument.save();
+      } else {
+        // If the document does not exist, create a new one with the new data
+        const stockPriceData = {
+          symbol: symbol,
+          quotes: result.quotes.map((quote) => ({
+            date: new Date(quote.date), // Convert the date string to a Date object
+            open: quote.open,
+            close: quote.close,
+            high: quote.high,
+            low: quote.low,
+            volume: quote.volume,
+            adjclose: quote.adjclose,
+          })),
+        };
+        const stockPrice = new StockPrices(stockPriceData);
+        await stockPrice.save();
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching and saving stock data:", error);
+    res.status(500).json({ error: "Unable to fetch and save stock data" });
+  }
+}
+
+async function saveStockPricesHorly() {
+  try {
+    const symbols = await getStocksInformation();
+    for (const stock of symbols) {
+      console.log(stock.symbol);
+      const symbol = stock.symbol;
+      if (symbol != "4321") continue;
+      // Adjust the period to fetch hourly data for the maximum available period
+      const period1 = "2000-01-01"; // Adjust the start date as needed
+      const period2 = new Date().toISOString().split("T")[0];
+
+      // Adjust the query options for hourly data
+      const queryOptions = { period1, period2, interval: "1h" };
+
+      const result = await yahooFinance._chart(
+        stock.symbol + ".SR",
+        queryOptions
+      );
+
+      if (!result || !result.quotes || result.quotes.length === 0) {
+        throw new Error("Invalid stock symbol or no data available.");
+      }
+
+      // Check if a document with the same symbol already exists in the database
+      const existingDocument = await StockPrices.findOne({ symbol });
+      console.log(result.quotes);
+      if (existingDocument) {
+        // If the document exists, update it with the new data
+        for (const quote of result.quotes) {
+          const existingDataPoint = existingDocument.quotes.find(
+            (dataPoint) =>
+              dataPoint.date.toLocaleDateString("en-GB") ===
+              new Date(quote.date).toLocaleDateString("en-GB")
+          );
+          if (!existingDataPoint) {
+            existingDocument.quotes.push({
+              date: new Date(quote.date), // Convert the date string to a Date object
+              open: quote.open,
+              close: quote.close,
+              high: quote.high,
+              low: quote.low,
+              volume: quote.volume,
+              adjclose: quote.adjclose,
+            });
+          }
+        }
+        await existingDocument.save();
+      } else {
+        // If the document does not exist, create a new one with the new data
+        const stockPriceData = {
+          symbol: symbol,
+          quotes: result.quotes.map((quote) => ({
+            date: new Date(quote.date), // Convert the date string to a Date object
+            open: quote.open,
+            close: quote.close,
+            high: quote.high,
+            low: quote.low,
+            volume: quote.volume,
+            adjclose: quote.adjclose,
+          })),
+        };
+        const stockPrice = new StockPrices(stockPriceData);
+        await stockPrice.save();
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching and saving stock data:", error);
   }
 }

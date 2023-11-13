@@ -61,6 +61,12 @@ const stockInformationSchema = new mongoose.Schema({
       lastUpdate: String,
     },
   ],
+  foreignOwnership: [
+    {
+      date: String,
+      percentage: String,
+    },
+  ],
 });
 
 const StockInformation = mongoose.model(
