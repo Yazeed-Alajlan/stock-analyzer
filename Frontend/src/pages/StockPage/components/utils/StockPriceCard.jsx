@@ -13,7 +13,7 @@ const StockPriceCard = ({
   highest,
 }) => {
   return (
-    <CustomCard className={"p-2 border-4 shadow-lg"}>
+    <CustomCard className={""}>
       <Row>
         <Col xs={"7"}>
           <Row>
@@ -30,7 +30,7 @@ const StockPriceCard = ({
         <Col xs={"1"}>
           <div className="border-start border-danger border-3 h-100"></div>
         </Col>
-        <Col xs={"4"}>
+        <Col className="text-center" xs={"4"}>
           <div>السعر : {open}</div>
           <div className="text-danger ">
             {change} ({changePercentage}%)

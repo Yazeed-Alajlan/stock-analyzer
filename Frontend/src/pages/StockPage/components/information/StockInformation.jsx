@@ -4,7 +4,7 @@ import { Col, Container, Row, Table } from "react-bootstrap";
 import { BsArrowDown } from "react-icons/bs";
 import { CustomCard } from "components/utils/CustomCard";
 import { useOutletContext, useParams } from "react-router-dom";
-import StockChart from "./StockChart";
+import StockChart from "../chart/StockChart";
 import SelectionTitle from "components/utils/SelectionTitle";
 
 const StockInformation = () => {

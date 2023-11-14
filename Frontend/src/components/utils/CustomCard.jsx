@@ -5,9 +5,9 @@ export const CustomCard = ({ className, children, header, subHeader }) => {
   return (
     <CompnentLayout>
       <Card
-        className={`bg-white border-0 shadow rounded-4 w-100 my-2 ${className}`}
+        className={`bg-white border border-light shadow-sm rounded-4 w-100 my-2 ${className} `}
       >
-        <Card.Body>
+        <Card.Body className="">
           <Container className="d-flex flex-column gap-2 p-0">
             {header != null || subHeader != null ? (
               <div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CompnentLayout from "components/CompnentLayout";
 import { Col, Row } from "react-bootstrap";
 import candlestick_patterns from "../candlestickPatterns";
-import StockChart from "pages/StockPage/components/StockChart";
+import StockChart from "pages/StockPage/components/chart/StockChart";
 import { CustomCard } from "components/utils/CustomCard";
 import CustomButton from "components/utils/CustomButton";
 import InputSelect from "components/utils/InputSelect";

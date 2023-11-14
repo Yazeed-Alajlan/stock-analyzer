@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import { Link, Outlet, useParams } from "react-router-dom";
-import { SidebarSelection } from "./components/SidebarSelection";
+import { SidebarSelection } from "./routing/SidebarSelection";
+import {
+  FaInfoCircle,
+  FaChartLine,
+  FaChartPie,
+  FaMoneyBillAlt,
+} from "react-icons/fa";
 import axios from "axios";
 import SmCardInformaiton from "components/utils/SmCardInformaiton";
-import StockPriceCard from "./components/StockPriceCard";
+import StockPriceCard from "./components/utils/StockPriceCard";
 import { useStocksData } from "contexts/StocksDataContext";
 import { CustomChart } from "components/utils/CustomChart";
-import MonthlyReturnTable from "./components/MonthlyReturnTable";
-import SelectionTabs from "./components/SelectionTabs";
+import MonthlyReturnTable from "./components/price_summary/MonthlyReturnTable";
+import SelectionTabs from "./routing/SelectionTabs";
 import PageLayout from "components/PageLayout";
 const StockPage = () => {
   const { symbol, sector } = useParams();
@@ -16,7 +22,33 @@ const StockPage = () => {
   const [stockInformationData, setStockInformationData] = useState();
   const [stockFinancialData, setStockFinancialData] = useState();
   const { getStockFinancialData, getStockInformationData } = useStocksData();
-  const [data, setData] = useState();
+
+  const myRoutes = [
+    {
+      path: "information",
+      icon: FaInfoCircle, // Replace with your desired icon component
+      name: "معلومات السهم",
+      to: `/companies/${sector}/${symbol}/information`, // Define your dynamic route structure
+    },
+    {
+      path: "financials",
+      icon: FaChartPie,
+      name: "القوائم المالية",
+      to: `/companies/${sector}/${symbol}/financials`, // Define your dynamic route structure
+    },
+    {
+      path: "chart",
+      icon: FaChartLine,
+      name: "تحركات السهم",
+      to: `/companies/${sector}/${symbol}/chart`, // Define your dynamic route structure
+    },
+    {
+      path: "dividend",
+      icon: FaMoneyBillAlt,
+      name: "التوزيعات",
+      to: `/companies/${sector}/${symbol}/dividend`, // Define your dynamic route structure
+    },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +104,7 @@ const StockPage = () => {
 
       <Row className="pt-4">
         <Col sm={2}>
-          <SidebarSelection />
+          <SidebarSelection routes={myRoutes} />
         </Col>
         <Col sm={10}>
           <Outlet
