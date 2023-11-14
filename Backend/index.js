@@ -1,13 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { runScript, getStocksInformation } from "./scraper/tadawul.js";
-import StockFinancials from "./models/stockFinancials.js";
-import StockInformation from "./models/stockInformation.js";
-import yahooFinance from "yahoo-finance2";
-import fs from "fs";
-import StockPrices from "./models/stockPrices.js";
-import axios from "axios";
+import { runScript } from "./scraper/tadawul.js";
 import stockAPI from "./services/stocks.js";
 import pytohnStockAPI from "./services-python/services-python.js";
 

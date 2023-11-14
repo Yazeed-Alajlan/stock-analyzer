@@ -1,15 +1,29 @@
+import CompnentLayout from "components/CompnentLayout";
 import { Card, Container } from "react-bootstrap";
 
-export const CustomCard = ({ children, header, subHeader }) => {
+export const CustomCard = ({ className, children, header, subHeader }) => {
   return (
-    <Card className="bg-white border-0 shadow rounded-4 w-100 my-2">
-      <Card.Body>
-        <Container className="p-0">
-          <h1 className="">{header}</h1>
-          <h2 className="">{subHeader}</h2>
-          {children}
-        </Container>
-      </Card.Body>
-    </Card>
+    <CompnentLayout>
+      <Card
+        className={`bg-white border-0 shadow rounded-4 w-100 my-2 ${className}`}
+      >
+        <Card.Body>
+          <Container className="d-flex flex-column gap-2 p-0">
+            {header != null || subHeader != null ? (
+              <div>
+                {header != null ? <div className="fs-2"> {header}</div> : null}
+                {subHeader != null ? (
+                  <div className="fs-5"> {subHeader}</div>
+                ) : null}
+              </div>
+            ) : (
+              <></>
+            )}
+
+            {children}
+          </Container>
+        </Card.Body>
+      </Card>
+    </CompnentLayout>
   );
 };

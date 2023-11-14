@@ -1,4 +1,5 @@
 import CompnentLayout from "components/CompnentLayout";
+import PageLayout from "components/PageLayout";
 import { CustomCard } from "components/utils/CustomCard";
 import FilterCard from "components/utils/FilterCard";
 import InputSelect from "components/utils/InputSelect";
@@ -18,7 +19,7 @@ const MonthlyReturns = () => {
     }
   };
   return (
-    <CompnentLayout>
+    <PageLayout>
       <FilterCard>
         <InputSelect
           label={"السهم:"}
@@ -43,7 +44,7 @@ const MonthlyReturns = () => {
           <p>select stock</p>
         )}
       </CustomCard>
-    </CompnentLayout>
+    </PageLayout>
   );
 };
 

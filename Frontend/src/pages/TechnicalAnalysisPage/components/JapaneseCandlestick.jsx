@@ -8,6 +8,7 @@ import CustomButton from "components/utils/CustomButton";
 import InputSelect from "components/utils/InputSelect";
 import Input from "components/utils/Input";
 import FilterCard from "components/utils/FilterCard";
+import PageLayout from "components/PageLayout";
 
 const JapaneseCandlestick = () => {
   const candlestickOptions = Object.entries(candlestick_patterns).map(
@@ -73,7 +74,7 @@ const JapaneseCandlestick = () => {
   };
 
   return (
-    <CompnentLayout>
+    <PageLayout>
       <FilterCard>
         <Col xs={8} xl={5} className="d-flex">
           <InputSelect
@@ -127,7 +128,7 @@ const JapaneseCandlestick = () => {
           )}
         </Row>
       </CustomCard>
-    </CompnentLayout>
+    </PageLayout>
   );
 };
 

@@ -11,7 +11,7 @@ const StockInformation = () => {
   const { stockInformationData } = useOutletContext();
 
   return (
-    <div>
+    <>
       {stockInformationData ? (
         <CustomCard header={"معلومات السهم"} subHeader={"معلومات"}>
           {/* <SelectionTitle title={"معلومات السهم"} /> */}
@@ -84,7 +84,7 @@ const StockInformation = () => {
       ) : (
         <p>loading</p>
       )}
-    </div>
+    </>
   );
 };
 

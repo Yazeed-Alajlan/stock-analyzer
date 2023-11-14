@@ -1,5 +1,6 @@
 import axios from "axios";
 import CompnentLayout from "components/CompnentLayout";
+import PageLayout from "components/PageLayout";
 import CustomButton from "components/utils/CustomButton";
 import { CustomCard } from "components/utils/CustomCard";
 import FilterCard from "components/utils/FilterCard";
@@ -45,7 +46,7 @@ const ConsolidatingStocks = () => {
   };
 
   return (
-    <CompnentLayout>
+    <PageLayout>
       <FilterCard>
         <Col xs={8} xl={5} className="d-flex">
           <Input
@@ -73,17 +74,15 @@ const ConsolidatingStocks = () => {
           <CustomButton title={"ابحث"} onClick={fetchData} />
         </Col>
       </FilterCard>
-      <div className="d-flex flex-column gap-4">
-        <CustomCard>
-          {Object.keys(data).map((symbol) => (
-            <CustomCard className="d-flex flex-column border-3 border-bottom">
-              <p>الرمز:{symbol}</p>
-              <StockChart key={symbol} symbol={symbol} />
-            </CustomCard>
-          ))}
-        </CustomCard>
-      </div>
-    </CompnentLayout>
+      <CustomCard className="d-flex flex-column">
+        {Object.keys(data).map((symbol) => (
+          <CustomCard className="d-flex flex-column border-3 border-bottom">
+            <p>الرمز:{symbol}</p>
+            <StockChart key={symbol} symbol={symbol} />
+          </CustomCard>
+        ))}
+      </CustomCard>
+    </PageLayout>
   );
 };
 

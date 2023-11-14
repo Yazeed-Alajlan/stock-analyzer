@@ -3,8 +3,9 @@ import axios from "axios";
 import { createChart } from "lightweight-charts";
 import { Container } from "react-bootstrap";
 import CompnentLayout from "components/CompnentLayout";
+import PageLayout from "components/PageLayout";
 
-const ChartPatterns = () => {
+const ChartPatterns = ({ symbol }) => {
   const [stockData, setStockData] = useState(null);
   const [legend, setLegend] = useState(() => ({
     close: "",
@@ -15,8 +16,6 @@ const ChartPatterns = () => {
     changePercent: "",
   }));
   const [drawData, setDrawData] = useState();
-
-  const symbol = "2030";
 
   const chartContainerId = `chart-container-${symbol}`;
 
@@ -138,7 +137,7 @@ const ChartPatterns = () => {
             tldata.push({
               time: new Date(draw[0]).toISOString().split("T")[0],
               value: draw[1],
-              color: pattern.includes("bull") ? "green" : "green",
+              color: pattern.includes("bull") ? "green" : "red",
             });
           });
         });
@@ -201,7 +200,7 @@ const ChartPatterns = () => {
   }, [stockData, drawData]);
 
   return (
-    <CompnentLayout>
+    <PageLayout>
       <Container className="px-4">
         <div
           className={`d-flex justify-content-end  gap-4 text-${
@@ -222,7 +221,7 @@ const ChartPatterns = () => {
         </div>
         <div className="p-4" id={chartContainerId}></div>
       </Container>
-    </CompnentLayout>
+    </PageLayout>
   );
 };
 

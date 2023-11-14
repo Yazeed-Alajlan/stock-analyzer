@@ -20,6 +20,8 @@ import HawkesProcess from "pages/TechnicalAnalysisPage/components/HawkesProcess"
 import JapaneseCandlestick from "pages/TechnicalAnalysisPage/components/JapaneseCandlestick";
 import ConsolidatingStocks from "pages/TechnicalAnalysisPage/components/ConsolidatingStocks";
 import MonthlyReturns from "pages/TechnicalAnalysisPage/components/MonthlyReturns";
+import TechnicalAnalysisLayout from "components/routing/TechnicalAnalysisLayout";
+import TechnicalAnalysisAutomation from "pages/TechnicalAnalysisPage/components/TechnicalAnalysisAutomation";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -64,30 +66,26 @@ function App() {
           <Route path="/companies/:sector" element={<StocksPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
 
-          <Route
-            path="/technical-analysis"
-            element={<TechnicalAnalysisPage />}
-          />
-          <Route
-            path="/technical-analysis/consolidating-stocks"
-            element={<ConsolidatingStocks />}
-          />
-          <Route
-            path="/technical-analysis/japanese-candlestick"
-            element={<JapaneseCandlestick />}
-          />
-          <Route
-            path="/technical-analysis/hawkes-process"
-            element={<HawkesProcess />}
-          />
-          <Route
-            path="/technical-analysis/monthly-returns"
-            element={<MonthlyReturns />}
-          />
-          <Route
-            path="/technical-analysis/technical-analysis-automation"
-            element={<MonthlyReturns />}
-          />
+          <Route element={<TechnicalAnalysisLayout />}>
+            <Route
+              path="/technical-analysis"
+              element={<TechnicalAnalysisPage />}
+            />
+            <Route
+              path="/consolidating-stocks"
+              element={<ConsolidatingStocks />}
+            />
+            <Route
+              path="/japanese-candlestick"
+              element={<JapaneseCandlestick />}
+            />
+            <Route path="/hawkes-process" element={<HawkesProcess />} />
+            <Route path="/monthly-returns" element={<MonthlyReturns />} />
+            <Route
+              path="technical-analysis-automation"
+              element={<TechnicalAnalysisAutomation />}
+            />
+          </Route>
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />

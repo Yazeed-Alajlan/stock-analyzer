@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
+import PageLayout from "components/PageLayout";
 
 const HawkesProcess = () => {
   const [data, setData] = useState({});
@@ -90,10 +91,9 @@ const HawkesProcess = () => {
   };
 
   return (
-    <div>
-      <div>ssssssssssssssssssssssssssssssssss</div>
+    <PageLayout>
       <Line data={chartData} options={chartOptions} />
-    </div>
+    </PageLayout>
   );
 };
 

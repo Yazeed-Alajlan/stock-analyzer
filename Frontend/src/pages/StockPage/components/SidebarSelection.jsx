@@ -18,45 +18,44 @@ export const SidebarSelection = () => {
 
   return (
     <CustomCard>
-      <Container className="p-0">
-        <Nav className="flex-column">
-          <Nav.Item>
-            <Nav.Link
-              as={Link}
-              to={`/companies/${sector}/${symbol}/information`}
-              className={isActive("/information") ? "bg-light" : ""}
-            >
-              <FaInfoCircle className="mr-2" /> معلومات السهم
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              as={Link}
-              to={`/companies/${sector}/${symbol}/financials`}
-              className={isActive("financials") ? "bg-light" : ""}
-            >
-              <FaChartPie className="mr-2" /> القوائم المالية
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              as={Link}
-              to={`/companies/${sector}/${symbol}/chart`}
-              className={isActive("chart") ? "bg-light" : ""}
-            >
-              <FaChartLine className="mr-2" /> تحركات السهم
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              as={Link}
-              to={`/companies/${sector}/${symbol}/dividend`}
-              className={isActive("dividend") ? "bg-light" : ""}
-            >
-              <FaMoneyBillAlt className="mr-2" /> التوزيعات
-            </Nav.Link>
-          </Nav.Item>
-          {/* <Nav.Item>
+      <Nav className="flex-column">
+        <Nav.Item>
+          <Nav.Link
+            as={Link}
+            to={`/companies/${sector}/${symbol}/information`}
+            className={isActive("/information") ? "bg-light" : ""}
+          >
+            <FaInfoCircle className="mr-2" /> معلومات السهم
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            as={Link}
+            to={`/companies/${sector}/${symbol}/financials`}
+            className={isActive("financials") ? "bg-light" : ""}
+          >
+            <FaChartPie className="mr-2" /> القوائم المالية
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            as={Link}
+            to={`/companies/${sector}/${symbol}/chart`}
+            className={isActive("chart") ? "bg-light" : ""}
+          >
+            <FaChartLine className="mr-2" /> تحركات السهم
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            as={Link}
+            to={`/companies/${sector}/${symbol}/dividend`}
+            className={isActive("dividend") ? "bg-light" : ""}
+          >
+            <FaMoneyBillAlt className="mr-2" /> التوزيعات
+          </Nav.Link>
+        </Nav.Item>
+        {/* <Nav.Item>
             <Nav.Link
               as={Link}
               to="/settings"
@@ -65,8 +64,7 @@ export const SidebarSelection = () => {
               <FaCog className="mr-2" /> Settings
             </Nav.Link>
           </Nav.Item> */}
-        </Nav>
-      </Container>
+      </Nav>
     </CustomCard>
   );
 };
