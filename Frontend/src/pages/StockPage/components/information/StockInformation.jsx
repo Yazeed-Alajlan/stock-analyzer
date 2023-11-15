@@ -17,7 +17,7 @@ const StockInformation = () => {
           <Container className="">
             <Row>
               <Col xs={6}>
-                <Table className="table-light" responsive>
+                <Table className="" responsive>
                   <tbody>
                     <tr>
                       <th>القيمة السوقية</th>
@@ -50,7 +50,7 @@ const StockInformation = () => {
                 </Table>
               </Col>
               <Col xs={6}>
-                <Table className="table-light" responsive>
+                <Table className="" responsive>
                   <tbody>
                     <tr>
                       <th>مضاعف القيمة الدفترية</th>

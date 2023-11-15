@@ -7,100 +7,70 @@ import SelectionTitle from "components/utils/SelectionTitle";
 import { BsCalendar3 } from "react-icons/bs";
 import { Container } from "react-bootstrap";
 import FinancialsTab from "./FinancialsTab";
+import ButtonsGroup from "components/utils/ButtonsGroup";
 
 const FinancialsTable = () => {
   const { stockFinancialData } = useOutletContext();
-  const [selectedTab, setSelectedTab] = useState("Balance Sheet");
-  const [displayAnnual, setDisplayAnnual] = useState(true);
-
-  const handleTabClick = (tabKey) => {
-    setSelectedTab(tabKey);
-  };
+  const [selectedTab, setSelectedTab] = useState(1);
+  const [displayAnnual, setDisplayAnnual] = useState(1);
 
   const handleDisplayButtonClick = (isAnnual) => {
     setDisplayAnnual(isAnnual);
   };
-
+  const financialsButtons = [
+    { id: 1, title: "المركز المالي" },
+    { id: 2, title: "قائمة الدخل" },
+    { id: 3, title: "التدفق النقدي" },
+  ];
+  const periodButtons = [
+    { id: 1, title: "سنوي" },
+    { id: 2, title: "ربع سنوي" },
+  ];
   return (
     <div>
       {stockFinancialData ? (
-        <CustomCard>
-          <SelectionTitle title={"القوائم المالية"} />
+        <CustomCard header={"القوائم المالية"}>
           <Container className="py-4">
             <div className="d-flex justify-content-between align-items-center pb-5">
-              <ButtonGroup className="gap-2">
-                <CustomButton
-                  variant={
-                    selectedTab === "Balance Sheet"
-                      ? "primary"
-                      : "outline-primary"
-                  }
-                  onClick={() => handleTabClick("Balance Sheet")}
-                  title={"المركز المالي"}
-                />
-                <CustomButton
-                  variant={
-                    selectedTab === "Statment of Income"
-                      ? "primary"
-                      : "outline-primary"
-                  }
-                  onClick={() => handleTabClick("Statment of Income")}
-                  title={"قائمة الدخل"}
-                />
-                <CustomButton
-                  variant={
-                    selectedTab === "Cash Flow" ? "primary" : "outline-primary"
-                  }
-                  onClick={() => handleTabClick("Cash Flow")}
-                  title={"التدفق النقدي"}
-                />
-              </ButtonGroup>
-              <ButtonGroup className="gap-2">
-                <div className="fs-3">
-                  <span className="mx-2">
-                    <BsCalendar3 />
-                  </span>
-                  المدة:
-                </div>
-                <CustomButton
-                  variant={displayAnnual ? "primary" : "outline-primary"}
-                  onClick={() => handleDisplayButtonClick(true)}
-                  title={"سنوي"}
-                />
-                <CustomButton
-                  variant={displayAnnual ? "outline-primary" : "primary"}
-                  onClick={() => handleDisplayButtonClick(false)}
-                  title={"ربع سنوي"}
-                />
-              </ButtonGroup>
+              <ButtonsGroup
+                buttons={financialsButtons}
+                parentSetState={setSelectedTab}
+              />
+
+              <ButtonsGroup
+                label={"المدة"}
+                icon={<BsCalendar3 />}
+                buttons={periodButtons}
+                parentSetState={setDisplayAnnual}
+              />
             </div>
 
             <div>
-              {selectedTab === "Balance Sheet" && (
+              {selectedTab === 1 && (
                 <FinancialsTab
                   title={"المركز المالي"}
                   data={
-                    displayAnnual
+                    displayAnnual === 1
                       ? stockFinancialData.balanceSheet
                       : stockFinancialData.balanceSheetQuarterly
                   }
                 />
               )}
-              {selectedTab === "Statment of Income" && (
+              {selectedTab === 2 && (
                 <FinancialsTab
                   title={"قائمة الدخل"}
                   data={
-                    displayAnnual
+                    displayAnnual === 1
                       ? stockFinancialData.incomeSheet
                       : stockFinancialData.incomeSheetQuarterly
                   }
                 />
               )}
-              {selectedTab === "Cash Flow" && (
+              {selectedTab === 3 && (
                 <FinancialsTab
                   title={"التدفق النقدي"}
                   data={
-                    displayAnnual
+                    displayAnnual === 1
                       ? stockFinancialData.cashFlow
                       : stockFinancialData.cashFlowQuarterly
                   }
