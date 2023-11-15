@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CompnentLayout from "components/CompnentLayout";
 import { Col, Row } from "react-bootstrap";
 import candlestick_patterns from "../candlestickPatterns";
-import StockChart from "pages/StockPage/components/chart/StockChart";
+import CandlestickChart from "pages/StockPage/components/chart/CandlestickChart";
 import { CustomCard } from "components/utils/CustomCard";
 import CustomButton from "components/utils/CustomButton";
 import InputSelect from "components/utils/InputSelect";
@@ -118,7 +118,7 @@ const JapaneseCandlestick = () => {
                           <p>رمز الشركة: {innerKey}</p>
                           <p>النوع: {value}</p>
                         </div>
-                        <StockChart symbol={innerKey} />
+                        <CandlestickChart symbol={innerKey} />
                       </CustomCard>
                     )
                   )}

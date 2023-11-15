@@ -1,88 +1,84 @@
-import React, { useState } from "react";
-import { CustomCard } from "components/utils/CustomCard";
-import { useOutletContext } from "react-router-dom";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import CustomButton from "components/utils/CustomButton";
-import SelectionTitle from "components/utils/SelectionTitle";
-import { BsCalendar3 } from "react-icons/bs";
-import { Container } from "react-bootstrap";
-import FinancialsTab from "./FinancialsTab";
-import ButtonsGroup from "components/utils/ButtonsGroup";
+import HoverGraph from "./HoverGraph";
+import { Container, Table } from "react-bootstrap";
 
-const FinancialsTable = () => {
-  const { stockFinancialData } = useOutletContext();
-  const [selectedTab, setSelectedTab] = useState(1);
-  const [displayAnnual, setDisplayAnnual] = useState(1);
+const FinancialsTable = ({ title, data, header }) => {
+  const keys = data.length > 0 ? Object.keys(data[0]) : [];
+  // Transpose the data
+  const transposedData = keys.map((key) => ({
+    field: key,
+    values: data.map((entry) => entry[key]),
+  }));
+  const firstRowValues = transposedData[0].values;
 
-  const handleDisplayButtonClick = (isAnnual) => {
-    setDisplayAnnual(isAnnual);
-  };
-  const financialsButtons = [
-    { id: 1, title: "المركز المالي" },
-    { id: 2, title: "قائمة الدخل" },
-    { id: 3, title: "التدفق النقدي" },
-  ];
-  const periodButtons = [
-    { id: 1, title: "سنوي" },
-    { id: 2, title: "ربع سنوي" },
-  ];
   return (
-    <div>
-      {stockFinancialData ? (
-        <CustomCard header={"القوائم المالية"}>
-          <Container className="py-4">
-            <div className="d-flex justify-content-between align-items-center pb-5">
-              <ButtonsGroup
-                buttons={financialsButtons}
-                parentSetState={setSelectedTab}
-              />
-
-              <ButtonsGroup
-                label={"المدة"}
-                icon={<BsCalendar3 />}
-                buttons={periodButtons}
-                parentSetState={setDisplayAnnual}
-              />
-            </div>
-
-            <div>
-              {selectedTab === 1 && (
-                <FinancialsTab
-                  title={"المركز المالي"}
-                  data={
-                    displayAnnual === 1
-                      ? stockFinancialData.balanceSheet
-                      : stockFinancialData.balanceSheetQuarterly
-                  }
-                />
+    <Container>
+      <Table className="fs-5" responsive hover>
+        <thead>
+          {header ? (
+            <tr>
+              <th>الشركة</th>
+              <th className="text-center" colSpan={2}>
+                {header[0]}
+              </th>
+              <th className="text-center" colSpan={2}>
+                {header[1]}
+              </th>
+            </tr>
+          ) : (
+            <></>
+          )}
+          <tr>
+            <th>{title}</th>
+            {firstRowValues.map((value, index) => (
+              <th key={index}>{value}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {transposedData.slice(1).map((rowData) => (
+            <tr key={rowData.field}>
+              {rowData.field !== "all_figures_in" &&
+              rowData.field !== "all_currency_in" &&
+              rowData.field !== "last_update_date" ? (
+                <>
+                  <td>
+                    <HoverGraph
+                      text={rowData.field}
+                      data={rowData.values}
+                      years={firstRowValues}
+                    />
+                  </td>
+                  {rowData.values.map((value, index) => (
+                    <td
+                      key={index}
+                      className={
+                        // Change to black if it includes "-" and has a length of 1
+                        value.includes("-") && value.length === 1
+                          ? ""
+                          : // Change to red if it includes "-" but doesn't meet the first condition
+                          value.includes("-")
+                          ? "text-danger"
+                          : // Make it green for all other cases
+                            "text-success"
+                      }
+                    >
+                      {value}
+                    </td>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <td>{rowData.field}</td>
+                  {rowData.values.map((value, index) => (
+                    <td key={index}>{value}</td>
+                  ))}
+                </>
               )}
-              {selectedTab === 2 && (
-                <FinancialsTab
-                  title={"قائمة الدخل"}
-                  data={
-                    displayAnnual === 1
-                      ? stockFinancialData.incomeSheet
-                      : stockFinancialData.incomeSheetQuarterly
-                  }
-                />
-              )}
-              {selectedTab === 3 && (
-                <FinancialsTab
-                  title={"التدفق النقدي"}
-                  data={
-                    displayAnnual === 1
-                      ? stockFinancialData.cashFlow
-                      : stockFinancialData.cashFlowQuarterly
-                  }
-                />
-              )}
-            </div>
-          </Container>
-        </CustomCard>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
   );
 };
 

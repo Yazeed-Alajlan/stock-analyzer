@@ -11,7 +11,6 @@ import {
 import SmCardInformaiton from "components/utils/SmCardInformaiton";
 import StockPriceCard from "./components/utils/StockPriceCard";
 import { useStocksData } from "contexts/StocksDataContext";
-import SelectionTabs from "../../components/routing/SelectionTabs";
 import PageLayout from "components/PageLayout";
 const StockPage = () => {
   const { symbol, sector } = useParams();

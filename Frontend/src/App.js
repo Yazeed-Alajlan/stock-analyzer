@@ -15,14 +15,13 @@ import TechnicalAnalysisPage from "pages/TechnicalAnalysisPage/TechnicalAnalysis
 import StockChart from "pages/StockPage/components/chart/StockChart";
 import Dividend from "pages/StockPage/components/profits_and_distributions/Dividend";
 import StockInformation from "pages/StockPage/components/information/StockInformation";
-import FinancialesTable from "pages/StockPage/components/financials/FinancialsTable";
+import Financials from "pages/StockPage/components/financials/Financials";
 import HawkesProcess from "pages/TechnicalAnalysisPage/components/HawkesProcess";
 import JapaneseCandlestick from "pages/TechnicalAnalysisPage/components/JapaneseCandlestick";
 import ConsolidatingStocks from "pages/TechnicalAnalysisPage/components/ConsolidatingStocks";
 import MonthlyReturns from "pages/TechnicalAnalysisPage/components/MonthlyReturns";
 import TechnicalAnalysisLayout from "components/routing/TechnicalAnalysisLayout";
 import TechnicalAnalysisAutomation from "pages/TechnicalAnalysisPage/components/TechnicalAnalysisAutomation";
-import TradingViewWidget from "components/utils/TradingViewWidget";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -90,8 +89,8 @@ function App() {
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />
-            <Route path="financials" element={<FinancialesTable />} />
-            <Route path="chart" element={<TradingViewWidget />} />
+            <Route path="financials" element={<Financials />} />
+            <Route path="chart" element={<StockChart />} />
             <Route path="dividend" element={<Dividend />} />
           </Route>
         </Routes>

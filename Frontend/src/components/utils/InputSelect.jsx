@@ -10,6 +10,7 @@ const InputSelect = ({
   onChange,
   isDisabled,
   isSearchable,
+  isMulti,
   className,
 }) => {
   return (
@@ -25,6 +26,7 @@ const InputSelect = ({
           isDisabled={isDisabled}
           isClearable
           isSearchable
+          isMulti={isMulti}
         />
       </div>
     </CompnentLayout>
