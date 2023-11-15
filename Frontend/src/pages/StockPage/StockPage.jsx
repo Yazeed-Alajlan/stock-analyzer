@@ -47,18 +47,6 @@ const StockPage = () => {
     },
   ];
 
-  const tabs = [
-    {
-      id: 1,
-      name: "معلومات السهم",
-      icon: FaMoneyBillAlt,
-      to: `/companies/${sector}/${symbol}/information`,
-    },
-    { id: 2, name: "Tab 2", to: "" },
-    { id: 3, name: "Tab 3", to: "" },
-    { id: 4, name: "Tab 4", to: `/companies/${sector}/${symbol}/dividend` },
-  ];
-
   useEffect(() => {
     const fetchData = async () => {
       try {

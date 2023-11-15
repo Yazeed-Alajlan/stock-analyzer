@@ -10,6 +10,35 @@ export const SidebarSelection = ({ routes }) => {
     return location.pathname.includes(path);
   };
 
+  // const myRoutes = [
+  //   {
+  //     path: "information",
+  //     icon: FaInfoCircle,
+  //     name: "معلومات السهم",
+  //     to: `/companies/${sector}/${symbol}/information`,
+  //   },
+  //   {
+  //     path: "financials",
+  //     icon: FaChartPie,
+  //     name: "القوائم المالية",
+  //     to: `/companies/${sector}/${symbol}/financials`,
+  //   },
+  //   {
+  //     path: "chart",
+  //     icon: FaChartLine,
+  //     name: "تحركات السهم",
+  //     to: `/companies/${sector}/${symbol}/chart`,
+  //   },
+  //   {
+  //     path: "dividend",
+  //     icon: FaMoneyBillAlt,
+  //     name: "التوزيعات",
+  //     to: `/companies/${sector}/${symbol}/dividend`,
+  //   },
+  // ];
+
+
+
   return (
     <CustomCard>
       <Nav className="gap-2">

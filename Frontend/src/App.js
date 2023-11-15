@@ -22,6 +22,7 @@ import ConsolidatingStocks from "pages/TechnicalAnalysisPage/components/Consolid
 import MonthlyReturns from "pages/TechnicalAnalysisPage/components/MonthlyReturns";
 import TechnicalAnalysisLayout from "components/routing/TechnicalAnalysisLayout";
 import TechnicalAnalysisAutomation from "pages/TechnicalAnalysisPage/components/TechnicalAnalysisAutomation";
+import TradingViewWidget from "components/utils/TradingViewWidget";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -90,7 +91,7 @@ function App() {
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>
             <Route path="information" element={<StockInformation />} />
             <Route path="financials" element={<FinancialesTable />} />
-            <Route path="chart" element={<StockChart />} />
+            <Route path="chart" element={<TradingViewWidget />} />
             <Route path="dividend" element={<Dividend />} />
           </Route>
         </Routes>
