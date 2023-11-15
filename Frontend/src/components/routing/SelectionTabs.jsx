@@ -3,22 +3,11 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./SelectionTabs.scss";
-import { Button, ButtonGroup, Row } from "react-bootstrap";
+import { ButtonGroup, Row } from "react-bootstrap";
 
-const SelectionTabs = ({ symbol, sector }) => {
+const SelectionTabs = ({ tabs }) => {
   const [selectedTab, setSelectedTab] = useState(1);
   const navigate = useNavigate();
-
-  const tabs = [
-    {
-      id: 1,
-      label: "معلومات السهم",
-      route: `/companies/${sector}/${symbol}/information`,
-    },
-    { id: 2, label: "Tab 2", route: "" },
-    { id: 3, label: "Tab 3", route: "" },
-    { id: 4, label: "Tab 4", route: "" },
-  ];
 
   const handleTabChange = (tabId, route) => {
     setSelectedTab(tabId);
@@ -41,10 +30,10 @@ const SelectionTabs = ({ symbol, sector }) => {
             className={`tab tab-button text-center w-100   ${
               selectedTab === tab.id ? "active" : ""
             }`}
-            onClick={() => handleTabChange(tab.id, tab.route)}
+            onClick={() => handleTabChange(tab.id, tab.to)}
             whileHover={{ scale: 1.1 }}
           >
-            {tab.label}
+            {tab.name}
           </motion.div>
         ))}
         <motion.div

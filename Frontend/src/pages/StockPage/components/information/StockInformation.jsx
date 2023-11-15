@@ -13,9 +13,8 @@ const StockInformation = () => {
   return (
     <>
       {stockInformationData ? (
-        <CustomCard header={"معلومات السهم"} subHeader={"معلومات"}>
-          {/* <SelectionTitle title={"معلومات السهم"} /> */}
-          <Container className="py-4">
+        <CustomCard className={"gap-4"} header={"معلومات السهم"}>
+          <Container className="">
             <Row>
               <Col xs={6}>
                 <Table className="table-light" responsive>
@@ -73,7 +72,9 @@ const StockInformation = () => {
                     </tr>
                     <tr>
                       <th> رأس المال المصرّح</th>
-                      <th>{stockInformationData.capital[0].newCApital}</th>
+                      <th>
+                        {stockInformationData.capital?.[0]?.newCApital ?? "N/A"}
+                      </th>
                     </tr>
                   </tbody>
                 </Table>
