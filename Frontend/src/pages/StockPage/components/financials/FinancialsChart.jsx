@@ -1,7 +1,5 @@
 import InputSelect from "components/utils/InputSelect";
-import React, { useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import { Line } from "react-chartjs-2";
+import React, { useState, useEffect } from "react";
 import DynamicChart from "components/utils/DynamicChart";
 
 const FinancialsChart = ({ stockFinancialData }) => {
@@ -33,9 +31,29 @@ const FinancialsChart = ({ stockFinancialData }) => {
     },
   ];
 
-  // State to hold the selected options
+  // State to hold the selected options and chart data
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [chartData, setChartData] = useState(null);
+
+  useEffect(() => {
+    let result = {};
+
+    if (selectedOptions.length > 0) {
+      selectedOptions.forEach((option) => {
+        result[option.label] = []; // Initialize an array for each option
+
+        stockFinancialData[option.groupLabel].forEach((item) => {
+          let obj = {
+            year: item["year"],
+            value: item[option.value], // Changed to option.value for the correct property access
+          };
+
+          result[option.label].push(obj); // Push object into the respective option's array
+        });
+      });
+      setChartData(result);
+    }
+  }, [selectedOptions, stockFinancialData]);
 
   const handleSelectChange = (selected) => {
     const optionsWithGroupLabel = selected.map((opt) => ({
@@ -45,25 +63,6 @@ const FinancialsChart = ({ stockFinancialData }) => {
       ).label,
     }));
     setSelectedOptions(optionsWithGroupLabel);
-    let result = {};
-
-    if (selectedOptions != []) {
-      optionsWithGroupLabel.forEach((option) => {
-        result[option.label] = []; // Initialize an array for each option
-
-        stockFinancialData[option.groupLabel].forEach((item) => {
-          let obj = {
-            year: item["year"],
-            value: item[option.label],
-          };
-
-          result[option.label].push(obj); // Push object into the respective option's array
-        });
-      });
-      setChartData(result);
-    }
-
-    console.log(chartData);
   };
 
   return (
