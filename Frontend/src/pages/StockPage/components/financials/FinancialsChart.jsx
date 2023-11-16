@@ -1,9 +1,10 @@
 import InputSelect from "components/utils/InputSelect";
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import { Line } from "react-chartjs-2";
+import DynamicChart from "components/utils/DynamicChart";
 
-const FinancialsChart = () => {
-  const { stockFinancialData } = useOutletContext();
+const FinancialsChart = ({ stockFinancialData }) => {
   const balanceSheetKeys =
     stockFinancialData.balanceSheet.length > 0
       ? Object.keys(stockFinancialData.balanceSheet[0]).slice(1)
@@ -34,6 +35,7 @@ const FinancialsChart = () => {
 
   // State to hold the selected options
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [chartData, setChartData] = useState(null);
 
   const handleSelectChange = (selected) => {
     const optionsWithGroupLabel = selected.map((opt) => ({
@@ -42,9 +44,26 @@ const FinancialsChart = () => {
         group.options.some((grpOpt) => grpOpt.value === opt.value)
       ).label,
     }));
-    console.log(optionsWithGroupLabel[0].groupLabel);
     setSelectedOptions(optionsWithGroupLabel);
-    console.log(stockFinancialData[optionsWithGroupLabel[0].groupLabel]);
+    let result = {};
+
+    if (selectedOptions != []) {
+      optionsWithGroupLabel.forEach((option) => {
+        result[option.label] = []; // Initialize an array for each option
+
+        stockFinancialData[option.groupLabel].forEach((item) => {
+          let obj = {
+            year: item["year"],
+            value: item[option.label],
+          };
+
+          result[option.label].push(obj); // Push object into the respective option's array
+        });
+      });
+      setChartData(result);
+    }
+
+    console.log(chartData);
   };
 
   return (
@@ -55,6 +74,7 @@ const FinancialsChart = () => {
         onChange={handleSelectChange}
         value={selectedOptions}
       />
+      <DynamicChart data={chartData} />
     </div>
   );
 };

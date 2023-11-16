@@ -29,6 +29,7 @@ const ButtonsGroup = ({
         <div className="d-flex">
           <CustomButton
             title={button.title}
+            icon={button.icon}
             onClick={() => handleButtonClick(button.id)}
             variant={
               selectedButton === button.id ? "primary" : "outline-primary"
