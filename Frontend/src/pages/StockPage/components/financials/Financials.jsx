@@ -12,7 +12,7 @@ const Financials = () => {
   const { stockFinancialData } = useOutletContext();
   const [selectedTab, setSelectedTab] = useState(1);
   const [displayAnnual, setDisplayAnnual] = useState(1);
-  const [type, setType] = useState(2);
+  const [type, setType] = useState(1);
   const [financialData, setFinancialData] = useState(null);
 
   useEffect(() => {

@@ -9,7 +9,7 @@ const CustomButton = ({
   variant,
   type,
   size,
-  icon: Icon, // Accepting icon as a prop
+  icon: Icon,
 }) => {
   return (
     <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>

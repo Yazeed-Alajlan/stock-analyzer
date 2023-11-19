@@ -5,7 +5,7 @@ export const CustomCard = ({ className, children, header, subHeader }) => {
   return (
     <CompnentLayout>
       <Card
-        className={`CARD bg-white border-0 shadow rounded-4 w-100 my-2 p-0 ${className}`}
+        className={`CARD bg-white bg-dark border-0 shadow rounded-4 w-100 my-2 p-0 ${className}`}
       >
         <Card.Body className="CARD_BODY p-3">
           <Container className="CARD_BODY_CONTAINER d-flex flex-column gap-4 p-0">

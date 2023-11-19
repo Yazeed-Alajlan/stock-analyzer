@@ -8,6 +8,7 @@ import PageLayout from "components/PageLayout";
 import { CustomCard } from "components/utils/CustomCard";
 import FilterCard from "components/utils/FilterCard";
 import InputSelect from "components/utils/InputSelect";
+import CustomButton from "components/utils/CustomButton";
 
 const StocksPage = () => {
   let { sector } = useParams();
@@ -86,8 +87,8 @@ const StocksPage = () => {
   return (
     <PageLayout title={"الشركات"} className="d-flex flex-column gap-4">
       <CustomCard>
-        <FilterCard className={"bg-light"}>
-          <Col xs={8} xl={4}>
+        <FilterCard>
+          <Col md={12} xl={4}>
             <InputSelect
               className="w-100"
               label={"الشركة"}
@@ -97,7 +98,7 @@ const StocksPage = () => {
               placeholder="ابحث حسب اسم الشركة أو الرمز"
             />
           </Col>
-          <Col xs={8} xl={7}>
+          <Col md={12} xl={7}>
             <InputSelect
               className="w-100"
               label={"القطاع"}
@@ -108,11 +109,9 @@ const StocksPage = () => {
             />
           </Col>
           <Col xs={8} xl={1}>
-            <Button
+            <CustomButton
               variant="danger"
-              as="input"
-              type="reset"
-              value="حذف"
+              title={"حذف"}
               onClick={clearFilters}
             />
           </Col>
