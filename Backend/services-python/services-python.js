@@ -119,5 +119,24 @@ router.get("/flags-pennants", async (req, res) => {
       console.log(error);
     });
 });
+router.get("/:symbol/indicators/:indicator", async (req, res) => {
+  const symbol = req.params.symbol;
+  const indicator = req.params.indicator;
+
+  console.log(symbol);
+  axios
+    .get(`http://127.0.0.1:4000/api/stocks/vsa`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      var data = response.data;
+      res.json(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
 export default router;

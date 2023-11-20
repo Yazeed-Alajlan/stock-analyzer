@@ -90,7 +90,8 @@ def vsa():
 
     data=vsa_indicator(stock_data,norm_lookback=10)
     data.index = data.index.strftime('%Y-%m-%d')
- 
+    data=data.fillna(0)
+    print(data)
     return data.to_json()
 
 

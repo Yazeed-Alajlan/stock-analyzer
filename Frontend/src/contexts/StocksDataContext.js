@@ -60,6 +60,19 @@ export function StocksDataProvider({ children }) {
 
     return response.data;
   }
+  async function getIndicatorData(symbol, indicator) {
+    let response;
+    try {
+      response = await axios.get(
+        `http://localhost:5000/python-api/${symbol}/indicators/${indicator}`
+      );
+      // console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching stock data:", error);
+    }
+
+    return response.data;
+  }
 
   const value = {
     stocksData,
@@ -69,6 +82,7 @@ export function StocksDataProvider({ children }) {
     getStockFinancialData,
     getStockInformationData,
     getStockPriceData,
+    getIndicatorData,
   };
 
   return (

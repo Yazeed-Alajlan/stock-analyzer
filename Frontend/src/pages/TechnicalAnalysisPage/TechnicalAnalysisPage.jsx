@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "react-bootstrap";
 import PageLayout from "components/PageLayout";
-import { FaChartBar, FaMoneyBillWave, FaSignal } from "react-icons/fa"; // Import FontAwesome icons
+import { FaChartBar, FaSignal } from "react-icons/fa"; // Import FontAwesome icons
 import {
   TbReportAnalytics,
   TbDeviceAnalytics,
@@ -10,17 +10,16 @@ import {
 import { useStocksData } from "contexts/StocksDataContext";
 
 import CardWithLink from "components/utils/CardWithLink";
-import ChartPatterns from "./components/ChartPatterns";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 
 const TechnicalAnalysisPage = () => {
-  const { getStockPriceData } = useStocksData();
-  console.log(getStockPriceData("4321"));
+  const { getStockPriceData, getIndicatorData } = useStocksData();
   return (
     <PageLayout>
       <Container className="d-flex justify-content-center flex-wrap gap-5">
         <CandlestickAndIndicatorsChart
           series={getStockPriceData("4321")}
+          indcators={getIndicatorData("4321", "vsa")}
           symbol={"4321"}
         />
         {/* {data && (

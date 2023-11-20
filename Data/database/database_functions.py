@@ -58,7 +58,6 @@ def get_price_data(symbol):
     # numeric_columns = ['open', 'close', 'high', 'low', 'volume', 'adjclose']
     # df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
 
-    print(df)
     # Close the MongoDB client when done
     client.close()
     return df
