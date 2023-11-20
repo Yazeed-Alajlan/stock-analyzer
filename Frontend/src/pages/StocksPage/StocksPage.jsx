@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { Card, Container, Table, Button, Col, Row } from "react-bootstrap";
-import Select from "react-select";
-import { useStocksData } from "../../contexts/StocksDataContext";
+import { Card, Table, Col } from "react-bootstrap";
+import { useStocksData } from "contexts/StocksDataContext";
 import PageLayout from "components/PageLayout";
 import { CustomCard } from "components/utils/CustomCard";
 import FilterCard from "components/utils/FilterCard";
@@ -13,7 +11,7 @@ import CustomButton from "components/utils/CustomButton";
 const StocksPage = () => {
   let { sector } = useParams();
   if (sector == "all") sector = "جميع القطاعات";
-  const { stocksData, selectedStock, setSelectedStock } = useStocksData();
+  const { stocksData, setSelectedStock } = useStocksData();
   const [sectorName, setSectorName] = useState(sector);
   const [filteredData, setFilteredData] = useState(null);
   const [selectedStockOption, setSelectedStockOption] = useState(); // Initialize with an empty object

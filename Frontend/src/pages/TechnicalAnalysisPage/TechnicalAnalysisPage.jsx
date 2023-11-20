@@ -7,14 +7,22 @@ import {
   TbDeviceAnalytics,
   TbChartCandle,
 } from "react-icons/tb";
+import { useStocksData } from "contexts/StocksDataContext";
 
 import CardWithLink from "components/utils/CardWithLink";
 import ChartPatterns from "./components/ChartPatterns";
+import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 
 const TechnicalAnalysisPage = () => {
+  const { getStockPriceData } = useStocksData();
+  console.log(getStockPriceData("4321"));
   return (
     <PageLayout>
       <Container className="d-flex justify-content-center flex-wrap gap-5">
+        <CandlestickAndIndicatorsChart
+          series={getStockPriceData("4321")}
+          symbol={"4321"}
+        />
         {/* {data && (
           <>
             <CustomChart

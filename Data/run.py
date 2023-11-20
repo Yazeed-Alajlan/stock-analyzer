@@ -82,6 +82,17 @@ def flags_pennants():
     } 
     return result_dict
 
+@app.route("/api/stocks/vsa")
+def vsa():
+    # symbol = flask.request.args.get("symbol")
+    symbol="4321"
+    stock_data=get_price_data(symbol) 
+
+    data=vsa_indicator(stock_data,norm_lookback=10)
+    data.index = data.index.strftime('%Y-%m-%d')
+ 
+    return data.to_json()
+
 
 
 

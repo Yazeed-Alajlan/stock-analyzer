@@ -47,6 +47,20 @@ export function StocksDataProvider({ children }) {
 
     return response.data;
   }
+  async function getStockPriceData(symbol) {
+    let response;
+    try {
+      response = await axios.get(
+        `http://localhost:5000/api/stock-price/${symbol}`
+      );
+      // console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching stock data:", error);
+    }
+
+    return response.data;
+  }
+
   const value = {
     stocksData,
     setStocksData,
@@ -54,6 +68,7 @@ export function StocksDataProvider({ children }) {
     setSelectedStock,
     getStockFinancialData,
     getStockInformationData,
+    getStockPriceData,
   };
 
   return (
