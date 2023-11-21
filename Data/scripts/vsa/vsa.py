@@ -37,16 +37,6 @@ def vsa_indicator(data: pd.DataFrame, norm_lookback: int = 10):
 
 
 
-# data = yf.download('4321.SR', start='2021-01-01', end='2022-10-01')
-# print(data)
-# data['Datetime'] = data.index  # Create a new column with the datetime index
-# data['Datetime'] = pd.to_datetime(data['Datetime'])  # Convert the 'Datetime' column to a datetime data type
-# data = data.set_index('Datetime')
-
-# print(data)
-# data['dev'] = vsa_indicator(data, 14)
-# print(data)
-
 
 ## Positive Value --- Range of the candle higher than expected 
 ## Negative Value --- Range of the candle smaller than expected --> Slow down in the trend (Ending the trend)

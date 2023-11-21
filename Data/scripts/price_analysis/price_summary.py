@@ -1,18 +1,13 @@
-import yfinance as yf
-import pandas as pd
-import numpy as np
-import sys
-import sys, json
 
-
-def fetch_stock_data(stock_symbol, start_date, end_date):
-    df = yf.download(stock_symbol, start=start_date, end=end_date)
-    return df
 
 def calculate_monthly_returns(df):
-    monthly_data = df['close'].resample('M').ffill()
-    monthly_returns = (monthly_data / monthly_data.shift(1) - 1) * 100
-    monthly_returns.iloc[0] = 0  
+# Resample to get the end of month close prices
+    monthly_end_close = df['close'].resample('M').last()
+    # Resample to get the beginning of month close prices
+    monthly_begin_close = df['open'].resample('M').first()
+    # Calculate monthly returns using the formula
+    monthly_returns = ((monthly_end_close - monthly_begin_close) / monthly_begin_close) * 100
+    
     return monthly_returns
 
 def calculate_monthly_average_returns(df):

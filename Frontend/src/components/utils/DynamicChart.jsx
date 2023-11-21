@@ -1,51 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Line, Bar, Radar } from "react-chartjs-2";
 
-const DynamicChart = ({ type, data }) => {
+const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {
-    const emptyData = {
+    return {
       labels: [],
       datasets: [],
     };
-
-    const options = {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    };
-
-    return (
-      <div>
-        <Bar data={emptyData} options={options} />
-      </div>
-    );
   }
 
-  const datasets = Object.keys(data).map((key, index) => {
-    const values = data[key].map((item) => ({
-      x: item.year,
-      y: parseInt(item.value.replace(/,/g, "")),
-    }));
-
-    return {
+  // Object with multiple values
+  if (Array.isArray(Object.values(data)[0])) {
+    const labels = data[Object.keys(data)[0]].map((item) => item.year);
+    const datasets = Object.keys(data).map((key) => ({
       label: key.replace("_", " ").toUpperCase(),
-      data: values,
+      data: data[key].map((item) => ({
+        x: item.year,
+        y: parseInt(item.value.replace(/,/g, "")),
+      })),
       borderColor: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(
         Math.random() * 256
       )}, ${Math.floor(Math.random() * 256)}, 1)`,
       backgroundColor: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(
         Math.random() * 256
       )}, ${Math.floor(Math.random() * 256)}, 0.2)`,
-    };
-  });
+    }));
 
-  const chartData = {
-    labels: data[Object.keys(data)[0]].map((item) => item.year),
-    datasets: datasets,
+    return { labels, datasets };
+  }
+  // Single Value
+  const formatData = {
+    labels: Object.keys(data),
+    datasets: [
+      {
+        label: "Data",
+        data: Object.values(data),
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
   };
 
+  return formatData; // Returning with correct
+};
+
+const DynamicChart = ({ type, data }) => {
+  const [chartType, setChartType] = useState(type);
+  const [chartData, setChartData] = useState();
   const options = {
     scales: {
       y: {
@@ -54,20 +56,36 @@ const DynamicChart = ({ type, data }) => {
     },
   };
 
+  useEffect(() => {
+    const convertedData = convertDataFormat(data);
+    setChartData(convertedData);
+  }, [data]);
+
   let ChartComponent;
-  if (type === "line") {
+  if (chartType === "line") {
     ChartComponent = Line;
-  } else if (type === "bar") {
+  } else if (chartType === "bar") {
     ChartComponent = Bar;
-  } else if (type === "radar") {
+  } else if (chartType === "radar") {
     ChartComponent = Radar;
   } else {
-    // Default to Bar chart for invalid type or when type is not provided
     ChartComponent = Bar;
   }
+
+  const changeChartType = (newType) => {
+    setChartType(newType);
+  };
+
   return (
     <div>
-      <ChartComponent data={chartData} options={options} />
+      <div>
+        <button onClick={() => changeChartType("line")}>Line Chart</button>
+        <button onClick={() => changeChartType("bar")}>Bar Chart</button>
+        <button onClick={() => changeChartType("radar")}>Radar Chart</button>
+      </div>
+      {chartData && data && (
+        <ChartComponent data={chartData} options={options} />
+      )}
     </div>
   );
 };

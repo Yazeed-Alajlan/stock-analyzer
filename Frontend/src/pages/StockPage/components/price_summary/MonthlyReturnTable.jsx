@@ -1,5 +1,6 @@
 import axios from "axios";
 import CompnentLayout from "components/CompnentLayout";
+import DynamicChart from "components/utils/DynamicChart";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
@@ -24,7 +25,6 @@ const MonthlyReturnTable = ({ symbols }) => {
   const uniqueYears = [
     ...new Set(sortedDates.map((date) => date.substring(0, 4))),
   ];
-  console.log(data);
   return (
     <CompnentLayout>
       <Table className="text-center" responsive>
@@ -76,6 +76,7 @@ const MonthlyReturnTable = ({ symbols }) => {
           ))}
         </tbody>
       </Table>
+      <DynamicChart type={"bar"} data={data} />
     </CompnentLayout>
   );
 };

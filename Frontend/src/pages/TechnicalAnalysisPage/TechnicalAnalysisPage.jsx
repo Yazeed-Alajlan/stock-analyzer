@@ -11,17 +11,20 @@ import { useStocksData } from "contexts/StocksDataContext";
 
 import CardWithLink from "components/utils/CardWithLink";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
+import { CustomCard } from "components/utils/CustomCard";
 
 const TechnicalAnalysisPage = () => {
   const { getStockPriceData, getIndicatorData } = useStocksData();
   return (
     <PageLayout>
-      <Container className="d-flex justify-content-center flex-wrap gap-5">
+      <CustomCard>
         <CandlestickAndIndicatorsChart
           series={getStockPriceData("4321")}
           indcators={getIndicatorData("4321", "vsa")}
           symbol={"4321"}
         />
+      </CustomCard>
+      <Container className="d-flex justify-content-center flex-wrap gap-5">
         {/* {data && (
           <>
             <CustomChart

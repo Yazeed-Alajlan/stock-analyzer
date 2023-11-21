@@ -111,6 +111,7 @@ const CandlestickAndIndicatorsChart = ({
     toolTip.style.color = "black";
     toolTip.style.borderColor = "rgba( 38, 166, 154, 1)";
     container.appendChild(toolTip);
+
     // update tooltip
     chart.subscribeCrosshairMove((param) => {
       if (
