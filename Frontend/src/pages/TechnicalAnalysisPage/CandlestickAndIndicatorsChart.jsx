@@ -83,6 +83,15 @@ const CandlestickAndIndicatorsChart = ({
     }
     addVolumeHistogram(chart, await series);
     createTooltip(chartContainerId, chart, candlestickSeries);
+
+    // Sync Cahrts
+    chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+      chart2.timeScale().setVisibleLogicalRange(range);
+    });
+    chart2.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+      chart.timeScale().setVisibleLogicalRange(range);
+    });
+
     return () => {
       chart.remove();
     };
