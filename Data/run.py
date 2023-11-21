@@ -15,12 +15,18 @@ app = flask.Flask(__name__)
 @app.route("/api/stocks/<symbol>/price-summary")
 def get_price_summary(symbol):
     df=get_price_data(symbol) 
-    price_summary = calculate_monthly_returns(df)
+    monthly_returns = calculate_monthly_returns(df)
+    monthly_returns_average=calculate_monthly_average_returns(df)
 
     # Convert the date index to ISO 8601 format
-    price_summary.index = price_summary.index.strftime('%Y-%m')
-
-    return price_summary.to_json()
+    monthly_returns.index = monthly_returns.index.strftime('%Y-%m')
+    result_dict = {
+        "monthly_returns": monthly_returns.to_dict(),
+        "monthly_returns_average": monthly_returns_average.to_dict(),
+        "price_change":count_price_change(df)
+    } 
+    print(result_dict)
+    return result_dict
 
 @app.route("/api/stocks/<symbol>/volume-seasonality-daily")
 def get_volume_seasonality_daily(symbol):

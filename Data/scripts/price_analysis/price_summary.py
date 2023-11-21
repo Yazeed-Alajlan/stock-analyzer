@@ -33,7 +33,7 @@ def calculate_daily_average_returns(df):
     return daily_average_returns
 
 def count_price_change(df):
-    df['PriceChange'] = ((df['Close'] - df['Open']) / df['Open']) * 100
+    df['PriceChange'] = ((df['close'] - df['open']) / df['open']) * 100
     count_dict = {
         '0_to_3': 0,
         '3_to_6': 0,
