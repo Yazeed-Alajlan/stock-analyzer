@@ -7,16 +7,15 @@ import { Container } from "react-bootstrap";
 import FinancialsTable from "./FinancialsTable";
 import ButtonsGroup from "components/utils/ButtonsGroup";
 import FinancialsChart from "./FinancialsChart";
+import Tabs from "components/utils/Tabs";
+import Tab from "components/utils/Tab";
 
 const Financials = () => {
   const { stockFinancialData } = useOutletContext();
-  const [selectedTab, setSelectedTab] = useState(1);
   const [displayAnnual, setDisplayAnnual] = useState(1);
-  const [type, setType] = useState(1);
   const [financialData, setFinancialData] = useState(null);
 
   useEffect(() => {
-    // Assuming stockFinancialData has all necessary properties for annual and quarterly data
     if (stockFinancialData) {
       setFinancialData({
         balanceSheet:
@@ -32,70 +31,66 @@ const Financials = () => {
             ? stockFinancialData.cashFlow
             : stockFinancialData.cashFlowQuarterly,
       });
+      // setFinancialData({
+      //   balanceSheet: {
+      //     annual: stockFinancialData.balanceSheet,
+      //     quarterly: stockFinancialData.balanceSheetQuarterly,
+      //   },
+      //   incomeSheet: {
+      //     annual: stockFinancialData.incomeSheet,
+      //     quarterly: stockFinancialData.incomeSheetQuarterly,
+      //   },
+      //   cashFlow: {
+      //     annual: stockFinancialData.cashFlow,
+      //     quarterly: stockFinancialData.cashFlowQuarterly,
+      //   },
+      // });
     }
   }, [stockFinancialData, displayAnnual]);
 
-  const financialsButtons = [
-    { id: 1, title: "المركز المالي" },
-    { id: 2, title: "قائمة الدخل" },
-    { id: 3, title: "التدفق النقدي" },
-  ];
   const periodButtons = [
     { id: 1, title: "سنوي" },
     { id: 2, title: "ربع سنوي" },
   ];
-  const typeButtons = [
-    { id: 1, icon: TbChartBar },
-    { id: 2, icon: TbTable },
-  ];
+
   return (
     <div>
       {financialData ? (
         <CustomCard header={"القوائم المالية"}>
           <Container className="py-4">
-            <div className="d-flex justify-content-around align-items-center pb-5">
-              <ButtonsGroup buttons={typeButtons} parentSetState={setType} />
+            <Tabs>
+              <Tab icon={TbChartBar}>
+                <FinancialsChart stockFinancialData={financialData} />
+              </Tab>
+              <Tab icon={TbTable}>
+                <Tabs activeTab={1}>
+                  <Tab title={"المركز المالي"}>
+                    <FinancialsTable
+                      title={"المركز المالي"}
+                      data={financialData.balanceSheet}
+                    />
+                  </Tab>
+                  <Tab title={"قائمة الدخل"}>
+                    <FinancialsTable
+                      title={"قائمة الدخل"}
+                      data={financialData.incomeSheet}
+                    />
+                  </Tab>
+                  <Tab title={"التدفق النقدي"}>
+                    <FinancialsTable
+                      title={"التدفق النقدي"}
+                      data={financialData.cashFlow}
+                    />
+                  </Tab>
+                </Tabs>
+              </Tab>
               <ButtonsGroup
                 label={"المدة"}
                 icon={<BsCalendar3 />}
                 buttons={periodButtons}
                 parentSetState={setDisplayAnnual}
               />
-            </div>
-            {type === 1 ? (
-              <>
-                <FinancialsChart stockFinancialData={financialData} />
-              </>
-            ) : (
-              <>
-                <div className="d-flex justify-content-around align-items-center pb-5">
-                  <ButtonsGroup
-                    buttons={financialsButtons}
-                    parentSetState={setSelectedTab}
-                  />
-                </div>
-                <div>
-                  {selectedTab === 1 && (
-                    <FinancialsTable
-                      title={"المركز المالي"}
-                      data={financialData.balanceSheet}
-                    />
-                  )}
-                  {selectedTab === 2 && (
-                    <FinancialsTable
-                      title={"قائمة الدخل"}
-                      data={financialData.incomeSheet}
-                    />
-                  )}
-                  {selectedTab === 3 && (
-                    <FinancialsTable
-                      title={"التدفق النقدي"}
-                      data={financialData.cashFlow}
-                    />
-                  )}
-                </div>
-              </>
-            )}
+            </Tabs>
           </Container>
         </CustomCard>
       ) : (

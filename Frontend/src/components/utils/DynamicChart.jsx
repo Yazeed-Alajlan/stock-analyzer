@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Line, Bar, Radar } from "react-chartjs-2";
+import Tab from "./Tab";
+import Tabs from "./Tabs";
+import { TbChartBar, TbChartLine } from "react-icons/tb";
+import { ButtonGroup } from "react-bootstrap";
+import ButtonsGroup from "./ButtonsGroup";
 
 const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {
@@ -76,9 +81,17 @@ const DynamicChart = ({ type, data }) => {
     setChartType(newType);
   };
 
+  const chartTypeButtons = [
+    { id: 1, title: "سنوي" },
+    { id: 2, title: "ربع سنوي" },
+  ];
   return (
     <div>
       <div>
+        <ButtonsGroup
+          buttons={chartTypeButtons}
+          parentSetState={setChartType}
+        />
         <button onClick={() => changeChartType("line")}>Line Chart</button>
         <button onClick={() => changeChartType("bar")}>Bar Chart</button>
         <button onClick={() => changeChartType("radar")}>Radar Chart</button>

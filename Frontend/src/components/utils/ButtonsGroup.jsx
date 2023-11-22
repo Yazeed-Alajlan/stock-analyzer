@@ -16,7 +16,7 @@ const ButtonsGroup = ({
   };
 
   return (
-    <div className="d-flex justify-content-between align-items-center gap-4">
+    <div className="d-flex  align-items-center gap-4">
       {label || icon != null ? (
         <p className="fs-5 my-auto me-2">
           <span> {label}</span>
