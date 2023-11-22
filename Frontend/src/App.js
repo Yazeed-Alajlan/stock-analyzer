@@ -50,16 +50,6 @@ function App() {
         transition={{ type: "spring", bounce: 0, duration: 0.4 }}
       >
         <Header {...{ sideBar, setSideBar }} />
-
-        {/* <button
-          onClick={() => {
-            setModal(!modal);
-          }}
-        >
-          OPEN MODAL
-        </button> */}
-        {/* <button onClick={handleClick}>Register</button> */}
-
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<HomePage />} />

@@ -18,7 +18,7 @@ const InputSelect = ({
       <div className="d-flex gap-2">
         <p className="fs-5 my-auto">{label}</p>
         <Select
-          className={`w-75 z-2 ${className}`}
+          className={`w-75  ${className}`}
           placeholder={placeholder}
           options={options}
           value={selectedOption}

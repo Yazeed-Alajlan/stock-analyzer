@@ -8,13 +8,14 @@ const ButtonsGroup = ({
   parentState,
   parentSetState,
 }) => {
-  const [selectedButton, setSelectedButton] = useState(1);
+  const [selectedButton, setSelectedButton] = useState(0);
 
-  const handleButtonClick = (buttonId) => {
+  const handleButtonClick = (buttonId, buttonName) => {
     setSelectedButton(buttonId);
-    parentSetState(buttonId);
+    parentSetState(buttonName ? buttonName : buttonId);
   };
 
+  console.log(selectedButton);
   return (
     <div className="d-flex  align-items-center gap-4">
       {label || icon != null ? (
@@ -25,15 +26,13 @@ const ButtonsGroup = ({
       ) : (
         <></>
       )}
-      {buttons.map((button) => (
+      {buttons.map((button, index) => (
         <div className="d-flex">
           <CustomButton
-            title={button.title}
+            text={button.text}
             icon={button.icon}
-            onClick={() => handleButtonClick(button.id)}
-            variant={
-              selectedButton === button.id ? "primary" : "outline-primary"
-            }
+            onClick={() => handleButtonClick(index, button.name)}
+            variant={selectedButton === index ? "primary" : "outline-primary"}
           />
         </div>
       ))}

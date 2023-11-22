@@ -71,7 +71,7 @@ const ConsolidatingStocks = () => {
           />
         </Col>
         <Col xs={8} xl={2} className="d-flex justify-content-center">
-          <CustomButton title={"ابحث"} onClick={fetchData} />
+          <CustomButton text={"ابحث"} onClick={fetchData} />
         </Col>
       </FilterCard>
       <CustomCard className="d-flex flex-column">

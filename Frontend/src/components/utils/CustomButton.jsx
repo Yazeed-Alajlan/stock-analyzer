@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const CustomButton = ({
   className,
   onClick,
-  title,
+  text,
   variant,
   type,
   size,
@@ -21,7 +21,7 @@ const CustomButton = ({
         size={size}
       >
         {Icon && <Icon className="me-1" />} {/* Render the icon if available */}
-        {title}
+        {text}
       </Button>
     </motion.div>
   );

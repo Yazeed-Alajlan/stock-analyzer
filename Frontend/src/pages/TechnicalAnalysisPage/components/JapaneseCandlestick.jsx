@@ -99,7 +99,7 @@ const JapaneseCandlestick = () => {
           />
         </Col>
         <Col xs={8} xl={2} className="d-flex justify-content-center">
-          <CustomButton title={"ابحث"} onClick={sendSelectedPattern} />
+          <CustomButton text={"ابحث"} onClick={sendSelectedPattern} />
         </Col>
       </FilterCard>
       <CustomCard>

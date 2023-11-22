@@ -109,7 +109,7 @@ const StocksPage = () => {
           <Col xs={8} xl={1}>
             <CustomButton
               variant="danger"
-              title={"حذف"}
+              text={"حذف"}
               onClick={clearFilters}
             />
           </Col>

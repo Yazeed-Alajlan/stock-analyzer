@@ -13,11 +13,11 @@ const Tabs = ({ children, activeTab }) => {
 
   React.Children.forEach(children, (child, index) => {
     if (React.isValidElement(child) && child.type.name === "Tab") {
-      const { title, icon } = child.props;
+      const { text, icon } = child.props;
       tabElements.push(
         <CustomButton
           key={index}
-          title={title}
+          text={text}
           icon={icon}
           onClick={() => changeTab(index + 1)}
           variant={active === index + 1 ? "primary" : "outline-primary"}
@@ -42,6 +42,11 @@ const Tabs = ({ children, activeTab }) => {
       <div className="tab-content mt-4">
         {React.Children.map(children, (child, index) => {
           if (React.isValidElement(child)) {
+            if (
+              React.isValidElement(child) &&
+              child.type.name === "ButtonsGroup"
+            )
+              return null;
             return React.cloneElement(child, {
               isActive: index + 1 === active,
             });

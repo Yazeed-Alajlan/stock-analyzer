@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Line, Bar, Radar } from "react-chartjs-2";
-import Tab from "./Tab";
-import Tabs from "./Tabs";
-import { TbChartBar, TbChartLine } from "react-icons/tb";
-import { ButtonGroup } from "react-bootstrap";
+import { motion } from "framer-motion";
+
 import ButtonsGroup from "./ButtonsGroup";
+import { TbChartBar, TbChartLine } from "react-icons/tb";
+import CusotmModal from "./CusotmModal";
 
 const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {
@@ -40,9 +40,7 @@ const convertDataFormat = (data) => {
       {
         label: "Data",
         data: Object.values(data),
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
+        backgroundColor: "rgba(117,125,232)",
       },
     ],
   };
@@ -53,6 +51,8 @@ const convertDataFormat = (data) => {
 const DynamicChart = ({ type, data }) => {
   const [chartType, setChartType] = useState(type);
   const [chartData, setChartData] = useState();
+  const [modal, setModal] = useState(false);
+
   const options = {
     scales: {
       y: {
@@ -71,35 +71,43 @@ const DynamicChart = ({ type, data }) => {
     ChartComponent = Line;
   } else if (chartType === "bar") {
     ChartComponent = Bar;
-  } else if (chartType === "radar") {
-    ChartComponent = Radar;
   } else {
     ChartComponent = Bar;
   }
 
-  const changeChartType = (newType) => {
-    setChartType(newType);
-  };
-
   const chartTypeButtons = [
-    { id: 1, title: "سنوي" },
-    { id: 2, title: "ربع سنوي" },
+    { name: "bar", icon: TbChartBar },
+    { name: "line", icon: TbChartLine },
   ];
   return (
-    <div>
-      <div>
+    <>
+      <motion.div
+        animate={{
+          scale: modal ? 0.8 : 1,
+          opacity: modal ? 0.4 : 1,
+        }}
+        transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+      >
         <ButtonsGroup
           buttons={chartTypeButtons}
           parentSetState={setChartType}
         />
-        <button onClick={() => changeChartType("line")}>Line Chart</button>
-        <button onClick={() => changeChartType("bar")}>Bar Chart</button>
-        <button onClick={() => changeChartType("radar")}>Radar Chart</button>
-      </div>
-      {chartData && data && (
-        <ChartComponent data={chartData} options={options} />
-      )}
-    </div>
+        <button
+          onClick={() => {
+            setModal(!modal);
+          }}
+        >
+          adsasd
+        </button>
+        {chartData && data && (
+          <ChartComponent data={chartData} options={options} />
+        )}
+      </motion.div>
+      <CusotmModal {...{ modal, setModal }}>
+        <div>HII</div>
+      </CusotmModal>
+      {/* <CusotmModal /> */}
+    </>
   );
 };
 

@@ -12,22 +12,22 @@ import Tab from "components/utils/Tab";
 
 const Financials = () => {
   const { stockFinancialData } = useOutletContext();
-  const [displayAnnual, setDisplayAnnual] = useState(1);
+  const [displayAnnual, setDisplayAnnual] = useState(0);
   const [financialData, setFinancialData] = useState(null);
 
   useEffect(() => {
     if (stockFinancialData) {
       setFinancialData({
         balanceSheet:
-          displayAnnual === 1
+          displayAnnual === 0
             ? stockFinancialData.balanceSheet
             : stockFinancialData.balanceSheetQuarterly,
         incomeSheet:
-          displayAnnual === 1
+          displayAnnual === 0
             ? stockFinancialData.incomeSheet
             : stockFinancialData.incomeSheetQuarterly,
         cashFlow:
-          displayAnnual === 1
+          displayAnnual === 0
             ? stockFinancialData.cashFlow
             : stockFinancialData.cashFlowQuarterly,
       });
@@ -49,8 +49,8 @@ const Financials = () => {
   }, [stockFinancialData, displayAnnual]);
 
   const periodButtons = [
-    { id: 1, title: "سنوي" },
-    { id: 2, title: "ربع سنوي" },
+    { id: 1, text: "سنوي" },
+    { id: 2, text: "ربع سنوي" },
   ];
 
   return (
@@ -64,19 +64,19 @@ const Financials = () => {
               </Tab>
               <Tab icon={TbTable}>
                 <Tabs activeTab={1}>
-                  <Tab title={"المركز المالي"}>
+                  <Tab text={"المركز المالي"}>
                     <FinancialsTable
                       title={"المركز المالي"}
                       data={financialData.balanceSheet}
                     />
                   </Tab>
-                  <Tab title={"قائمة الدخل"}>
+                  <Tab text={"قائمة الدخل"}>
                     <FinancialsTable
                       title={"قائمة الدخل"}
                       data={financialData.incomeSheet}
                     />
                   </Tab>
-                  <Tab title={"التدفق النقدي"}>
+                  <Tab text={"التدفق النقدي"}>
                     <FinancialsTable
                       title={"التدفق النقدي"}
                       data={financialData.cashFlow}
