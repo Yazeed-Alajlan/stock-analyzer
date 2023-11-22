@@ -12,7 +12,11 @@ const CustomButton = ({
   icon: Icon,
 }) => {
   return (
-    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.98 }}
+      style={{ display: "inline-flex" }} // Set to inline-flex to avoid block behavior
+    >
       <Button
         className={`p-2 px-4 ${className}`}
         onClick={onClick}

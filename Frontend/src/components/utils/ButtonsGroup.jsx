@@ -15,7 +15,6 @@ const ButtonsGroup = ({
     parentSetState(buttonName ? buttonName : buttonId);
   };
 
-  console.log(selectedButton);
   return (
     <div className="d-flex  align-items-center gap-4">
       {label || icon != null ? (

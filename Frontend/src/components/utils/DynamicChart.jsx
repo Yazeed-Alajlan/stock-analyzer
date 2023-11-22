@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import ButtonsGroup from "./ButtonsGroup";
 import { TbChartBar, TbChartLine } from "react-icons/tb";
 import CusotmModal from "./CusotmModal";
+import Table from "./Table";
 
 const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {
@@ -52,7 +53,7 @@ const DynamicChart = ({ type, data }) => {
   const [chartType, setChartType] = useState(type);
   const [chartData, setChartData] = useState();
   const [modal, setModal] = useState(false);
-
+  console.log(data);
   const options = {
     scales: {
       y: {
@@ -63,6 +64,11 @@ const DynamicChart = ({ type, data }) => {
 
   useEffect(() => {
     const convertedData = convertDataFormat(data);
+    console.log(data);
+    console.log([
+      { name: "John Doe", age: 30, location: "New York" },
+      { name: "Jane Smith", age: 25, location: "San Francisco" },
+    ]);
     setChartData(convertedData);
   }, [data]);
 
@@ -79,6 +85,7 @@ const DynamicChart = ({ type, data }) => {
     { name: "bar", icon: TbChartBar },
     { name: "line", icon: TbChartLine },
   ];
+
   return (
     <>
       <motion.div
@@ -103,12 +110,36 @@ const DynamicChart = ({ type, data }) => {
           <ChartComponent data={chartData} options={options} />
         )}
       </motion.div>
-      <CusotmModal {...{ modal, setModal }}>
-        <div>HII</div>
-      </CusotmModal>
+
+      {chartData && data && (
+        <CusotmModal {...{ modal, setModal }}>
+          <Table
+            columns={[
+              {
+                Header: "Year",
+                accessor: "year",
+              },
+              {
+                Header: "Change in %",
+                accessor: "changePercentage",
+              },
+
+              // Add more columns as needed
+            ]}
+            data={transformData(data, "year", "changePercentage")}
+          />
+        </CusotmModal>
+      )}
       {/* <CusotmModal /> */}
     </>
   );
 };
-
+function transformData(data, yearKeyName, changeKeyName) {
+  return Object.keys(data).map((key) => {
+    const obj = {};
+    obj[yearKeyName] = key;
+    obj[changeKeyName] = data[key];
+    return obj;
+  });
+}
 export default DynamicChart;
