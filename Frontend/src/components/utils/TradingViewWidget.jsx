@@ -14,8 +14,7 @@ export default function TradingViewWidget() {
       tvScriptLoadingPromise = new Promise((resolve) => {
         const script = document.createElement("script");
         script.id = "tradingview-widget-loading-script";
-        script.src =
-          "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+        script.src = "https://s3.tradingview.com/tv.js";
         script.type = "text/javascript";
         script.onload = resolve;
 
@@ -31,33 +30,28 @@ export default function TradingViewWidget() {
 
     function createWidget() {
       if (
-        document.getElementById("technical-analysis-chart-demo") &&
+        document.getElementById("tradingview_ffbde") &&
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          container_id: "technical-analysis-chart-demo",
-          width: "100%",
-          height: "100%",
           autosize: true,
-          symbol: "AAPL",
-          interval: "D",
-          timezone: "exchange",
+          symbol: "NASDAQ:AAPL",
+          timezone: "Etc/UTC",
           theme: "dark",
           style: "1",
+          locale: "en",
+          enable_publishing: true,
           withdateranges: true,
+          range: "YTD",
           hide_side_toolbar: false,
           allow_symbol_change: true,
-          save_image: false,
-          studies: [
-            "ROC@tv-basicstudies",
-            "StochasticRSI@tv-basicstudies",
-            "MASimple@tv-basicstudies",
-          ],
+          details: true,
+          hotlist: true,
+          calendar: true,
           show_popup_button: true,
           popup_width: "1000",
           popup_height: "650",
-          support_host: "https://www.tradingview.com",
-          locale: "en",
+          container_id: "tradingview_ffbde",
         });
       }
     }
@@ -69,7 +63,7 @@ export default function TradingViewWidget() {
       style={{ height: "100%", width: "100%" }}
     >
       <div
-        id="technical-analysis-chart-demo"
+        id="tradingview_ffbde"
         style={{ height: "calc(100% - 32px)", width: "100%" }}
       />
       <div className="tradingview-widget-copyright">

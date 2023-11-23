@@ -5,13 +5,15 @@ import { CustomCard } from "components/utils/CustomCard";
 const StockChart = () => {
   return (
     <CustomCard>
-      <TradingViewWidget
+      <div
         style={{
-          width: "500px", // Change the width as needed
-          height: "800px", // Change the height as needed
+          width: "1000px", // Change the width as needed
+          height: "1000px", // Change the height as needed
           /* You can add more styles if required */
         }}
-      />
+      >
+        <TradingViewWidget />
+      </div>
     </CustomCard>
   );
 };
