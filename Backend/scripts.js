@@ -540,5 +540,6 @@ async function saveStockPricesHorly() {
 }
 
 // saveStockPricesHorly();
-saveStockPrices();
+// saveStockPrices();
 // runStockInformatioScript();
+updatedStockSummary();

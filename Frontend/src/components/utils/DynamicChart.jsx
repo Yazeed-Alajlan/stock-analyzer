@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Line, Bar, Radar } from "react-chartjs-2";
 import { motion } from "framer-motion";
-
 import ButtonsGroup from "./ButtonsGroup";
-import { TbChartBar, TbChartLine } from "react-icons/tb";
+import { TbChartBar, TbChartLine, TbTable } from "react-icons/tb";
 import CusotmModal from "./CusotmModal";
 import Table from "./Table";
+import CustomButton from "./CustomButton";
 
 const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {
@@ -95,17 +95,19 @@ const DynamicChart = ({ type, data }) => {
         }}
         transition={{ type: "spring", bounce: 0, duration: 0.4 }}
       >
-        <ButtonsGroup
-          buttons={chartTypeButtons}
-          parentSetState={setChartType}
-        />
-        <button
-          onClick={() => {
-            setModal(!modal);
-          }}
-        >
-          adsasd
-        </button>
+        <div className="d-flex justify-content-between">
+          <ButtonsGroup
+            buttons={chartTypeButtons}
+            parentSetState={setChartType}
+          />
+          <CustomButton
+            icon={TbTable}
+            onClick={() => {
+              setModal(!modal);
+            }}
+          />
+        </div>
+
         {chartData && data && (
           <ChartComponent data={chartData} options={options} />
         )}

@@ -24,7 +24,8 @@ const CustomButton = ({
         type={type}
         size={size}
       >
-        {Icon && <Icon className="me-1" />} {/* Render the icon if available */}
+        {Icon && <Icon className="me-1 fs-5" />}{" "}
+        {/* Render the icon if available */}
         {text}
       </Button>
     </motion.div>

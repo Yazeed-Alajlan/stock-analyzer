@@ -14,16 +14,8 @@ import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { CustomCard } from "components/utils/CustomCard";
 
 const TechnicalAnalysisPage = () => {
-  const { getStockPriceData, getIndicatorData } = useStocksData();
   return (
     <PageLayout>
-      <CustomCard>
-        <CandlestickAndIndicatorsChart
-          series={getStockPriceData("4321")}
-          indcators={getIndicatorData("4321", "vsa")}
-          symbol={"4321"}
-        />
-      </CustomCard>
       <Container className="d-flex justify-content-center flex-wrap gap-5">
         {/* {data && (
           <>
@@ -62,6 +54,11 @@ const TechnicalAnalysisPage = () => {
         <CardWithLink
           to="/technical-analysis-automation"
           label="Technical Analysis"
+          icon={<TbDeviceAnalytics size={50} />}
+        />
+        <CardWithLink
+          to="/vsa"
+          label="VSA"
           icon={<TbDeviceAnalytics size={50} />}
         />
         {/* <CardWithLink

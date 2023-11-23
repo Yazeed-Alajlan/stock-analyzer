@@ -22,6 +22,7 @@ import ConsolidatingStocks from "pages/TechnicalAnalysisPage/components/Consolid
 import MonthlyReturns from "pages/TechnicalAnalysisPage/components/MonthlyReturns";
 import TechnicalAnalysisLayout from "components/routing/TechnicalAnalysisLayout";
 import TechnicalAnalysisAutomation from "pages/TechnicalAnalysisPage/components/TechnicalAnalysisAutomation";
+import Vsa from "pages/TechnicalAnalysisPage/components/Vsa";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -75,6 +76,7 @@ function App() {
               path="technical-analysis-automation"
               element={<TechnicalAnalysisAutomation />}
             />
+            <Route path="vsa" element={<Vsa />} />
           </Route>
 
           <Route path="/companies/:sector/:symbol" element={<StockPage />}>

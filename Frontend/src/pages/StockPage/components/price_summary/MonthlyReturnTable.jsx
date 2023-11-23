@@ -23,10 +23,16 @@ const MonthlyReturnTable = ({ symbols }) => {
   }, [symbols]);
 
   let uniqueYears = [];
+  let sortedMonths = [];
+
   if (data["monthly_returns"]) {
-    const sortedDates = Object.keys(data["monthly_returns"]).sort();
-    uniqueYears = [...new Set(sortedDates.map((date) => date.substring(0, 4)))];
+    const dates = Object.keys(data["monthly_returns"]);
+    sortedMonths = dates.sort((a, b) => new Date(a) - new Date(b));
+    uniqueYears = [
+      ...new Set(sortedMonths.map((date) => date.substring(0, 4))),
+    ];
   }
+
   function sortObjectByMonth(data) {
     if (data == null) return;
     const months = [
@@ -45,7 +51,14 @@ const MonthlyReturnTable = ({ symbols }) => {
     ];
 
     const sortedData = Object.entries(data)
-      .sort((a, b) => months.indexOf(a[0]) - months.indexOf(b[0]))
+      .sort((a, b) => {
+        const [aYear, aMonth] = a[0].split("-");
+        const [bYear, bMonth] = b[0].split("-");
+        if (aYear !== bYear) {
+          return parseInt(aYear, 10) - parseInt(bYear, 10);
+        }
+        return months.indexOf(aMonth) - months.indexOf(bMonth);
+      })
       .reduce((obj, [key, value]) => {
         obj[key] = value;
         return obj;
@@ -53,6 +66,7 @@ const MonthlyReturnTable = ({ symbols }) => {
 
     return sortedData;
   }
+
   return (
     <CompnentLayout>
       <Table className="text-center" responsive>
@@ -78,29 +92,28 @@ const MonthlyReturnTable = ({ symbols }) => {
             uniqueYears.map((year) => (
               <tr key={year}>
                 <td>{year}</td>
-                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => {
-                  const key = `${year}-${String(m).padStart(2, "0")}`;
-                  const value = data["monthly_returns"].hasOwnProperty(key)
-                    ? data["monthly_returns"][key]
-                    : null;
-                  let cellClass = ""; // Default to a neutral (grey) background
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((m, index) => {
+                  const monthIndex = sortedMonths.findIndex((date) =>
+                    date.startsWith(`${year}-${String(m).padStart(2, "0")}`)
+                  );
+                  const value =
+                    monthIndex !== -1
+                      ? data["monthly_returns"][sortedMonths[monthIndex]]
+                      : null;
+                  let cellClass = "";
 
                   if (value !== null) {
                     cellClass =
                       value < 0
-                        ? "border border-1  bg-dark-red text-light-red"
-                        : "border border-1  bg-dark-green text-light-green";
+                        ? "border border-1 bg-dark-red text-light-red"
+                        : "border border-1 bg-dark-green text-light-green";
                   }
                   return value !== null ? (
-                    <td
-                      // style={{ border: "1px solid #fff" }}
-                      key={key}
-                      className={cellClass}
-                    >
+                    <td key={index} className={cellClass}>
                       {value.toFixed(2)}
                     </td>
                   ) : (
-                    <></> // or you can return null, an empty string, or any other placeholder
+                    <td key={index}></td>
                   );
                 })}
               </tr>
