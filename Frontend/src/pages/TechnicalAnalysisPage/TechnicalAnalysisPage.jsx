@@ -12,11 +12,12 @@ import { useStocksData } from "contexts/StocksDataContext";
 import CardWithLink from "components/utils/CardWithLink";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { CustomCard } from "components/utils/CustomCard";
+import ResizableComponent from "./ResizableComponent";
 
 const TechnicalAnalysisPage = () => {
   return (
     <PageLayout>
-      <Container className="d-flex justify-content-center flex-wrap gap-5">
+      <Container className="d-flex justify-content-center flex-wrap gap-5 w-100 h-100">
         {/* {data && (
           <>
             <CustomChart
@@ -31,7 +32,8 @@ const TechnicalAnalysisPage = () => {
             />
           </>
         )} */}
-        <CardWithLink
+        <ResizableComponent />
+        {/* <CardWithLink
           to="/consolidating-stocks"
           label="Consolidating Stocks"
           icon={<FaChartBar size={50} />}
@@ -60,7 +62,7 @@ const TechnicalAnalysisPage = () => {
           to="/vsa"
           label="VSA"
           icon={<TbDeviceAnalytics size={50} />}
-        />
+        /> */}
         {/* <CardWithLink
           to="/"
           label="volume Seasonality Daily"
