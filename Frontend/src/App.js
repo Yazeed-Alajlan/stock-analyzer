@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Sidebar from "components/routing/Sidebar";
 import CusotmModal from "components/utils/CusotmModal";
 import StockPage from "pages/StockPage/StockPage";
-import { Header } from "components/routing/Header";
+import Header from "components/routing/Header";
 import { Container } from "react-bootstrap";
 import HomePage from "pages/HomePage/HomePage";
 import StocksPage from "./pages/StocksPage/StocksPage";
@@ -41,7 +41,7 @@ function App() {
       fluid
       className="bg-light p-0"
       style={{ minHeight: "100vh", width: "100%" }}
-      dir="rtl"
+      // dir="rtl"
     >
       <motion.div
         animate={{

@@ -16,8 +16,8 @@ import ResizableComponent from "./ResizableComponent";
 
 const TechnicalAnalysisPage = () => {
   return (
-    <PageLayout>
-      <Container className="d-flex justify-content-center flex-wrap gap-5 w-100 h-100">
+    <PageLayout fullPage={true} title={"main"}>
+      <>
         {/* {data && (
           <>
             <CustomChart
@@ -68,7 +68,7 @@ const TechnicalAnalysisPage = () => {
           label="volume Seasonality Daily"
           icon={<TbDeviceAnalytics size={50} />}
         /> */}
-      </Container>
+      </>
     </PageLayout>
   );
 };
