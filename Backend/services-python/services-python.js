@@ -123,9 +123,9 @@ router.get("/:symbol/indicators/:indicator", async (req, res) => {
   const symbol = req.params.symbol;
   const indicator = req.params.indicator;
 
-  console.log(symbol);
+  console.log(symbol + "----------------------------------");
   axios
-    .get(`http://127.0.0.1:4000/api/stocks/vsa`, {
+    .get(`http://127.0.0.1:4000/api/stocks/vsa?symbol=${symbol}`, {
       headers: {
         "Content-Type": "application/json",
       },

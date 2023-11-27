@@ -10,26 +10,69 @@ const CandlestickAndIndicatorsChart = ({
   drawLines,
 }) => {
   const [stockData, setStockData] = useState();
+  const [indicators, setIndicators] = useState();
   const chartContainerId = `chart-container-${symbol}`;
 
   useEffect(() => {
-    const fetchStockData = async () => {
-      try {
-        setStockData(formatCandleStickData(await series));
-      } catch (error) {
-        // Handle any errors if the promise rejects
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchStockData();
-  }, []);
+    setStockData(formatCandleStickData(series));
+    setIndicators(formatIndicatorkData(indcators));
+  }, [series, symbol]);
 
   useEffect(() => {
-    if (stockData) {
-      generateChart(stockData); // Call generateChart only when stockData is not null
+    console.log(stockData);
+    if (!stockData) return;
+    const chartOptions = {
+      layout: {
+        textColor: "black",
+        background: { type: "solid", color: "white" },
+      },
+    };
+    const chart = createChart(chartContainerId, {
+      height: "400",
+    });
+    const chart2 = createChart(chartContainerId, chartOptions);
+
+    chart.applyOptions({
+      rightPriceScale: {
+        scaleMargins: {
+          top: 0.4,
+          bottom: 0.15,
+        },
+      },
+      crosshair: {
+        horzLine: {
+          visible: false,
+          labelVisible: false,
+        },
+      },
+      grid: {
+        vertLines: {
+          visible: false,
+        },
+        horzLines: {
+          visible: false,
+        },
+      },
+    });
+
+    // Add candlestick series
+    const candlestickSeries = chart.addCandlestickSeries();
+    candlestickSeries.setData(stockData);
+    if (indcators) {
+      const indcator_chart = chart2.addLineSeries({
+        pane: 1, // Set the pane for the indicator series
+      });
+      indcator_chart.setData(formatIndicatorkData(indcators));
     }
-  }, [stockData]);
+    addVolumeHistogram(chart, series);
+    createTooltip(chartContainerId, chart, candlestickSeries);
+
+    return () => {
+      chart.remove();
+      chart2.remove();
+    };
+  }, [stockData, indcators]);
+
   const generateChart = async () => {
     const chartOptions = {
       layout: {
@@ -111,7 +154,6 @@ const CandlestickAndIndicatorsChart = ({
     toolTip.style.color = "black";
     toolTip.style.borderColor = "rgba( 38, 166, 154, 1)";
     container.appendChild(toolTip);
-
     // update tooltip
     chart.subscribeCrosshairMove((param) => {
       if (
@@ -181,6 +223,7 @@ const CandlestickAndIndicatorsChart = ({
 
   const formatCandleStickData = (series) => {
     console.log(series);
+
     if (!series) return [];
     return series
       .map((quote) => {
@@ -212,6 +255,7 @@ const CandlestickAndIndicatorsChart = ({
   };
 
   const formatIndicatorkData = (series) => {
+    // console.log(indcators);
     let data = [];
     if (!series) return [];
 
@@ -225,13 +269,7 @@ const CandlestickAndIndicatorsChart = ({
   return (
     <CompnentLayout>
       <Container className="px-4">
-        {stockData ? (
-          <>
-            <div className="p-4" id={chartContainerId}></div>
-          </>
-        ) : (
-          <p>loading</p>
-        )}
+        <div className="p-4" id={chartContainerId}></div>
       </Container>
     </CompnentLayout>
   );
