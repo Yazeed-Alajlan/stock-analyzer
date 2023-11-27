@@ -1,6 +1,6 @@
 import { CustomCard } from "components/utils/CustomCard";
 import React from "react";
-import CandlestickAndIndicatorsChart from "../CandlestickAndIndicatorsChart";
+import CandlestickAndIndicatorsChart from "../analysis/CandlestickAndIndicatorsChart";
 import { useStocksData } from "contexts/StocksDataContext";
 
 const Vsa = () => {

@@ -10,9 +10,9 @@ import {
 import { useStocksData } from "contexts/StocksDataContext";
 
 import CardWithLink from "components/utils/CardWithLink";
-import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
+import CandlestickAndIndicatorsChart from "./analysis/CandlestickAndIndicatorsChart";
 import { CustomCard } from "components/utils/CustomCard";
-import ResizableComponent from "./ResizableComponent";
+import ResizableComponent from "./analysis/ResizableComponent";
 
 const TechnicalAnalysisPage = () => {
   return (

@@ -41,7 +41,7 @@ function App() {
       fluid
       className="bg-light p-0"
       style={{ minHeight: "100vh", width: "100%" }}
-      // dir="rtl"
+      dir="rtl"
     >
       <motion.div
         animate={{
