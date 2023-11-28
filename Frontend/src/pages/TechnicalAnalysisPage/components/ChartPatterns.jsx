@@ -201,7 +201,7 @@ const ChartPatterns = ({ symbol }) => {
 
   return (
     <PageLayout>
-      <Container className="px-4" dir="ltr">
+      <Container className="px-4">
         <div
           className={`d-flex justify-content-end  gap-4 text-${
             legend.open > legend.close ? "danger" : "success"

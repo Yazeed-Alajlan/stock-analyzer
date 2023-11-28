@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTable, useSortBy } from "react-table";
 import { useStocksData } from "contexts/StocksDataContext";
 import CustomButton from "components/utils/buttons/CustomButton";
@@ -7,15 +7,29 @@ import { TbFilter } from "react-icons/tb";
 import { useModal } from "contexts/ModalContext";
 import GlobalModal from "components/utils/modals/GlobalModal";
 import FilterStocksModal from "components/utils/modals/FilterStocksModal";
+import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 
 const SidebarSelection = ({ onRowClick }) => {
   const { stocksData } = useStocksData();
+  const { filteredStocks, setFilteredStocks } = useTechnicalAnalysis();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState([]);
 
   const handleRowClick = (symbol) => {
     onRowClick(symbol);
   };
+  useEffect(() => {
+    if (filteredStocks) {
+      const filteredSymbols = Object.keys(filteredStocks);
+      const filteredData = stocksData.filter((item) =>
+        filteredSymbols.includes(item.symbol)
+      );
 
+      setData(filteredData);
+    } else {
+      setData(stocksData || []);
+    }
+  }, [filteredStocks, stocksData]);
   const columns = React.useMemo(
     () => [
       {
@@ -53,14 +67,22 @@ const SidebarSelection = ({ onRowClick }) => {
     []
   );
 
-  const data = React.useMemo(() => stocksData || [], [stocksData]);
+  // const data = React.useMemo(() => {
+  //   if (filteredStocks && filteredStocks.length > 0) {
+  //     console.log(filteredStocks);
+  //     return filteredStocks;
+  //   } else {
+  //     return stocksData || [];
+  //   }
+  // }, [filteredStocks, stocksData]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data }, useSortBy);
-  console.log(data);
-  console.log(columns);
+  // console.log(data);
+  // console.log(columns);
   return (
     <div className="d-flex flex-column align-items-center bg-dark">
+      <button onClick={() => setFilteredStocks("")}>asdsdasd</button>
       <IconButton
         icon={TbFilter}
         hoverText={"filter"}

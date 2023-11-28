@@ -15,10 +15,10 @@ const InputSelect = ({
 }) => {
   return (
     <CompnentLayout>
-      <div className="d-flex gap-2">
+      <div className="d-flex gap-2 z-1900">
         <p className="fs-5 my-auto">{label}</p>
         <Select
-          className={`w-75  ${className}`}
+          className={`w-75   ${className}`}
           placeholder={placeholder}
           options={options}
           value={selectedOption}

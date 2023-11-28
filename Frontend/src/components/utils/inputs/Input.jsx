@@ -8,6 +8,7 @@ const Input = ({
   placeholder,
   onChange,
   isDisabled,
+  name,
   min,
   max,
   ref,
@@ -22,10 +23,11 @@ const Input = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          isDisabled={isDisabled}
+          disabled={isDisabled}
           min={min}
           max={max}
           ref={ref}
+          name={name}
         />
       </div>
     </CompnentLayout>
