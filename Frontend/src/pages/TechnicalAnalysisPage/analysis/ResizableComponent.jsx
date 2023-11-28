@@ -31,8 +31,8 @@ const ResizableComponent = () => {
     fetchStockData();
   }, [selectedSymbol]);
   return (
-    <div dir="ltr">
-      <PanelGroup direction="horizontal">
+    <div>
+      <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
         <Panel minSizePercentage={80}>
           {stockPriceData ? (
             <CustomCard>
@@ -48,9 +48,13 @@ const ResizableComponent = () => {
 
           {/* {<ChartPatterns symbol={selectedSymbol} />} */}
         </Panel>
-        <PanelResizeHandle className="bg-dark" style={{ width: "4px" }} />
+        <PanelResizeHandle className="bg-white" style={{ width: "16px" }} />
 
-        <Panel defaultSizePercentage={20} minSizePercentage={10}>
+        <Panel
+          collapsible={true}
+          collapsedSizePixels={20}
+          minSizePercentage={10}
+        >
           <SidebarSelection onRowClick={handleRowClick} />
         </Panel>
       </PanelGroup>
