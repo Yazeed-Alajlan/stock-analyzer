@@ -1,4 +1,4 @@
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import { Nav } from "react-bootstrap";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -36,8 +36,6 @@ export const SidebarSelection = ({ routes }) => {
   //     to: `/companies/${sector}/${symbol}/dividend`,
   //   },
   // ];
-
-
 
   return (
     <CustomCard>

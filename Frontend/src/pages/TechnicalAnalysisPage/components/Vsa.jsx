@@ -1,4 +1,4 @@
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import React from "react";
 import CandlestickAndIndicatorsChart from "../analysis/CandlestickAndIndicatorsChart";
 import { useStocksData } from "contexts/StocksDataContext";

@@ -1,7 +1,7 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
 import SelectionTitle from "components/utils/SelectionTitle";
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import { Container, Table } from "react-bootstrap";
 
 const Dividend = () => {

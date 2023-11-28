@@ -9,9 +9,9 @@ import {
 } from "react-icons/tb";
 import { useStocksData } from "contexts/StocksDataContext";
 
-import CardWithLink from "components/utils/CardWithLink";
+import CardWithLink from "components/utils/cards/CardWithLink";
 import CandlestickAndIndicatorsChart from "./analysis/CandlestickAndIndicatorsChart";
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import ResizableComponent from "./analysis/ResizableComponent";
 
 const TechnicalAnalysisPage = () => {
@@ -33,6 +33,11 @@ const TechnicalAnalysisPage = () => {
           </>
         )} */}
         <ResizableComponent />
+        <CardWithLink
+          to="/monthly-returns"
+          label="Monthly Returns"
+          icon={<TbReportAnalytics size={50} />}
+        />
         {/* <CardWithLink
           to="/consolidating-stocks"
           label="Consolidating Stocks"
@@ -48,11 +53,7 @@ const TechnicalAnalysisPage = () => {
           label="Hawkes Process"
           icon={<FaSignal size={50} />}
         />
-        <CardWithLink
-          to="/monthly-returns"
-          label="Monthly Returns"
-          icon={<TbReportAnalytics size={50} />}
-        />
+
         <CardWithLink
           to="/technical-analysis-automation"
           label="Technical Analysis"

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Route, Routes } from "react-router-dom";
 
 import Sidebar from "components/routing/Sidebar";
-import CusotmModal from "components/utils/CusotmModal";
+import CusotmModal from "components/utils/modals/CusotmModal";
 import StockPage from "pages/StockPage/StockPage";
 import Header from "components/routing/Header";
 import { Container } from "react-bootstrap";

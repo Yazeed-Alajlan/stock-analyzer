@@ -1,4 +1,4 @@
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { IconContext } from "react-icons";

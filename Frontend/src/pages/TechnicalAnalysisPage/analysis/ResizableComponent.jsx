@@ -4,7 +4,7 @@ import SidebarSelection from "./SidebarSelection";
 import ChartPatterns from "../components/ChartPatterns";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { useStocksData } from "contexts/StocksDataContext";
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 
 const ResizableComponent = () => {
   const [selectedSymbol, setSelectedSymbol] = useState(null);

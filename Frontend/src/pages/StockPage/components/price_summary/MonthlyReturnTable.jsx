@@ -1,6 +1,6 @@
 import axios from "axios";
 import CompnentLayout from "components/CompnentLayout";
-import DynamicChart from "components/utils/DynamicChart";
+import DynamicChart from "components/utils/charts/DynamicChart";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 

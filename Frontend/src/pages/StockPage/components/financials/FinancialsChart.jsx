@@ -1,6 +1,6 @@
-import InputSelect from "components/utils/InputSelect";
 import React, { useState, useEffect } from "react";
-import DynamicChart from "components/utils/DynamicChart";
+import DynamicChart from "components/utils/charts/DynamicChart";
+import InputSelect from "components/utils/inputs/InputSelect";
 
 const FinancialsChart = ({ stockFinancialData }) => {
   const balanceSheetKeys =

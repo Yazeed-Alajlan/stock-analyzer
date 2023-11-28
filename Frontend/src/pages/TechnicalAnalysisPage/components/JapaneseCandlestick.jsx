@@ -3,11 +3,11 @@ import CompnentLayout from "components/CompnentLayout";
 import { Col, Row } from "react-bootstrap";
 import candlestick_patterns from "../candlestickPatterns";
 import CandlestickChart from "pages/StockPage/components/chart/CandlestickChart";
-import { CustomCard } from "components/utils/CustomCard";
-import CustomButton from "components/utils/CustomButton";
-import InputSelect from "components/utils/InputSelect";
-import Input from "components/utils/Input";
-import FilterCard from "components/utils/FilterCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
+import CustomButton from "components/utils/buttons/CustomButton";
+import InputSelect from "components/utils/inputs/InputSelect";
+import Input from "components/utils/inputs/Input";
+import FilterCard from "components/utils/inputs/FilterCard";
 import PageLayout from "components/PageLayout";
 
 const JapaneseCandlestick = () => {

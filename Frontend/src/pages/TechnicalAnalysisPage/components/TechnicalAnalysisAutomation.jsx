@@ -1,7 +1,7 @@
 import CompnentLayout from "components/CompnentLayout";
-import { CustomCard } from "components/utils/CustomCard";
-import FilterCard from "components/utils/FilterCard";
-import InputSelect from "components/utils/InputSelect";
+import { CustomCard } from "components/utils/cards/CustomCard";
+import FilterCard from "components/utils/inputs/FilterCard";
+import InputSelect from "components/utils/inputs/InputSelect";
 import { useStocksData } from "contexts/StocksDataContext";
 import React, { useState } from "react";
 import ChartPatterns from "./ChartPatterns";

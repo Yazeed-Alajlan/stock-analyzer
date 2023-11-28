@@ -3,10 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { Card, Table, Col } from "react-bootstrap";
 import { useStocksData } from "contexts/StocksDataContext";
 import PageLayout from "components/PageLayout";
-import { CustomCard } from "components/utils/CustomCard";
-import FilterCard from "components/utils/FilterCard";
-import InputSelect from "components/utils/InputSelect";
-import CustomButton from "components/utils/CustomButton";
+import { CustomCard } from "components/utils/cards/CustomCard";
+import FilterCard from "components/utils/inputs/FilterCard";
+import InputSelect from "components/utils/inputs/InputSelect";
+import CustomButton from "components/utils/buttons/CustomButton";
 
 const StocksPage = () => {
   let { sector } = useParams();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CustomButton from "./CustomButton";
+import CustomButton from "./buttons/CustomButton";
 
 const Tabs = ({ children, activeTab }) => {
   const [active, setActive] = useState(activeTab || 1);

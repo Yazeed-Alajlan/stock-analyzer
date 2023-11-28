@@ -8,7 +8,7 @@ import {
   FaChartPie,
   FaMoneyBillAlt,
 } from "react-icons/fa";
-import SmCardInformaiton from "components/utils/SmCardInformaiton";
+import SmCardInformaiton from "components/utils/cards/SmCardInformaiton";
 import StockPriceCard from "./components/utils/StockPriceCard";
 import { useStocksData } from "contexts/StocksDataContext";
 import PageLayout from "components/PageLayout";

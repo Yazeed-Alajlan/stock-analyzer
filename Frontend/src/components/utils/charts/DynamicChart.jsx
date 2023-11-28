@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Line, Bar, Radar } from "react-chartjs-2";
 import { motion } from "framer-motion";
-import ButtonsGroup from "./ButtonsGroup";
 import { TbChartBar, TbChartLine, TbTable } from "react-icons/tb";
-import CusotmModal from "./CusotmModal";
-import Table from "./Table";
-import CustomButton from "./CustomButton";
+import Table from "../Table";
+import ButtonsGroup from "../buttons/ButtonsGroup";
+import CustomButton from "../buttons/CustomButton";
+import CusotmModal from "../modals/CusotmModal";
 
 const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {

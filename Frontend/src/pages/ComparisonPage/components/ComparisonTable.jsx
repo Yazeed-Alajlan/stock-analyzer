@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import FinancialsTab from "pages/StockPage/components/financials/FinancialsTable";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import CustomButton from "components/utils/CustomButton";
+import CustomButton from "components/utils/buttons/CustomButton";
 import { BsCalendar3 } from "react-icons/bs";
 import { Container } from "react-bootstrap";
 import { useStocksData } from "contexts/StocksDataContext";

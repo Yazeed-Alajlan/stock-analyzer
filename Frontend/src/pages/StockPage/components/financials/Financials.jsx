@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 import { useOutletContext } from "react-router-dom";
 import { BsCalendar3 } from "react-icons/bs";
 import { TbChartBar, TbTable } from "react-icons/tb";
 import { Container } from "react-bootstrap";
 import FinancialsTable from "./FinancialsTable";
-import ButtonsGroup from "components/utils/ButtonsGroup";
+import ButtonsGroup from "components/utils/buttons/ButtonsGroup";
 import FinancialsChart from "./FinancialsChart";
 import Tabs from "components/utils/Tabs";
 import Tab from "components/utils/Tab";

@@ -2,7 +2,7 @@ import React from "react";
 
 import CompnentLayout from "components/CompnentLayout";
 import { Row } from "react-bootstrap";
-import { CustomCard } from "./CustomCard";
+import { CustomCard } from "../cards/CustomCard";
 
 const FilterCard = ({ className, children }) => {
   return (

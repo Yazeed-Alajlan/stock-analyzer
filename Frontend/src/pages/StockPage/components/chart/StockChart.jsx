@@ -1,6 +1,6 @@
 import React from "react";
 import TradingViewWidget from "components/utils/TradingViewWidget";
-import { CustomCard } from "components/utils/CustomCard";
+import { CustomCard } from "components/utils/cards/CustomCard";
 
 const StockChart = () => {
   return (

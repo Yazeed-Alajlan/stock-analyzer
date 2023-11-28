@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CustomCard } from "./CustomCard";
-import CustomButton from "./CustomButton";
+import { CustomCard } from "../cards/CustomCard";
+import CustomButton from "../buttons/CustomButton";
 import { TbArrowBackUp } from "react-icons/tb";
 
 const CusotmModal = ({ modal, setModal, children }) => {

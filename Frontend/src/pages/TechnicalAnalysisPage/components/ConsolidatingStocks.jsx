@@ -1,10 +1,10 @@
 import axios from "axios";
 import CompnentLayout from "components/CompnentLayout";
 import PageLayout from "components/PageLayout";
-import CustomButton from "components/utils/CustomButton";
-import { CustomCard } from "components/utils/CustomCard";
-import FilterCard from "components/utils/FilterCard";
-import Input from "components/utils/Input";
+import CustomButton from "components/utils/buttons/CustomButton";
+import { CustomCard } from "components/utils/cards/CustomCard";
+import FilterCard from "components/utils/inputs/FilterCard";
+import Input from "components/utils/inputs/Input";
 import CandlestickChart from "pages/StockPage/components/chart/CandlestickChart";
 import React, { useEffect, useState, useRef } from "react";
 import { Col } from "react-bootstrap";
