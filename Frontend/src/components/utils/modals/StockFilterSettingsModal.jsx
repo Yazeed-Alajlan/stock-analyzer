@@ -5,53 +5,18 @@ import IconButton from "../buttons/IconButton";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Input from "../inputs/Input";
 import InputSelect from "../inputs/InputSelect";
-import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPatterns";
-import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 import SettingsButton from "../buttons/SettingsButton";
-import { AiOutlineAlert } from "react-icons/ai"; // Import the desired icon
 import { TbX } from "react-icons/tb";
+import CustomButton from "../buttons/CustomButton";
 
-const StockFilterModal = ({ title, isModalOpen, setIsModalOpen }) => {
-  const { getConsolidatingStocks } = useTechnicalAnalysis();
-
+const StockFilterSettingsModal = ({
+  title,
+  isModalOpen,
+  setIsModalOpen,
+  settings,
+}) => {
   const [selectedType, setSelectedType] = useState("");
   const [inputValues, setInputValues] = useState({}); // State to store input values
-  const settings = {
-    "Consolidating Stocks": {
-      icon: AiOutlineAlert, // Add the icon for this category
-      options: [
-        {
-          name: "option1",
-          label: "عدد الشموع",
-          type: "number",
-          placeholder: "حدد عدد الشموع",
-          defaultValue: "14",
-        },
-        {
-          name: "option2",
-          label: "نسبة النطاق",
-          type: "number",
-          placeholder: "حدد نسبة النطاق",
-          defaultValue: 2.5,
-        },
-      ],
-    },
-    "Japanese Candlestick": {
-      icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
-      options: [
-        {
-          isSelect: true,
-          name: "option3",
-          label: "Option 3",
-          type: "text",
-          options: Object.entries(candlestick_patterns).map(([key, value]) => ({
-            value: key,
-            label: value,
-          })),
-        },
-      ],
-    },
-  };
 
   const handleTypeSelection = (type) => {
     setSelectedType(type);
@@ -75,7 +40,14 @@ const StockFilterModal = ({ title, isModalOpen, setIsModalOpen }) => {
     // Do something with selectedType and inputValues
     console.log("Selected Type:", selectedType);
     console.log("Input Values:", inputValues);
-    await getConsolidatingStocks(inputValues.option1, inputValues.option2);
+    // Invoke the onSave method for the selected setting
+    if (
+      selectedType &&
+      settings[selectedType] &&
+      settings[selectedType].onSave
+    ) {
+      settings[selectedType].onSave();
+    }
     setIsModalOpen((isModalOpen) => !isModalOpen);
   };
 
@@ -118,8 +90,8 @@ const StockFilterModal = ({ title, isModalOpen, setIsModalOpen }) => {
               </div>
             </Panel>
             <PanelResizeHandle
-              className="bg-dark mx-3"
-              style={{ width: "4px" }}
+              className="bg-dark-light mx-3"
+              style={{ width: "3px" }}
             />
             <Panel minSizePercentage={70}>
               {/* Right panel for displaying filtration options */}
@@ -169,11 +141,16 @@ const StockFilterModal = ({ title, isModalOpen, setIsModalOpen }) => {
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
           {/* Submit button */}
-          <button onClick={handleSubmit}>Submit</button>
+          <CustomButton
+            text={"Cancel"}
+            variant={"danger"}
+            onClick={() => setIsModalOpen((isModalOpen) => !isModalOpen)}
+          />
+          <CustomButton text={"Save"} onClick={handleSubmit} />
         </BootstrapModal.Footer>
       </motion.div>
     </BootstrapModal>
   );
 };
 
-export default StockFilterModal;
+export default StockFilterSettingsModal;

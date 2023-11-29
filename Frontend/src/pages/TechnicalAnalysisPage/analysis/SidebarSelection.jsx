@@ -8,12 +8,52 @@ import SettingsModal from "components/utils/modals/SettingsModal";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 import { TbX } from "react-icons/tb";
 import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPatterns";
+import StockFilterSettingsModal from "components/utils/modals/StockFilterSettingsModal";
 
 const SidebarSelection = ({ onRowClick }) => {
   const { stocksData } = useStocksData();
   const { filteredStocks, setFilteredStocks } = useTechnicalAnalysis();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [data, setData] = useState([]);
+  const [settings, setSettings] = useState({
+    "Consolidating Stocks": {
+      icon: TbX, // Add the icon for this category
+      options: [
+        {
+          name: "option1",
+          label: "عدد الشموع",
+          type: "number",
+          placeholder: "حدد عدد الشموع",
+          defaultValue: "14",
+        },
+        {
+          name: "option2",
+          label: "نسبة النطاق",
+          type: "number",
+          placeholder: "حدد نسبة النطاق",
+          defaultValue: 2.5,
+        },
+      ],
+    },
+    "Japanese Candlestick": {
+      icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
+      options: [
+        {
+          isSelect: true,
+          name: "option3",
+          isMulti: true,
+
+          label: "Option 3",
+          type: "text",
+          options: Object.entries(candlestick_patterns).map(([key, value]) => ({
+            value: key,
+            label: value,
+          })),
+        },
+      ],
+    },
+  });
 
   const handleRowClick = (symbol) => {
     onRowClick(symbol);
@@ -78,13 +118,23 @@ const SidebarSelection = ({ onRowClick }) => {
           onClick={() => setIsModalOpen(true)}
         />
         <IconButton
+          icon={TbFilter}
+          hoverText={"Filter Stocks222222222222222222"}
+          onClick={() => setIsModalOpen2(true)}
+        />
+        <IconButton
+          icon={TbFilter}
+          hoverText={"Filter Stocks22222222222221312123322222222"}
+          onClick={() => console.log(settings)}
+        />
+        <IconButton
           icon={TbFilterOff}
           hoverText={"Delete Filters"}
           onClick={() => setFilteredStocks("")}
         />
       </div>
 
-      <SettingsModal
+      <StockFilterSettingsModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         title={"Filter Data"}
@@ -172,6 +222,13 @@ const SidebarSelection = ({ onRowClick }) => {
             },
           },
         }}
+      />
+      <SettingsModal
+        isModalOpen={isModalOpen2}
+        setIsModalOpen={setIsModalOpen2}
+        title={"Filter Data"}
+        settings={settings}
+        setSettings={setSettings}
       />
 
       <div

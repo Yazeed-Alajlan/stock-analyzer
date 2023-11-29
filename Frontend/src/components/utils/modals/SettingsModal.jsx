@@ -9,40 +9,49 @@ import SettingsButton from "../buttons/SettingsButton";
 import { TbX } from "react-icons/tb";
 import CustomButton from "../buttons/CustomButton";
 
-const SettingsModal = ({ title, isModalOpen, setIsModalOpen, settings }) => {
+const SettingsModal = ({
+  title,
+  isModalOpen,
+  setIsModalOpen,
+  settings,
+  setSettings,
+}) => {
   const [selectedType, setSelectedType] = useState("");
-  const [inputValues, setInputValues] = useState({}); // State to store input values
-
+  const [inputValues, setInputValues] = useState({});
   const handleTypeSelection = (type) => {
     setSelectedType(type);
-    const defaultValues = {}; // Store default values for the selected type
-    // Set default values based on the selected filtration type
+    const defaultValues = {};
     settings[type].options.forEach((option) => {
-      defaultValues[option.name] = option.defaultValue || ""; // Use defaultValue or an empty string if not provided
-    });
+      console.log(option);
 
-    setInputValues(defaultValues); // Set default values for the selected type
+      defaultValues[option.name] = option.value || option.defaultValue || "";
+    });
+    setInputValues(defaultValues);
   };
 
   const handleInputChange = (name, value) => {
+    console.log(value);
     setInputValues((prevInputValues) => ({
       ...prevInputValues,
       [name]: value,
     }));
   };
 
+  const updateSettings = (type, newOptions) => {
+    setSettings((prevSettings) => {
+      const updatedSettings = { ...prevSettings };
+      updatedSettings[type].options = newOptions;
+      return updatedSettings;
+    });
+  };
+
   const handleSubmit = async () => {
-    // Do something with selectedType and inputValues
-    console.log("Selected Type:", selectedType);
-    console.log("Input Values:", inputValues);
-    // Invoke the onSave method for the selected setting
-    if (
-      selectedType &&
-      settings[selectedType] &&
-      settings[selectedType].onSave
-    ) {
-      settings[selectedType].onSave();
-    }
+    const newOptions = settings[selectedType].options.map((option) => ({
+      ...option,
+      value: inputValues[option.name] || option.defaultValue || "",
+    }));
+    updateSettings(selectedType, newOptions);
+
     setIsModalOpen((isModalOpen) => !isModalOpen);
   };
 
@@ -69,7 +78,6 @@ const SettingsModal = ({ title, isModalOpen, setIsModalOpen, settings }) => {
         <BootstrapModal.Body>
           <PanelGroup direction="horizontal">
             <Panel defaultSizePercentage={25} minSizePercentage={20}>
-              {/* Left panel for filtration type selection */}
               <div className="d-flex flex-column">
                 {Object.keys(settings).map((type) => (
                   <SettingsButton
@@ -89,42 +97,45 @@ const SettingsModal = ({ title, isModalOpen, setIsModalOpen, settings }) => {
               style={{ width: "3px" }}
             />
             <Panel minSizePercentage={70}>
-              {/* Right panel for displaying filtration options */}
               <div>
-                {/* Display options based on the selected filtration type */}
                 {selectedType && (
                   <div>
                     {settings[selectedType].options.map((option) => (
                       <div key={option.name}>
                         {option.isSelect ? (
-                          <>
-                            <InputSelect
-                              label={option.label}
-                              onChange={(e) => {
-                                console.log(e);
-                                handleInputChange(option.name, e.value);
-                              }}
-                              options={option.options}
-                              value={inputValues[option.name] || ""}
-                              placeholder={option.placeholder}
-                            />
-                          </>
+                          <InputSelect
+                            label={option.label}
+                            isMulti={option.isMulti}
+                            onChange={(e) => {
+                              handleInputChange(
+                                option.name,
+                                option.isMulti ? e : e.value
+                              );
+                            }}
+                            options={option.options}
+                            value={
+                              inputValues[option.name] ||
+                              option.defaultValue ||
+                              ""
+                            }
+                            placeholder={option.placeholder}
+                          />
                         ) : (
-                          <>
-                            <Input
-                              type={option.type}
-                              label={option.label}
-                              onChange={(e) =>
-                                handleInputChange(option.name, e.target.value)
-                              }
-                              value={
-                                inputValues[option.name] || option.defaultValue
-                              }
-                              placeholder={option.placeholder}
-                              max={option.max}
-                              min={option.min}
-                            />
-                          </>
+                          <Input
+                            type={option.type}
+                            label={option.label}
+                            onChange={(e) =>
+                              handleInputChange(option.name, e.target.value)
+                            }
+                            value={
+                              inputValues[option.name] ||
+                              option.defaultValue ||
+                              ""
+                            }
+                            placeholder={option.placeholder}
+                            max={option.max}
+                            min={option.min}
+                          />
                         )}
                       </div>
                     ))}
@@ -135,7 +146,6 @@ const SettingsModal = ({ title, isModalOpen, setIsModalOpen, settings }) => {
           </PanelGroup>
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
-          {/* Submit button */}
           <CustomButton
             text={"Cancel"}
             variant={"danger"}
