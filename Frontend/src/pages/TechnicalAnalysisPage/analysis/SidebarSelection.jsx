@@ -4,10 +4,10 @@ import { useStocksData } from "contexts/StocksDataContext";
 import CustomButton from "components/utils/buttons/CustomButton";
 import IconButton from "components/utils/buttons/IconButton";
 import { TbFilter, TbFilterOff } from "react-icons/tb";
-import { useModal } from "contexts/ModalContext";
-import GlobalModal from "components/utils/modals/GlobalModal";
-import FilterStocksModal from "components/utils/modals/FilterStocksModal";
+import SettingsModal from "components/utils/modals/SettingsModal";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
+import { TbX } from "react-icons/tb";
+import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPatterns";
 
 const SidebarSelection = ({ onRowClick }) => {
   const { stocksData } = useStocksData();
@@ -70,7 +70,7 @@ const SidebarSelection = ({ onRowClick }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data }, useSortBy);
   return (
-    <div className="d-flex flex-column align-items-center bg-dark">
+    <div className="d-flex flex-column align-items-center">
       <div className="d-flex  justify-contnet-between">
         <IconButton
           icon={TbFilter}
@@ -84,11 +84,95 @@ const SidebarSelection = ({ onRowClick }) => {
         />
       </div>
 
-      <FilterStocksModal
+      <SettingsModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         title={"Filter Data"}
-      ></FilterStocksModal>
+        settings={{
+          "Consolidating Stocks": {
+            icon: TbX, // Add the icon for this category
+            options: [
+              {
+                name: "option1",
+                label: "عدد الشموع",
+                type: "number",
+                placeholder: "حدد عدد الشموع",
+                defaultValue: "14",
+              },
+              {
+                name: "option2",
+                label: "نسبة النطاق",
+                type: "number",
+                placeholder: "حدد نسبة النطاق",
+                defaultValue: 2.5,
+              },
+            ],
+            onSave: () => {
+              console.log("Save clicked for Consolidating Stocks");
+            },
+          },
+          "Japanese Candlestick": {
+            icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
+            options: [
+              {
+                isSelect: true,
+                name: "option3",
+                label: "Option 3",
+                type: "text",
+                options: Object.entries(candlestick_patterns).map(
+                  ([key, value]) => ({
+                    value: key,
+                    label: value,
+                  })
+                ),
+              },
+            ],
+            onSave: () => {
+              console.log("Save clicked for Japanese Candlestick");
+            },
+          },
+          "Japanese Candlestick2": {
+            icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
+            options: [
+              {
+                isSelect: true,
+                name: "option3",
+                label: "Option 3",
+                type: "text",
+                options: Object.entries(candlestick_patterns).map(
+                  ([key, value]) => ({
+                    value: key,
+                    label: value,
+                  })
+                ),
+              },
+            ],
+            onSave: () => {
+              console.log("Save clicked for Japanese Candlestick2");
+            },
+          },
+          "Japanese Candlestick3": {
+            icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
+            options: [
+              {
+                isSelect: true,
+                name: "option3",
+                label: "Option 3",
+                type: "text",
+                options: Object.entries(candlestick_patterns).map(
+                  ([key, value]) => ({
+                    value: key,
+                    label: value,
+                  })
+                ),
+              },
+            ],
+            onSave: () => {
+              console.log("Save clicked for Japanese Candlestick3");
+            },
+          },
+        }}
+      />
 
       <div
         className="custom-scrollbar"

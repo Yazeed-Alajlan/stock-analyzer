@@ -1,60 +1,23 @@
 import React, { useState } from "react";
 import { Modal as BootstrapModal } from "react-bootstrap";
 import { motion } from "framer-motion";
-import { TbX } from "react-icons/tb";
 import IconButton from "../buttons/IconButton";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Input from "../inputs/Input";
 import InputSelect from "../inputs/InputSelect";
-import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPatterns";
-import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
+import SettingsButton from "../buttons/SettingsButton";
+import { TbX } from "react-icons/tb";
+import CustomButton from "../buttons/CustomButton";
 
-const FilterStocksModal = ({
-  title,
-  isModalOpen,
-  setIsModalOpen,
-  setFilteredStocksData,
-}) => {
-  const { getConsolidatingStocks } = useTechnicalAnalysis();
-
+const SettingsModal = ({ title, isModalOpen, setIsModalOpen, settings }) => {
   const [selectedType, setSelectedType] = useState("");
   const [inputValues, setInputValues] = useState({}); // State to store input values
-  const filtrationData = {
-    "Consolidating Stocks": [
-      {
-        name: "option1",
-        label: "عدد الشموع",
-        type: "number",
-        placeholder: "حدد عدد الشموع",
-        defaultValue: "14",
-      },
-      {
-        name: "option2",
-        label: "نسبة النطاق",
-        type: "number",
-        placeholder: "حدد نسبة النطاق",
-        defaultValue: 2.5,
-      },
-    ],
-    "Japanese Candlestick": [
-      {
-        isSelect: true,
-        name: "option3",
-        label: "Option 3",
-        type: "text",
-        options: Object.entries(candlestick_patterns).map(([key, value]) => ({
-          value: key,
-          label: value,
-        })),
-      },
-    ],
-  };
 
   const handleTypeSelection = (type) => {
     setSelectedType(type);
     const defaultValues = {}; // Store default values for the selected type
     // Set default values based on the selected filtration type
-    filtrationData[type].forEach((option) => {
+    settings[type].options.forEach((option) => {
       defaultValues[option.name] = option.defaultValue || ""; // Use defaultValue or an empty string if not provided
     });
 
@@ -72,7 +35,14 @@ const FilterStocksModal = ({
     // Do something with selectedType and inputValues
     console.log("Selected Type:", selectedType);
     console.log("Input Values:", inputValues);
-    await getConsolidatingStocks(inputValues.option1, inputValues.option2);
+    // Invoke the onSave method for the selected setting
+    if (
+      selectedType &&
+      settings[selectedType] &&
+      settings[selectedType].onSave
+    ) {
+      settings[selectedType].onSave();
+    }
     setIsModalOpen((isModalOpen) => !isModalOpen);
   };
 
@@ -89,7 +59,7 @@ const FilterStocksModal = ({
         exit={{ opacity: 0, y: -50 }}
         transition={{ type: "spring", duration: 0.5 }}
       >
-        <BootstrapModal.Header className="border-bottom-4">
+        <BootstrapModal.Header>
           <BootstrapModal.Title>{title}</BootstrapModal.Title>
           <IconButton
             onClick={() => setIsModalOpen((isModalOpen) => !isModalOpen)}
@@ -98,27 +68,25 @@ const FilterStocksModal = ({
         </BootstrapModal.Header>
         <BootstrapModal.Body>
           <PanelGroup direction="horizontal">
-            <Panel defaultSizePercentage={20} minSizePercentage={10}>
+            <Panel defaultSizePercentage={25} minSizePercentage={20}>
               {/* Left panel for filtration type selection */}
-              <div className="d-flex flex-column gap-4 text-center">
-                {Object.keys(filtrationData).map((type) => (
-                  <span
+              <div className="d-flex flex-column">
+                {Object.keys(settings).map((type) => (
+                  <SettingsButton
+                    text={type}
                     key={type}
                     onClick={() => handleTypeSelection(type)}
-                    className={`p-2 rounded cursor-pointer ${
-                      selectedType === type
-                        ? "bg-secondary text-light"
-                        : "bg-light"
-                    }`}
+                    isActive={type === selectedType}
+                    icon={settings[type].icon}
                   >
                     {type}
-                  </span>
+                  </SettingsButton>
                 ))}
               </div>
             </Panel>
             <PanelResizeHandle
-              className="bg-dark mx-3"
-              style={{ width: "4px" }}
+              className="bg-dark-light mx-3"
+              style={{ width: "3px" }}
             />
             <Panel minSizePercentage={70}>
               {/* Right panel for displaying filtration options */}
@@ -126,7 +94,7 @@ const FilterStocksModal = ({
                 {/* Display options based on the selected filtration type */}
                 {selectedType && (
                   <div>
-                    {filtrationData[selectedType].map((option) => (
+                    {settings[selectedType].options.map((option) => (
                       <div key={option.name}>
                         {option.isSelect ? (
                           <>
@@ -168,11 +136,16 @@ const FilterStocksModal = ({
         </BootstrapModal.Body>
         <BootstrapModal.Footer>
           {/* Submit button */}
-          <button onClick={handleSubmit}>Submit</button>
+          <CustomButton
+            text={"Cancel"}
+            variant={"danger"}
+            onClick={() => setIsModalOpen((isModalOpen) => !isModalOpen)}
+          />
+          <CustomButton text={"Save"} onClick={handleSubmit} />
         </BootstrapModal.Footer>
       </motion.div>
     </BootstrapModal>
   );
 };
 
-export default FilterStocksModal;
+export default SettingsModal;

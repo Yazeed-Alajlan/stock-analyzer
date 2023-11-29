@@ -48,7 +48,7 @@ const ResizableComponent = () => {
 
           {/* {<ChartPatterns symbol={selectedSymbol} />} */}
         </Panel>
-        <PanelResizeHandle className="bg-white" style={{ width: "16px" }} />
+        <PanelResizeHandle className="bg-dark-light" style={{ width: "4px" }} />
 
         <Panel
           collapsible={true}

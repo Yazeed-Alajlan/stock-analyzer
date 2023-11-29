@@ -33,11 +33,11 @@ const TechnicalAnalysisPage = () => {
           </>
         )} */}
         <ResizableComponent />
-        <CardWithLink
+        {/* <CardWithLink
           to="/monthly-returns"
           label="Monthly Returns"
           icon={<TbReportAnalytics size={50} />}
-        />
+        /> */}
         {/* <CardWithLink
           to="/consolidating-stocks"
           label="Consolidating Stocks"
