@@ -12,7 +12,10 @@ const InputSelect = ({
   isSearchable,
   isMulti,
   className,
+  defaultValue,
 }) => {
+  console.log(defaultValue);
+
   return (
     <CompnentLayout>
       <div className="d-flex gap-2 z-1900">
@@ -27,6 +30,7 @@ const InputSelect = ({
           isClearable
           isSearchable
           isMulti={isMulti}
+          defaultValue={options.find((option) => option.value === defaultValue)}
         />
       </div>
     </CompnentLayout>

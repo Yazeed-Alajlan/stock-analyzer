@@ -30,7 +30,6 @@ const SettingsModal = ({
   };
 
   const handleInputChange = (name, value) => {
-    console.log(value);
     setInputValues((prevInputValues) => ({
       ...prevInputValues,
       [name]: value,
@@ -109,10 +108,15 @@ const SettingsModal = ({
                             onChange={(e) => {
                               handleInputChange(
                                 option.name,
-                                option.isMulti ? e : e.value
+                                option.isMulti ? option.defaultValue : e.value
                               );
                             }}
                             options={option.options}
+                            defaultValue={
+                              inputValues[option.name] ||
+                              option.defaultValue ||
+                              ""
+                            }
                             value={
                               inputValues[option.name] ||
                               option.defaultValue ||

@@ -16,9 +16,13 @@ const SidebarSelection = ({ onRowClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [data, setData] = useState([]);
+
   const [settings, setSettings] = useState({
     "Consolidating Stocks": {
       icon: TbX, // Add the icon for this category
+      onSave: () => {
+        console.log("Save clicked for Japanese Candlestick");
+      },
       options: [
         {
           name: "option1",
@@ -42,9 +46,8 @@ const SidebarSelection = ({ onRowClick }) => {
         {
           isSelect: true,
           name: "option3",
-          isMulti: true,
-
           label: "Option 3",
+          // defaultValue: "CDL2CROWS",
           type: "text",
           options: Object.entries(candlestick_patterns).map(([key, value]) => ({
             value: key,
@@ -117,16 +120,7 @@ const SidebarSelection = ({ onRowClick }) => {
           hoverText={"Filter Stocks"}
           onClick={() => setIsModalOpen(true)}
         />
-        <IconButton
-          icon={TbFilter}
-          hoverText={"Filter Stocks222222222222222222"}
-          onClick={() => setIsModalOpen2(true)}
-        />
-        <IconButton
-          icon={TbFilter}
-          hoverText={"Filter Stocks22222222222221312123322222222"}
-          onClick={() => console.log(settings)}
-        />
+
         <IconButton
           icon={TbFilterOff}
           hoverText={"Delete Filters"}
@@ -137,95 +131,6 @@ const SidebarSelection = ({ onRowClick }) => {
       <StockFilterSettingsModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        title={"Filter Data"}
-        settings={{
-          "Consolidating Stocks": {
-            icon: TbX, // Add the icon for this category
-            options: [
-              {
-                name: "option1",
-                label: "عدد الشموع",
-                type: "number",
-                placeholder: "حدد عدد الشموع",
-                defaultValue: "14",
-              },
-              {
-                name: "option2",
-                label: "نسبة النطاق",
-                type: "number",
-                placeholder: "حدد نسبة النطاق",
-                defaultValue: 2.5,
-              },
-            ],
-            onSave: () => {
-              console.log("Save clicked for Consolidating Stocks");
-            },
-          },
-          "Japanese Candlestick": {
-            icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
-            options: [
-              {
-                isSelect: true,
-                name: "option3",
-                label: "Option 3",
-                type: "text",
-                options: Object.entries(candlestick_patterns).map(
-                  ([key, value]) => ({
-                    value: key,
-                    label: value,
-                  })
-                ),
-              },
-            ],
-            onSave: () => {
-              console.log("Save clicked for Japanese Candlestick");
-            },
-          },
-          "Japanese Candlestick2": {
-            icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
-            options: [
-              {
-                isSelect: true,
-                name: "option3",
-                label: "Option 3",
-                type: "text",
-                options: Object.entries(candlestick_patterns).map(
-                  ([key, value]) => ({
-                    value: key,
-                    label: value,
-                  })
-                ),
-              },
-            ],
-            onSave: () => {
-              console.log("Save clicked for Japanese Candlestick2");
-            },
-          },
-          "Japanese Candlestick3": {
-            icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
-            options: [
-              {
-                isSelect: true,
-                name: "option3",
-                label: "Option 3",
-                type: "text",
-                options: Object.entries(candlestick_patterns).map(
-                  ([key, value]) => ({
-                    value: key,
-                    label: value,
-                  })
-                ),
-              },
-            ],
-            onSave: () => {
-              console.log("Save clicked for Japanese Candlestick3");
-            },
-          },
-        }}
-      />
-      <SettingsModal
-        isModalOpen={isModalOpen2}
-        setIsModalOpen={setIsModalOpen2}
         title={"Filter Data"}
         settings={settings}
         setSettings={setSettings}
