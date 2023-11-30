@@ -5,7 +5,7 @@ import { TbChartBar, TbChartLine, TbTable } from "react-icons/tb";
 import Table from "../Table";
 import ButtonsGroup from "../buttons/ButtonsGroup";
 import CustomButton from "../buttons/CustomButton";
-import CusotmModal from "../modals/CusotmModal";
+import CustomModal from "../modals/CustomModal";
 
 const convertDataFormat = (data) => {
   if (!data || Object.keys(data).length === 0) {
@@ -114,7 +114,7 @@ const DynamicChart = ({ type, data }) => {
       </motion.div>
 
       {chartData && data && (
-        <CusotmModal {...{ modal, setModal }}>
+        <CustomModal {...{ modal, setModal }}>
           <Table
             columns={[
               {
@@ -130,9 +130,8 @@ const DynamicChart = ({ type, data }) => {
             ]}
             data={transformData(data, "year", "changePercentage")}
           />
-        </CusotmModal>
+        </CustomModal>
       )}
-      {/* <CusotmModal /> */}
     </>
   );
 };

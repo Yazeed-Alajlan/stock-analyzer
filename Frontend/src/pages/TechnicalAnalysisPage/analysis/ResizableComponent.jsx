@@ -5,6 +5,7 @@ import ChartPatterns from "../components/ChartPatterns";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { useStocksData } from "contexts/StocksDataContext";
 import { CustomCard } from "components/utils/cards/CustomCard";
+import AdvancedChart from "./AdvancedChart";
 
 const ResizableComponent = () => {
   const [selectedSymbol, setSelectedSymbol] = useState(null);
@@ -36,6 +37,7 @@ const ResizableComponent = () => {
         <Panel minSizePercentage={80}>
           {stockPriceData ? (
             <CustomCard>
+              <AdvancedChart />
               <CandlestickAndIndicatorsChart
                 series={stockPriceData}
                 indcators={selectedIndicators}

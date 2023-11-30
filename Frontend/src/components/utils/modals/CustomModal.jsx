@@ -4,7 +4,7 @@ import { CustomCard } from "../cards/CustomCard";
 import CustomButton from "../buttons/CustomButton";
 import { TbArrowBackUp } from "react-icons/tb";
 
-const CusotmModal = ({ modal, setModal, children }) => {
+const CustomModal = ({ modal, setModal, children }) => {
   useEffect(() => {
     if (modal) {
       document.body.style.overflow = "hidden"; // Disable scrolling when the modal is open
@@ -61,4 +61,4 @@ const CusotmModal = ({ modal, setModal, children }) => {
     </AnimatePresence>
   );
 };
-export default CusotmModal;
+export default CustomModal;
