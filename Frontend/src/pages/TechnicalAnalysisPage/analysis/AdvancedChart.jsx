@@ -43,7 +43,7 @@ const AdvancedChart = ({ symbol }) => {
     fetchStockData();
   }, [symbol]);
   return (
-    <div className="">
+    <div className="adksl;als;kd">
       <Toolbar>
         <ButtonTool
           icon={TbX}

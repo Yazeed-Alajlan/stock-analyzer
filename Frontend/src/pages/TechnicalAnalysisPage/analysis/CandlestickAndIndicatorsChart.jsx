@@ -266,11 +266,11 @@ const CandlestickAndIndicatorsChart = ({
   };
 
   return (
-    <CompnentLayout>
-      <Container className="px-4" fluid>
-        <div className="" id={chartContainerId} />
+    <>
+      <Container className="px-2" fluid>
+        <div className="w-100 h-100" id={chartContainerId} />
       </Container>
-    </CompnentLayout>
+    </>
   );
 };
 
