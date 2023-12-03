@@ -9,46 +9,23 @@ import AdvancedChart from "./AdvancedChart";
 
 const ResizableComponent = () => {
   const [selectedSymbol, setSelectedSymbol] = useState(null);
-  const [stockPriceData, setStockPriceData] = useState();
-  const [selectedIndicators, setSelectedIndicators] = useState();
-  const { getStockPriceData, getIndicatorData } = useStocksData();
+
   const handleRowClick = (symbol) => {
     setSelectedSymbol(symbol);
     // Do whatever you need with the selected symbol in the parent component
   };
-  useEffect(() => {
-    const fetchStockData = async () => {
-      try {
-        if (selectedSymbol) {
-          setStockPriceData(await getStockPriceData(selectedSymbol));
-          setSelectedIndicators(await getIndicatorData(selectedSymbol, "vsa"));
-        }
-      } catch (error) {
-        // Handle any errors if the promise rejects
-        console.error("Error fetching data:", error);
-      }
-    };
 
-    fetchStockData();
-  }, [selectedSymbol]);
   return (
     <div>
       <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
-        <Panel minSizePercentage={80}>
-          {stockPriceData ? (
+        <Panel minSizePercentage={75} className="">
+          {selectedSymbol ? (
             <>
               <AdvancedChart symbol={selectedSymbol} />
-              <CandlestickAndIndicatorsChart
-                series={stockPriceData}
-                indcators={selectedIndicators}
-                symbol={selectedSymbol}
-              />
             </>
           ) : (
             <>SELECT STOCK</>
           )}
-
-          {/* {<ChartPatterns symbol={selectedSymbol} />} */}
         </Panel>
         <PanelResizeHandle className="bg-dark-light" style={{ width: "4px" }} />
 

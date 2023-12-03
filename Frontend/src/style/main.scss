@@ -86,5 +86,28 @@ $theme-colors: (
   display: none !important;
 }
 
+/* styles.css */
+
+/* For Webkit (Chrome, Safari, etc.) */
+/* Customize the scrollbar */
+::-webkit-scrollbar {
+  width: 4px; /* Set the width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar handle on hover */
+}
+
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";

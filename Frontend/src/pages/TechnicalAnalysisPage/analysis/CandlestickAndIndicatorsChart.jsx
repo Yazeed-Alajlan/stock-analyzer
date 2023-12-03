@@ -79,7 +79,6 @@ const CandlestickAndIndicatorsChart = ({
         textColor: "black",
         background: { type: "solid", color: "white" },
       },
-      height: "400",
     };
     const chart = createChart(chartContainerId, chartOptions);
     const chart2 = createChart(chartContainerId, chartOptions);
@@ -268,8 +267,8 @@ const CandlestickAndIndicatorsChart = ({
 
   return (
     <CompnentLayout>
-      <Container className="px-4">
-        <div className="p-4" id={chartContainerId}></div>
+      <Container className="px-4" fluid>
+        <div className="" id={chartContainerId} />
       </Container>
     </CompnentLayout>
   );
