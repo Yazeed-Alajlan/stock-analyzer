@@ -1,11 +1,15 @@
 import SelectionTabs from "components/routing/SelectionTabs";
 import React, { useState } from "react";
-import { Toolbar, Tool } from "./Toolbar";
-import { TbX } from "react-icons/tb";
-import InputSelect from "components/utils/inputs/InputSelect";
-import CustomDropdown from "./Dropdown";
+import {
+  Toolbar,
+  ToolSeparator,
+  ButtonTool,
+  SelectTool,
+  ModalTool,
+} from "./Toolbar/Toolbar";
+import { TbX, TbSearch } from "react-icons/tb";
 
-const AdvancedChart = () => {
+const AdvancedChart = ({ symbol }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null); // State to hold the selected option
 
@@ -30,26 +34,41 @@ const AdvancedChart = () => {
   // Dummy data for the select options
 
   return (
-    <div className="d-flex">
-      <CustomDropdown
-        hoverText={"HII"}
-        options={[
-          { value: "ny", label: "New York" },
-          { value: "ca", label: "California" },
-          { value: "tx", label: "Texas" },
-          // Add more dummy data as needed
-        ]}
-        // defaultValues={"ca"}
-      />
-
+    <div className="">
       <Toolbar>
-        <Tool
+        <ButtonTool
           icon={TbX}
           hoverText="Tool 1"
           onClick={() => console.log("Tool 1 clicked")}
         />
+        <ToolSeparator />
+        <ModalTool
+          icon={TbSearch}
+          hoverText="Modal"
+          text={symbol}
+          title={"Search"}
+        >
+          <div> aksdkadlsdksdlak</div>
+        </ModalTool>
+        <ToolSeparator />
+
+        <SelectTool
+          options={[
+            { value: "ny", label: "New York" },
+            { value: "ca", label: "California" },
+            { value: "tx", label: "Texas" },
+
+            // Add more dummy data as needed
+          ]}
+          // defaultValue={"tx"}
+        />
       </Toolbar>
-      <SelectionTabs tabs={tabs} />
+      {/* <CustomDropdown
+        hoverText={"HII"}
+
+      /> */}
+
+      {/* <SelectionTabs tabs={tabs} /> */}
     </div>
   );
 };

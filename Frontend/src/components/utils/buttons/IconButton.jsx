@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
-const IconButton = ({ icon: Icon, onClick, hoverText, size }) => {
+const IconButton = ({ icon: Icon, onClick, hoverText, size, text }) => {
   return (
     <OverlayTrigger
       trigger={["hover", "hover"]}
@@ -15,7 +15,8 @@ const IconButton = ({ icon: Icon, onClick, hoverText, size }) => {
         size={size}
         variant="outline-dark-light"
       >
-        {Icon && <Icon className="fs-4" />}
+        {text}
+        {Icon && <Icon className={`fs-4 ${text ? "me-2" : ""}`} />}
       </Button>
     </OverlayTrigger>
   );

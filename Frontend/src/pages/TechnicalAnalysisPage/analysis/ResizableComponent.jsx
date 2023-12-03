@@ -36,14 +36,14 @@ const ResizableComponent = () => {
       <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
         <Panel minSizePercentage={80}>
           {stockPriceData ? (
-            <CustomCard>
-              <AdvancedChart />
+            <>
+              <AdvancedChart symbol={selectedSymbol} />
               <CandlestickAndIndicatorsChart
                 series={stockPriceData}
                 indcators={selectedIndicators}
                 symbol={selectedSymbol}
               />
-            </CustomCard>
+            </>
           ) : (
             <>SELECT STOCK</>
           )}

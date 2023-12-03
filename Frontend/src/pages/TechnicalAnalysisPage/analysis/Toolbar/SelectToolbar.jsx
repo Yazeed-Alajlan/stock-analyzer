@@ -6,7 +6,7 @@ import {
   Tooltip,
 } from "react-bootstrap";
 
-export default function CustomDropdown({
+export default function SelectToolbar({
   options,
   defaultValue,
   value,
@@ -19,6 +19,7 @@ export default function CustomDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [hoveredOption, setHoveredOption] = useState(null);
 
   useEffect(() => {
     let selected = defaultValue || value || "";
@@ -39,19 +40,19 @@ export default function CustomDropdown({
     option.label.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const renderTooltip = (props) => (
-    <Tooltip id="dropdown-tooltip" {...props}>
-      {hoverText}
-    </Tooltip>
-  );
-
   return (
     <Dropdown show={isOpen} onToggle={(isOpen) => setIsOpen(isOpen)}>
       <OverlayTrigger
+        trigger={["hover", "hover"]}
         placement="bottom"
-        overlay={<Tooltip id="dropdown-info-tooltip">{hoverText}</Tooltip>}
+        overlay={
+          hoverText ? <Tooltip id="tooltip">{hoverText}</Tooltip> : <></>
+        }
       >
-        <Dropdown.Toggle variant="primary">
+        <Dropdown.Toggle
+          className="text-center text-grey fw-bolder m-2 p-2 border-0"
+          variant="outline-dark-light"
+        >
           {text}
           {Icon && <Icon />}
           {selectedValue ? selectedValue.label : "Select a State"}
@@ -71,10 +72,14 @@ export default function CustomDropdown({
             <Dropdown.Item
               key={option.value}
               onClick={() => handleSelectChange(option)}
+              onMouseEnter={() => setHoveredOption(option.value)}
+              onMouseLeave={() => setHoveredOption(null)}
               style={{
                 backgroundColor:
                   selectedValue && selectedValue.value === option.value
-                    ? "lightblue"
+                    ? "lightgray"
+                    : hoveredOption === option.value
+                    ? "lightgray"
                     : "transparent",
               }}
             >

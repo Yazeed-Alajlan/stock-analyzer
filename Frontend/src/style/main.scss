@@ -81,5 +81,10 @@ $theme-colors: (
   width: 100%; /* Keep the line indicator at full width on hover */
   left: 0;
 }
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
