@@ -12,7 +12,12 @@ import StocksTable from "./StocksTable";
 
 const SidebarSelection = ({ onRowClick }) => {
   const { stocksData } = useStocksData();
-  const { filteredStocks, setFilteredStocks } = useTechnicalAnalysis();
+  const {
+    filteredStocks,
+    setFilteredStocks,
+    consolidatingStocksFilter,
+    japaneseCandlestickFilter,
+  } = useTechnicalAnalysis();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState([]);
 
@@ -20,7 +25,7 @@ const SidebarSelection = ({ onRowClick }) => {
     "Consolidating Stocks": {
       icon: TbX, // Add the icon for this category
       onSave: () => {
-        console.log("Save clicked for Japanese Candlestick");
+        consolidatingStocksFilter();
       },
       options: [
         {

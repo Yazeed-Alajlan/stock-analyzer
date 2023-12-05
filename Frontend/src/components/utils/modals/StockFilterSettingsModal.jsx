@@ -59,7 +59,8 @@ const StockFilterSettingsModal = ({
       settings[selectedType] &&
       settings[selectedType].onSave
     ) {
-      settings[selectedType].onSave();
+      console.log(inputValues.option1, inputValues.option2);
+      settings[selectedType].onSave(inputValues.option1, inputValues.option2);
     }
     setIsModalOpen((isModalOpen) => !isModalOpen);
   };
