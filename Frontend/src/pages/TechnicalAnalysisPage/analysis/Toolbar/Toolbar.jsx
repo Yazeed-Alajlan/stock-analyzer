@@ -82,9 +82,7 @@ const Toolbar = ({ children }) => {
   return (
     <div className="toolbar d-flex justify-content-center align-content-center align-items-center flex-wrap border-bottom p-0 border-3">
       {React.Children.map(children, (child, index) =>
-        React.cloneElement(child, {
-          onClick: () => handleToolClick(index + 1),
-        })
+        React.cloneElement(child)
       )}
     </div>
   );

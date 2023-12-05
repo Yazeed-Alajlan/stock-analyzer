@@ -7,12 +7,15 @@ import {
   SelectTool,
   ModalTool,
 } from "./Toolbar/Toolbar";
-import { TbX, TbSearch } from "react-icons/tb";
+import { TbX, TbSearch, TbHome } from "react-icons/tb";
 import { useStocksData } from "contexts/StocksDataContext";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { CustomCard } from "components/utils/cards/CustomCard";
+import { useNavigate } from "react-router-dom";
 
 const AdvancedChart = ({ symbol }) => {
+  const navigate = useNavigate();
+
   const tabs = [
     {
       id: 1,
@@ -43,8 +46,18 @@ const AdvancedChart = ({ symbol }) => {
     fetchStockData();
   }, [symbol]);
   return (
-    <div className="adksl;als;kd">
+    <div className="">
       <Toolbar>
+        <ButtonTool
+          icon={TbHome}
+          hoverText="Home"
+          onClick={() => {
+            console.log("hi");
+            navigate("/");
+          }}
+        />
+        <ToolSeparator />
+
         <ButtonTool
           icon={TbX}
           hoverText="Tool 1"

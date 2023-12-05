@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import SidebarSelection from "./SidebarSelection";
-import ChartPatterns from "../components/ChartPatterns";
-import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
-import { useStocksData } from "contexts/StocksDataContext";
-import { CustomCard } from "components/utils/cards/CustomCard";
+
 import AdvancedChart from "./AdvancedChart";
 
 const ResizableComponent = () => {
-  const [selectedSymbol, setSelectedSymbol] = useState(null);
+  const [selectedSymbol, setSelectedSymbol] = useState("2222");
 
   const handleRowClick = (symbol) => {
     setSelectedSymbol(symbol);
@@ -18,7 +15,7 @@ const ResizableComponent = () => {
   return (
     <div>
       <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
-        <Panel minSizePercentage={75} className="">
+        <Panel minSizePercentage={80} className="">
           {selectedSymbol ? (
             <>
               <AdvancedChart symbol={selectedSymbol} />
@@ -32,7 +29,7 @@ const ResizableComponent = () => {
         <Panel
           collapsible={true}
           collapsedSizePixels={20}
-          minSizePercentage={10}
+          minSizePercentage={15}
         >
           <SidebarSelection onRowClick={handleRowClick} />
         </Panel>

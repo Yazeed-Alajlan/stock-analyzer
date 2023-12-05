@@ -28,7 +28,7 @@ const CandlestickAndIndicatorsChart = ({
       },
     };
     const chart = createChart(chartContainerId, {
-      height: "400",
+      height: "300",
     });
     const chart2 = createChart(chartContainerId, chartOptions);
 
