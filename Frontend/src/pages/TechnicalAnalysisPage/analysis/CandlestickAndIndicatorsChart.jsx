@@ -19,17 +19,23 @@ const CandlestickAndIndicatorsChart = ({
   }, [series, symbol]);
 
   useEffect(() => {
-    console.log(stockData);
     if (!stockData) return;
+    const container = document.getElementById("responsive-chart");
+
+    // Get the available width and height of the container
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    console.log(containerHeight);
+    console.log(containerWidth);
     const chartOptions = {
+      width: containerWidth,
+      height: containerHeight / 2, // Divide height equally between two charts
       layout: {
         textColor: "black",
         background: { type: "solid", color: "white" },
       },
     };
-    const chart = createChart(chartContainerId, {
-      height: "300",
-    });
+    const chart = createChart(chartContainerId, chartOptions);
     const chart2 = createChart(chartContainerId, chartOptions);
 
     chart.applyOptions({
@@ -66,6 +72,13 @@ const CandlestickAndIndicatorsChart = ({
     }
     addVolumeHistogram(chart, series);
     createTooltip(chartContainerId, chart, candlestickSeries);
+    // Sync Cahrts
+    chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+      chart2.timeScale().setVisibleLogicalRange(range);
+    });
+    chart2.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+      chart.timeScale().setVisibleLogicalRange(range);
+    });
 
     return () => {
       chart.remove();
@@ -80,7 +93,11 @@ const CandlestickAndIndicatorsChart = ({
         background: { type: "solid", color: "white" },
       },
     };
-    const chart = createChart(chartContainerId, chartOptions);
+    const chart = createChart(chartContainerId, {
+      timeScale: {
+        visible: false, // Hide the X-axis (time scale)
+      },
+    });
     const chart2 = createChart(chartContainerId, chartOptions);
     chart.applyOptions({
       rightPriceScale: {
@@ -112,7 +129,7 @@ const CandlestickAndIndicatorsChart = ({
       borderVisible: false,
       wickUpColor: "#26a69a",
       wickDownColor: "#ef5350",
-      pane: 0,
+      pane: 1,
     });
 
     candlestickSeries.setData(stockData);
@@ -125,14 +142,6 @@ const CandlestickAndIndicatorsChart = ({
     }
     addVolumeHistogram(chart, await series);
     createTooltip(chartContainerId, chart, candlestickSeries);
-
-    // Sync Cahrts
-    chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-      chart2.timeScale().setVisibleLogicalRange(range);
-    });
-    chart2.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-      chart.timeScale().setVisibleLogicalRange(range);
-    });
 
     return () => {
       chart.remove();
@@ -267,9 +276,7 @@ const CandlestickAndIndicatorsChart = ({
 
   return (
     <>
-      <Container className="px-2" fluid>
-        <div className="w-100 h-100" id={chartContainerId} />
-      </Container>
+      <div className="" id={chartContainerId} />
     </>
   );
 };

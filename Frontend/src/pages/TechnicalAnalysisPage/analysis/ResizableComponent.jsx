@@ -15,7 +15,7 @@ const ResizableComponent = () => {
   return (
     <div>
       <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
-        <Panel minSizePercentage={80} className="">
+        <Panel minSizePercentage={80}>
           {selectedSymbol ? (
             <>
               <AdvancedChart symbol={selectedSymbol} />

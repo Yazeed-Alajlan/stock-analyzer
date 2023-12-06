@@ -46,7 +46,7 @@ const AdvancedChart = ({ symbol }) => {
     fetchStockData();
   }, [symbol]);
   return (
-    <div className="">
+    <div className="d-flex flex-column" style={{ height: "100vh" }}>
       <Toolbar>
         <ButtonTool
           icon={TbHome}
@@ -82,11 +82,14 @@ const AdvancedChart = ({ symbol }) => {
           ]}
         />
       </Toolbar>
-      <CandlestickAndIndicatorsChart
-        series={stockPriceData}
-        indcators={selectedIndicators}
-        symbol={symbol}
-      />
+      <div id="responsive-chart" className="h-100 jdakd">
+        <CandlestickAndIndicatorsChart
+          series={stockPriceData}
+          indcators={selectedIndicators}
+          symbol={symbol}
+        />
+      </div>
+
       {/* <SelectionTabs tabs={tabs} /> */}
     </div>
   );

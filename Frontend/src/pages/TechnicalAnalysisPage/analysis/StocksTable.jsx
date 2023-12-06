@@ -7,7 +7,10 @@ const StocksTable = ({ data, columns, handleRowClick }) => {
   return (
     <div
       className="custom-scrollbar border-top"
-      style={{ maxHeight: "100vh", overflowY: "auto" }}
+      style={{
+        // maxHeight: "100%",x
+        overflowY: "auto",
+      }}
     >
       <table
         {...getTableProps()}

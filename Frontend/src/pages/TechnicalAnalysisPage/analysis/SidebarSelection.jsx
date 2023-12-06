@@ -24,9 +24,7 @@ const SidebarSelection = ({ onRowClick }) => {
   const [settings, setSettings] = useState({
     "Consolidating Stocks": {
       icon: TbX, // Add the icon for this category
-      onSave: () => {
-        consolidatingStocksFilter();
-      },
+      onSave: consolidatingStocksFilter,
       options: [
         {
           name: "option1",
@@ -78,8 +76,8 @@ const SidebarSelection = ({ onRowClick }) => {
   }, [filteredStocks, stocksData]);
 
   return (
-    <div className="d-flex flex-column">
-      <div className="d-flex justify-content-between">
+    <div className="d-flex flex-column" style={{ height: "100vh" }}>
+      <div className="filters d-flex justify-content-between">
         <IconButton
           icon={TbFilter}
           hoverText={"Filter Stocks"}
