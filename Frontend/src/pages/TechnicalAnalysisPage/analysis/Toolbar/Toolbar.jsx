@@ -20,7 +20,7 @@ const Tool = ({ icon, text, hoverText, onClick, children }) => {
 const ToolSeparator = () => {
   return (
     <span>
-      <div class="mx-2 fs-1 vr"></div>
+      <div className="mx-2 fs-1 vr"></div>
     </span>
   );
 };

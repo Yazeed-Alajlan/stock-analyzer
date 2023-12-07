@@ -36,6 +36,7 @@ const AdvancedChart = ({ symbol }) => {
         if (symbol) {
           setStockPriceData(await getStockPriceData(symbol));
           setSelectedIndicators(await getIndicatorData(symbol, "vsa"));
+          console.log(await getIndicatorData(symbol, "vsa"));
         }
       } catch (error) {
         // Handle any errors if the promise rejects

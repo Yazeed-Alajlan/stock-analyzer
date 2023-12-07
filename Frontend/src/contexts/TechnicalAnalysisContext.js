@@ -10,25 +10,29 @@ export function useTechnicalAnalysis() {
 export function TechnicalAnalysisProvider({ children }) {
   const [filteredStocks, setFilteredStocks] = useState();
 
-  async function consolidatingStocksFilter(numberOfCandles, percentageRange) {
+  async function consolidatingStocksFilter({
+    numberOfCandles,
+    percentageRange,
+  }) {
     try {
       const url = `http://localhost:5000/python-api/consolidating-stocks?numberOfCandles=${numberOfCandles}&percentageRange=${percentageRange}`;
       const response = await axios.get(url);
-      console.log(numberOfCandles);
+      console.log(response.data);
       setFilteredStocks(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
 
-  async function japaneseCandlestickFilter(pattern) {
+  async function japaneseCandlestickFilter({ pattern }) {
     try {
       const response = await fetch(
         `http://localhost:5000/python-api/japanese-candlestick-patterns/${pattern}`
       );
 
       if (response.ok) {
-        setFilteredStocks(await response.json());
+        const data = await response.json();
+        setFilteredStocks(data[pattern]);
       } else {
         console.error("Failed to send pattern");
       }

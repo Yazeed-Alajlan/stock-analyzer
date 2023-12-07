@@ -27,14 +27,14 @@ const SidebarSelection = ({ onRowClick }) => {
       onSave: consolidatingStocksFilter,
       options: [
         {
-          name: "option1",
+          name: "numberOfCandles",
           label: "عدد الشموع",
           type: "number",
           placeholder: "حدد عدد الشموع",
           defaultValue: "14",
         },
         {
-          name: "option2",
+          name: "percentageRange",
           label: "نسبة النطاق",
           type: "number",
           placeholder: "حدد نسبة النطاق",
@@ -44,10 +44,12 @@ const SidebarSelection = ({ onRowClick }) => {
     },
     "Japanese Candlestick": {
       icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
+      onSave: japaneseCandlestickFilter,
+
       options: [
         {
           isSelect: true,
-          name: "option3",
+          name: "pattern",
           label: "Option 3",
           // defaultValue: "CDL2CROWS",
           type: "text",

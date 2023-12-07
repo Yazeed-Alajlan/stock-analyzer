@@ -25,8 +25,6 @@ const CandlestickAndIndicatorsChart = ({
     // Get the available width and height of the container
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
-    console.log(containerHeight);
-    console.log(containerWidth);
     const chartOptions = {
       width: containerWidth,
       height: containerHeight / 2, // Divide height equally between two charts
@@ -230,8 +228,6 @@ const CandlestickAndIndicatorsChart = ({
   }
 
   const formatCandleStickData = (series) => {
-    console.log(series);
-
     if (!series) return [];
     return series
       .map((quote) => {
@@ -263,7 +259,6 @@ const CandlestickAndIndicatorsChart = ({
   };
 
   const formatIndicatorkData = (series) => {
-    // console.log(indcators);
     let data = [];
     if (!series) return [];
 
