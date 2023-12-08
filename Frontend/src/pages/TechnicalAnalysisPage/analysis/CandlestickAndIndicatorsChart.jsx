@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
 import { Container } from "react-bootstrap";
 import CompnentLayout from "components/CompnentLayout";
@@ -13,6 +13,9 @@ const CandlestickAndIndicatorsChart = ({
   const [stockData, setStockData] = useState();
   const [indicators, setIndicators] = useState();
   const chartContainerId = `chart-container-${symbol}`;
+
+  const chartElRefs = [useRef(null), useRef(null), useRef(null)];
+  const chartRefs = [useRef(), useRef(), useRef()];
 
   useEffect(() => {
     setStockData(formatCandleStickData(series));
@@ -29,7 +32,7 @@ const CandlestickAndIndicatorsChart = ({
     const containerHeight = container.clientHeight;
     const chartOptions = {
       width: containerWidth,
-      height: containerHeight / 2, // Divide height equally between two charts
+      height: containerHeight / 6, // Divide height equally between two charts
       layout: {
         textColor: "black",
         background: { type: "solid", color: "white" },
@@ -66,6 +69,46 @@ const CandlestickAndIndicatorsChart = ({
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(stockData);
     if (indicators) {
+      if (chartElRefs.find((r) => !r.current)) {
+        return;
+      }
+      chartElRefs.forEach((cr, i) => {
+        chartRefs[i].current = createChart(cr.current, chartOptions);
+        // add data
+        indicators[i]?.values.map((data) => {
+          chartRefs[i].current
+            ?.addLineSeries()
+            .setData(formatIndicatorkData(Object.values(data)[0]));
+        });
+      });
+      const charts = chartRefs.map((c) => c.current);
+      // sync charts
+      charts.forEach((chart) => {
+        if (!chart) {
+          return;
+        }
+        chart.timeScale().subscribeVisibleTimeRangeChange((e) => {
+          charts
+            .filter((c) => c !== chart)
+            .forEach((c) => {
+              c.timeScale().applyOptions({
+                rightOffset: chart.timeScale().scrollPosition(),
+              });
+            });
+        });
+        chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+          if (range) {
+            charts
+              .filter((c) => c !== chart)
+              .forEach((c) => {
+                c.timeScale().setVisibleLogicalRange({
+                  from: range?.from,
+                  to: range?.to,
+                });
+              });
+          }
+        });
+      });
     }
     // if (indcators) {
     //   const indcator_chart = chart2.addLineSeries({
@@ -87,7 +130,7 @@ const CandlestickAndIndicatorsChart = ({
       chart.remove();
       // chart2.remove();
     };
-  }, [stockData, indcators]);
+  }, [stockData]);
 
   const generateChart = async () => {
     const chartOptions = {
@@ -264,6 +307,7 @@ const CandlestickAndIndicatorsChart = ({
   };
 
   const formatIndicatorkData = (series) => {
+    console.log(series);
     let data = [];
     if (!series) return [];
 
@@ -277,6 +321,22 @@ const CandlestickAndIndicatorsChart = ({
   return (
     <>
       <div className="" id={chartContainerId} />
+      <div
+        style={{
+          // maxHeight: "100%",x
+          overflowY: "auto",
+        }}
+      >
+        {" "}
+        {chartElRefs.map((ref, i) => (
+          <div
+            ref={ref}
+            id={`chart_${i}`}
+            key={`chart_${i}`}
+            style={{ borderBottom: "1px solid transparent" }}
+          />
+        ))}
+      </div>
     </>
   );
 };
