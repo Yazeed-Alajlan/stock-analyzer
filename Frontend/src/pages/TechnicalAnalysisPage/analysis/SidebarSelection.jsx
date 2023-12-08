@@ -5,7 +5,7 @@ import CustomButton from "components/utils/buttons/CustomButton";
 import IconButton from "components/utils/buttons/IconButton";
 import { TbFilter, TbFilterOff } from "react-icons/tb";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
-import { TbX } from "react-icons/tb";
+import { TbArrowMergeBoth, TbChartCandle } from "react-icons/tb";
 import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPatterns";
 import StockFilterSettingsModal from "components/utils/modals/StockFilterSettingsModal";
 import StocksTable from "./StocksTable";
@@ -23,7 +23,7 @@ const SidebarSelection = ({ onRowClick }) => {
 
   const [settings, setSettings] = useState({
     "Consolidating Stocks": {
-      icon: TbX, // Add the icon for this category
+      // icon: TbArrowMergeBoth, // Add the icon for this category
       onSave: consolidatingStocksFilter,
       options: [
         {
@@ -43,7 +43,7 @@ const SidebarSelection = ({ onRowClick }) => {
       ],
     },
     "Japanese Candlestick": {
-      icon: TbX, // Add the icon for this category (assuming TbX is an icon component)
+      icon: TbChartCandle, // Add the icon for this category (assuming TbX is an icon component)
       onSave: japaneseCandlestickFilter,
 
       options: [

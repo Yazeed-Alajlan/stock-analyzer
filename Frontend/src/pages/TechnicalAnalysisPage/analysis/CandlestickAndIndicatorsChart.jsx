@@ -9,13 +9,15 @@ const CandlestickAndIndicatorsChart = ({
   indcators,
   drawLines,
 }) => {
+  console.log(indcators);
   const [stockData, setStockData] = useState();
   const [indicators, setIndicators] = useState();
   const chartContainerId = `chart-container-${symbol}`;
 
   useEffect(() => {
     setStockData(formatCandleStickData(series));
-    setIndicators(formatIndicatorkData(indcators));
+    setIndicators(indcators);
+    // setIndicators(formatIndicatorkData(indcators));
   }, [series, symbol]);
 
   useEffect(() => {
@@ -34,7 +36,8 @@ const CandlestickAndIndicatorsChart = ({
       },
     };
     const chart = createChart(chartContainerId, chartOptions);
-    const chart2 = createChart(chartContainerId, chartOptions);
+    console.log(indicators);
+    // const chart2 = createChart(chartContainerId, chartOptions);
 
     chart.applyOptions({
       rightPriceScale: {
@@ -62,25 +65,27 @@ const CandlestickAndIndicatorsChart = ({
     // Add candlestick series
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(stockData);
-    if (indcators) {
-      const indcator_chart = chart2.addLineSeries({
-        pane: 1, // Set the pane for the indicator series
-      });
-      indcator_chart.setData(formatIndicatorkData(indcators));
+    if (indicators) {
     }
+    // if (indcators) {
+    //   const indcator_chart = chart2.addLineSeries({
+    //     pane: 1, // Set the pane for the indicator series
+    //   });
+    //   indcator_chart.setData(formatIndicatorkData(indcators));
+    // }
     addVolumeHistogram(chart, series);
     createTooltip(chartContainerId, chart, candlestickSeries);
     // Sync Cahrts
-    chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-      chart2.timeScale().setVisibleLogicalRange(range);
-    });
-    chart2.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-      chart.timeScale().setVisibleLogicalRange(range);
-    });
+    // chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+    //   chart2.timeScale().setVisibleLogicalRange(range);
+    // });
+    // chart2.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+    //   chart.timeScale().setVisibleLogicalRange(range);
+    // });
 
     return () => {
       chart.remove();
-      chart2.remove();
+      // chart2.remove();
     };
   }, [stockData, indcators]);
 

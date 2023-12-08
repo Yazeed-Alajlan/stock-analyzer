@@ -34,8 +34,32 @@ const AdvancedChart = ({ symbol }) => {
     const fetchStockData = async () => {
       try {
         if (symbol) {
+          const indicators = [
+            {
+              name: "macd",
+              pane: 1,
+              values: [
+                {
+                  vas: await getIndicatorData(symbol, "vsa"),
+                },
+                {
+                  ema_21: await getIndicatorData(symbol, "vsa"),
+                },
+              ],
+            },
+            {
+              name: "vsa",
+              pane: 2,
+              values: [
+                {
+                  vas: await getIndicatorData(symbol, "vsa"),
+                },
+              ],
+            },
+          ];
+          console.log(indicators);
           setStockPriceData(await getStockPriceData(symbol));
-          setSelectedIndicators(await getIndicatorData(symbol, "vsa"));
+          setSelectedIndicators(indicators);
           console.log(await getIndicatorData(symbol, "vsa"));
         }
       } catch (error) {
