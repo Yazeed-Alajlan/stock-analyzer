@@ -1,0 +1,367 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 3802,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "8606014",
+        "FACILITY_NAME": "Arid H -6 Luxury Gold Balcony AZ79"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.628843367, 24.883409488]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 4236,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "6071063",
+        "FACILITY_NAME": "Badeel"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.717245533744602, 24.564563188500301]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2922,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "5714353",
+        "FACILITY_NAME": "180 Executive Suites AlNarjes"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.679848, 24.84531] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2632,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "6767382",
+        "FACILITY_NAME": "Admire Apart' Hotel - فندق ادماير"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.6713714, 24.68311573] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2561,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "2331549",
+        "FACILITY_NAME": "Al Eairy Apartments - Al Riyad 4"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7619927, 24.58328907] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2564,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "6026585",
+        "FACILITY_NAME": "Almakan Suites 111"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.73589502, 24.59285366] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 3775,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "9071134",
+        "FACILITY_NAME": "Ar Rabi I-4 Royal touch AG34"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.662887596, 24.79661249]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2929,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "4228339",
+        "FACILITY_NAME": "Aspar Resorts"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.81866309, 24.85780441] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 681,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "296535",
+        "FACILITY_NAME": "Boudl Al Malaz"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.73518002, 24.68620667] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2849,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "8059662",
+        "FACILITY_NAME": "Delta Adventures"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.640087, 24.8082647] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2812,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "8138521",
+        "FACILITY_NAME": "Elegant high-rise 1-Bdrm apartment w/ smart access"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.6322425, 24.7929031] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2707,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "1949313",
+        "FACILITY_NAME": "Elite Suites Hotel - Al Muruj"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.6698622, 24.75159855] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2618,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "6038105",
+        "FACILITY_NAME": "Ewaa Express Hotel - Khurais"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.68466982, 24.67672252] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 903,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "1042264",
+        "FACILITY_NAME": "Land Beach An Narjis"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.68558195, 24.82800805] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 4065,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "7825769",
+        "FACILITY_NAME": "Burj Al Hayah Hotel Suites-Al Olaya - برج الحياة للوحدات الفندقيه العليا"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.691677, 24.675346] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2686,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "187844",
+        "FACILITY_NAME": "Capital O 419 Al Safeer Hotel"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.81830838, 24.71974001] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 364,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "7165949",
+        "FACILITY_NAME": "DoubleTree by Hilton Riyadh Financial District Hotel & Suites"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.65468411, 24.765681] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2758,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "8024150",
+        "FACILITY_NAME": "A1-1 Al Tawun Royal Touch"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7047022, 24.7747918] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2655,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "6689727",
+        "FACILITY_NAME": "Al Massa Hotel Olaya"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.68441064, 24.69232956] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 4061,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "442824",
+        "FACILITY_NAME": "Al Muhaidb Hotel Apartments 24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.688439846, 24.584100074]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 4179,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "9152642",
+        "FACILITY_NAME": "Apartment with private Entrance (self check in)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.765569766, 24.814891969]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 3994,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "8600775",
+        "FACILITY_NAME": "Arid H -5 Luxury Gold Balcony AG93"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.62884177, 24.883418544]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 2759,
+        "DATA_SOURCE": "BOOKING",
+        "SOURCE_IDENTIFIER": "8024170",
+        "FACILITY_NAME": "A1-11 AlTawun Royal Touch"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7047022, 24.7747918] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJi9pEEGcOLz4RfBO7r6qvSgU",
+        "FACILITY_NAME": "روفان للشقق المفروشة"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7026602, 24.543282] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJD4ZdfBkFLz4RBvlMAx6zgPI",
+        "FACILITY_NAME": "الفيصل لشقق المفروشه"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7210273, 24.638439] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJA0x4fPX9Lj4RYModbRCczUs",
+        "FACILITY_NAME": "Apartments Corner Age"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7309267, 24.7645688] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJvwI_ltoBLz4RGzYT5sAX_XM",
+        "FACILITY_NAME": "Dima Oasis Apartments for furnished residential units - furnished apartments"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7586158, 24.7711829] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJa-pHmYICLz4Rmww2x3ochXI",
+        "FACILITY_NAME": "Mocador hotels"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.701202, 24.753211] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJ_ziB6_QDLz4R0ByM3wjdKP0",
+        "FACILITY_NAME": "صيدلية بيت الصحة ( انوفا ) - Health House Pharmacy (innova)"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7434454, 24.7528943] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJhWLNgj8FLz4RSwYLBsS4RCU",
+        "FACILITY_NAME": "Vivienda Hotel Villas Accommodation"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.6762535, 24.6435837] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJT-Ue9eH_Lj4RJtUkKfY5aTs",
+        "FACILITY_NAME": "عائلة البكري"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7585139, 24.7792136] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJ3Sil7MoBLz4RNDJTI4kUVr4",
+        "FACILITY_NAME": "White House"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.7665781, 24.7483625] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJidH6ZR2hLz4RNqd0M4uQoTI",
+        "FACILITY_NAME": "Unimed"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.864615, 24.5558582] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "U_ID": 0,
+        "DATA_SOURCE": "GOOGLE",
+        "SOURCE_IDENTIFIER": "ChIJjXUmvmIDLz4RzdK43r_rozk",
+        "FACILITY_NAME": "Ewaa Express Hotel - Khurais"
+      },
+      "geometry": { "type": "Point", "coordinates": [46.6848178, 24.6766624] }
+    }
+  ]
+}
