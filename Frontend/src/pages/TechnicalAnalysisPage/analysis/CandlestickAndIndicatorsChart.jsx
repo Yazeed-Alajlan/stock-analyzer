@@ -9,7 +9,6 @@ const CandlestickAndIndicatorsChart = ({
   indcators,
   drawLines,
 }) => {
-  console.log(indcators);
   const [stockData, setStockData] = useState();
   const [indicators, setIndicators] = useState();
   const chartContainerId = `chart-container-${symbol}`;
@@ -26,6 +25,7 @@ const CandlestickAndIndicatorsChart = ({
   useEffect(() => {
     if (!stockData) return;
     const container = document.getElementById("responsive-chart");
+    console.log("HIIIIII");
 
     // Get the available width and height of the container
     const containerWidth = container.clientWidth;
@@ -39,7 +39,7 @@ const CandlestickAndIndicatorsChart = ({
       },
     };
     const chart = createChart(chartContainerId, chartOptions);
-    console.log(indicators);
+
     // const chart2 = createChart(chartContainerId, chartOptions);
 
     chart.applyOptions({
@@ -74,10 +74,11 @@ const CandlestickAndIndicatorsChart = ({
       }
       chartElRefs.forEach((cr, i) => {
         chartRefs[i].current = createChart(cr.current, chartOptions);
-        // add data
-        indicators[i]?.values.map((data) => {
+        indicators[i]?.lines.map((data) => {
           chartRefs[i].current
-            ?.addLineSeries()
+            ?.addLineSeries({
+              color: data.color,
+            })
             .setData(formatIndicatorkData(Object.values(data)[0]));
         });
       });
@@ -128,9 +129,12 @@ const CandlestickAndIndicatorsChart = ({
 
     return () => {
       chart.remove();
+      const charts = chartRefs.map((c) => c.current);
+
+      charts.map((chart) => chart.remove());
       // chart2.remove();
     };
-  }, [stockData]);
+  }, [symbol]);
 
   const generateChart = async () => {
     const chartOptions = {
@@ -307,7 +311,6 @@ const CandlestickAndIndicatorsChart = ({
   };
 
   const formatIndicatorkData = (series) => {
-    console.log(series);
     let data = [];
     if (!series) return [];
 

@@ -93,10 +93,10 @@ def vsa():
     symbol = flask.request.args.get("symbol")
     print(symbol)
     print("---------------------------------------------------")
-    # symbol="4321"
     stock_data=get_price_data(symbol) 
 
     data=vsa_indicator(stock_data,norm_lookback=10)
+    
     data.index = data.index.strftime('%Y-%m-%d')
     data=data.fillna(0)
     return data.to_json()
