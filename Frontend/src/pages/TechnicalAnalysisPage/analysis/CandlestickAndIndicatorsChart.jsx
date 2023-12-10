@@ -13,8 +13,8 @@ const CandlestickAndIndicatorsChart = ({
   const [indicators, setIndicators] = useState();
   const chartContainerId = `chart-container-${symbol}`;
 
-  const chartElRefs = [useRef(null), useRef(null), useRef(null)];
-  const chartRefs = [useRef(), useRef(), useRef()];
+  const chartElRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const chartRefs = [useRef(), useRef(), useRef(), useRef()];
 
   useEffect(() => {
     setStockData(formatCandleStickData(series));
@@ -25,24 +25,16 @@ const CandlestickAndIndicatorsChart = ({
   useEffect(() => {
     if (!stockData) return;
     const container = document.getElementById("responsive-chart");
-    console.log("HIIIIII");
-
     // Get the available width and height of the container
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
     const chartOptions = {
       width: containerWidth,
-      height: containerHeight / 6, // Divide height equally between two charts
+      height: containerHeight / 4, // Divide height equally between two charts
       layout: {
         textColor: "black",
         background: { type: "solid", color: "white" },
       },
-    };
-    const chart = createChart(chartContainerId, chartOptions);
-
-    // const chart2 = createChart(chartContainerId, chartOptions);
-
-    chart.applyOptions({
       rightPriceScale: {
         scaleMargins: {
           top: 0.4,
@@ -63,9 +55,9 @@ const CandlestickAndIndicatorsChart = ({
           visible: false,
         },
       },
-    });
+    };
 
-    // Add candlestick series
+    const chart = createChart(chartContainerId, chartOptions);
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(stockData);
     if (indicators) {
@@ -73,7 +65,11 @@ const CandlestickAndIndicatorsChart = ({
         return;
       }
       chartElRefs.forEach((cr, i) => {
-        chartRefs[i].current = createChart(cr.current, chartOptions);
+        if (indicators[i]?.pane === 0) chartRefs[i].current = chart;
+        else {
+          chartRefs[i].current = createChart(cr.current, chartOptions);
+        }
+
         indicators[i]?.lines.map((data) => {
           chartRefs[i].current
             ?.addLineSeries({
@@ -83,6 +79,7 @@ const CandlestickAndIndicatorsChart = ({
         });
       });
       const charts = chartRefs.map((c) => c.current);
+
       // sync charts
       charts.forEach((chart) => {
         if (!chart) {
@@ -111,92 +108,24 @@ const CandlestickAndIndicatorsChart = ({
         });
       });
     }
-    // if (indcators) {
-    //   const indcator_chart = chart2.addLineSeries({
-    //     pane: 1, // Set the pane for the indicator series
-    //   });
-    //   indcator_chart.setData(formatIndicatorkData(indcators));
-    // }
     addVolumeHistogram(chart, series);
     createTooltip(chartContainerId, chart, candlestickSeries);
-    // Sync Cahrts
-    // chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-    //   chart2.timeScale().setVisibleLogicalRange(range);
-    // });
-    // chart2.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-    //   chart.timeScale().setVisibleLogicalRange(range);
-    // });
 
     return () => {
-      chart.remove();
-      const charts = chartRefs.map((c) => c.current);
+      let removedPanes = new Set();
 
-      charts.map((chart) => chart.remove());
-      // chart2.remove();
+      const charts = chartRefs.map((c, index) => {
+        const chart = c.current;
+        let pane = indicators[index]?.pane;
+        if (chart && !removedPanes.has(pane)) {
+          removedPanes.add(pane);
+          chart.remove();
+        }
+        return chart;
+      });
+      removedPanes = new Set();
     };
   }, [symbol]);
-
-  const generateChart = async () => {
-    const chartOptions = {
-      layout: {
-        textColor: "black",
-        background: { type: "solid", color: "white" },
-      },
-    };
-    const chart = createChart(chartContainerId, {
-      timeScale: {
-        visible: false, // Hide the X-axis (time scale)
-      },
-    });
-    const chart2 = createChart(chartContainerId, chartOptions);
-    chart.applyOptions({
-      rightPriceScale: {
-        scaleMargins: {
-          top: 0.4, // leave some space for the legend
-          bottom: 0.15,
-        },
-      },
-      crosshair: {
-        // hide the horizontal crosshair line
-        horzLine: {
-          visible: true,
-          labelVisible: true,
-        },
-      },
-      // hide the grid lines
-      grid: {
-        vertLines: {
-          visible: false,
-        },
-        horzLines: {
-          visible: false,
-        },
-      },
-    });
-    const candlestickSeries = chart.addCandlestickSeries({
-      upColor: "#26a69a",
-      downColor: "#ef5350",
-      borderVisible: false,
-      wickUpColor: "#26a69a",
-      wickDownColor: "#ef5350",
-      pane: 1,
-    });
-
-    candlestickSeries.setData(stockData);
-
-    if (indcators) {
-      const indcator_chart = chart2.addLineSeries({
-        pane: 1, // Set the pane for the indicator series
-      });
-      indcator_chart.setData(formatIndicatorkData(await indcators));
-    }
-    addVolumeHistogram(chart, await series);
-    createTooltip(chartContainerId, chart, candlestickSeries);
-
-    return () => {
-      chart.remove();
-    };
-  };
 
   function createTooltip(chartContainerId, chart, series) {
     const container = document.getElementById(chartContainerId);
@@ -323,23 +252,22 @@ const CandlestickAndIndicatorsChart = ({
 
   return (
     <>
-      <div className="" id={chartContainerId} />
-      <div
-        style={{
-          // maxHeight: "100%",x
-          overflowY: "auto",
-        }}
-      >
-        {" "}
-        {chartElRefs.map((ref, i) => (
-          <div
-            ref={ref}
-            id={`chart_${i}`}
-            key={`chart_${i}`}
-            style={{ borderBottom: "1px solid transparent" }}
-          />
-        ))}
-      </div>
+      {series && indcators ? (
+        <>
+          {" "}
+          <div id={chartContainerId} />
+          {chartElRefs.map((ref, i) => (
+            <div
+              ref={ref}
+              id={`chart_${i}`}
+              key={`chart_${i}`}
+              style={{ borderBottom: "1px solid transparent" }}
+            />
+          ))}
+        </>
+      ) : (
+        <>loading</>
+      )}
     </>
   );
 };
