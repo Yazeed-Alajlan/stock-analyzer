@@ -13,47 +13,6 @@ const CandlestickAndIndicatorsChart = ({
 
   const chartContainerId = `chart-container-${symbol}`;
 
-  const chartElRefs = Array.from({ length: indicators?.length }, () =>
-    React.createRef(null)
-  );
-
-  const chartRefs = Array.from({ length: indicators?.length }, () =>
-    React.createRef()
-  );
-  let isChartRemoved = Array(indicators?.length).fill(false);
-
-  function removeChart(index, pane) {
-    chartRefs.forEach((chartRef, i) => {
-      if (index === i) {
-        if (!isChartRemoved[index] && chartRef.current) {
-          if (pane === 0) {
-            isChartRemoved[index] = true; // Update the flag to indicate removal
-
-            // chartRef.current.setData([]);
-          } else {
-            chartRef.current.remove();
-            isChartRemoved[index] = true; // Update the flag to indicate removal
-          }
-        }
-      }
-    });
-  }
-
-  function removeAllCharts() {
-    let removedPanes = new Set();
-    chartRefs.map((c, index) => {
-      const chart = c.current;
-      let pane = indicators[index]?.pane;
-      if (chart && !removedPanes.has(pane) && !isChartRemoved[index]) {
-        removedPanes.add(pane);
-        isChartRemoved[index] = true; // Update the flag to indicate removal
-
-        chart.remove();
-      }
-    });
-    isChartRemoved = Array(indicators?.length).fill(false);
-    removedPanes = new Set();
-  }
   useEffect(() => {
     if (!series || series == []) return;
 
@@ -64,7 +23,7 @@ const CandlestickAndIndicatorsChart = ({
     const chartOptions = {
       width: containerWidth,
       // height: containerHeight / indicators?.length, // Divide height equally between two charts
-      height: containerHeight / 4, // Divide height equally between two charts
+      height: containerHeight, // Divide height equally between two charts
       layout: {
         textColor: "black",
         background: { type: "solid", color: "white" },
@@ -95,57 +54,25 @@ const CandlestickAndIndicatorsChart = ({
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(formatCandleStickData(series));
     if (indicators) {
-      if (chartElRefs.find((r) => !r.current)) {
-        return;
-      }
-      chartElRefs.forEach((cr, i) => {
-        if (indicators[i]?.pane === 0) chartRefs[i].current = chart;
-        else {
-          chartRefs[i].current = createChart(cr.current, chartOptions);
-        }
+      indicators.forEach((indicator, index) => {
+        indicator.lines.map((data) => {
+          chart
+            .addLineSeries({
+              title: indicator.name,
 
-        indicators[i]?.lines.map((data) => {
-          chartRefs[i].current
-            ?.addLineSeries({
+              pane: indicator.pane,
               color: data.color,
             })
             .setData(formatIndicatorkData(Object.values(data)[0]));
         });
-      });
-      const charts = chartRefs.map((c) => c.current);
-
-      // sync charts
-      charts.forEach((chart) => {
-        if (!chart) {
-          return;
-        }
-        chart.timeScale().subscribeVisibleTimeRangeChange((e) => {
-          charts
-            .filter((c) => c !== chart)
-            .forEach((c) => {
-              c.timeScale().applyOptions({
-                rightOffset: chart.timeScale().scrollPosition(),
-              });
-            });
-        });
-        chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
-          if (range) {
-            charts
-              .filter((c) => c !== chart)
-              .forEach((c) => {
-                c.timeScale().setVisibleLogicalRange({
-                  from: range?.from,
-                  to: range?.to,
-                });
-              });
-          }
-        });
+        console.log(indicator.name);
       });
     }
+
     addVolumeHistogram(chart, series);
     createTooltip(chartContainerId, chart, candlestickSeries);
     return () => {
-      removeAllCharts();
+      chart.remove();
     };
   }, [symbol, selectedIndicators]);
 
@@ -272,8 +199,6 @@ const CandlestickAndIndicatorsChart = ({
     // .filter((data) => data !== null); // Filter out null values
   };
   const handleDelete = (name, pane, index) => {
-    removeChart(index, pane);
-
     const updatedIndicators = indicators.filter(
       (indicator) => indicator.name !== name
     );
@@ -286,14 +211,6 @@ const CandlestickAndIndicatorsChart = ({
         <>
           <Indicators indicators={indicators} onDelete={handleDelete} />
           <div id={chartContainerId} />
-          {chartElRefs.map((ref, i) => (
-            <div
-              ref={ref}
-              id={`chart_${i}`}
-              key={`chart_${i}`}
-              style={{ borderBottom: "1px solid transparent" }}
-            />
-          ))}
         </>
       ) : (
         <>loading</>
