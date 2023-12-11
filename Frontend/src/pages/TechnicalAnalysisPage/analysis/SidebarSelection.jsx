@@ -10,11 +10,13 @@ import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPattern
 import StockFilterSettingsModal from "components/utils/modals/StockFilterSettingsModal";
 import StocksTable from "./StocksTable";
 
-const SidebarSelection = ({ onRowClick }) => {
+const SidebarSelection = () => {
   const { stocksData } = useStocksData();
   const {
     filteredStocks,
     setFilteredStocks,
+    selectedStock,
+    setSelectedStock,
     consolidatingStocksFilter,
     japaneseCandlestickFilter,
   } = useTechnicalAnalysis();
@@ -63,7 +65,7 @@ const SidebarSelection = ({ onRowClick }) => {
   });
 
   const handleRowClick = (symbol) => {
-    onRowClick(symbol);
+    setSelectedStock(symbol);
   };
   useEffect(() => {
     if (filteredStocks) {

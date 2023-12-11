@@ -3,22 +3,18 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import SidebarSelection from "./SidebarSelection";
 
 import AdvancedChart from "./AdvancedChart";
+import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 
 const ResizableComponent = () => {
-  const [selectedSymbol, setSelectedSymbol] = useState("2222");
-
-  const handleRowClick = (symbol) => {
-    setSelectedSymbol(symbol);
-    // Do whatever you need with the selected symbol in the parent component
-  };
+  const { selectedStock } = useTechnicalAnalysis();
 
   return (
     <div>
       <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
         <Panel minSizePercentage={80}>
-          {selectedSymbol ? (
+          {selectedStock ? (
             <>
-              <AdvancedChart symbol={selectedSymbol} />
+              <AdvancedChart />
             </>
           ) : (
             <>SELECT STOCK</>
@@ -31,7 +27,7 @@ const ResizableComponent = () => {
           collapsedSizePixels={20}
           minSizePercentage={15}
         >
-          <SidebarSelection onRowClick={handleRowClick} />
+          <SidebarSelection />
         </Panel>
       </PanelGroup>
     </div>

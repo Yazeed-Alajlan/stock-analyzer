@@ -10,10 +10,10 @@ import {
 import { TbX, TbSearch, TbHome } from "react-icons/tb";
 import { useStocksData } from "contexts/StocksDataContext";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
-import { CustomCard } from "components/utils/cards/CustomCard";
 import { useNavigate } from "react-router-dom";
+import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 
-const AdvancedChart = ({ symbol }) => {
+const AdvancedChart = () => {
   const navigate = useNavigate();
 
   const tabs = [
@@ -27,65 +27,65 @@ const AdvancedChart = ({ symbol }) => {
     { id: 4, name: "Tab 4", to: `` },
   ];
   const [stockPriceData, setStockPriceData] = useState();
-  const [selectedIndicators, setSelectedIndicators] = useState();
   const { getStockPriceData, getIndicatorData } = useStocksData();
+  const { selectedStock, selectedIndicators, setSelectedIndicators } =
+    useTechnicalAnalysis();
   // Dummy data for the select options
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        if (symbol) {
+        if (selectedStock) {
           const indicators = [
             {
-              name: "macd",
+              name: "pane0-a",
+              pane: 0,
+              lines: [
+                {
+                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  color: "#fff",
+                },
+                {
+                  ema_21: await getIndicatorData(selectedStock, "vsa"),
+                  color: "#bbb",
+                },
+              ],
+            },
+
+            {
+              name: "pane0",
 
               pane: 0,
               lines: [
                 {
-                  vas: await getIndicatorData(symbol, "vsa"),
-                  color: "#BF5733",
-                },
-                {
-                  ema_21: await getIndicatorData(symbol, "vsa"),
-                  color: "#000",
-                },
-              ],
-            },
-            {
-              name: "macd",
-
-              pane: 0,
-              lines: [
-                {
-                  vas: await getIndicatorData(symbol, "vsa"),
-                  color: "#ccaa44",
-                },
-              ],
-            },
-
-            {
-              name: "vsa",
-              pane: 1,
-              lines: [
-                {
-                  vas: await getIndicatorData(symbol, "vsa"),
-                  color: "#ccaa44",
-                },
-              ],
-            },
-            {
-              name: "vsa",
-              pane: 2,
-              lines: [
-                {
-                  vas: await getIndicatorData(symbol, "vsa"),
+                  vas: await getIndicatorData(selectedStock, "vsa"),
                   color: "#ccc",
                 },
               ],
             },
+
+            {
+              name: "pane1",
+              pane: 1,
+              lines: [
+                {
+                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  color: "#009999",
+                },
+              ],
+            },
+            {
+              name: "pane2",
+              pane: 2,
+              lines: [
+                {
+                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  color: "#ff0000",
+                },
+              ],
+            },
           ];
-          setStockPriceData(await getStockPriceData(symbol));
+          setStockPriceData(await getStockPriceData(selectedStock));
           setSelectedIndicators(indicators);
-          console.log(await getIndicatorData(symbol, "vsa"));
         }
       } catch (error) {
         // Handle any errors if the promise rejects
@@ -94,7 +94,7 @@ const AdvancedChart = ({ symbol }) => {
     };
 
     fetchStockData();
-  }, [symbol]);
+  }, [selectedStock]);
   return (
     <div className="d-flex flex-column" style={{ height: "100vh" }}>
       <Toolbar>
@@ -102,7 +102,6 @@ const AdvancedChart = ({ symbol }) => {
           icon={TbHome}
           hoverText="Home"
           onClick={() => {
-            console.log("hi");
             navigate("/");
           }}
         />
@@ -117,7 +116,7 @@ const AdvancedChart = ({ symbol }) => {
         <ModalTool
           icon={TbSearch}
           hoverText="Modal"
-          text={symbol}
+          text={selectedStock}
           title={"Search"}
         >
           <div> aksdkadlsdksdlak</div>
@@ -135,8 +134,9 @@ const AdvancedChart = ({ symbol }) => {
       <div id="responsive-chart" className="h-100">
         <CandlestickAndIndicatorsChart
           series={stockPriceData}
-          indcators={selectedIndicators}
-          symbol={symbol}
+          indicators={selectedIndicators}
+          selectedStock={selectedStock}
+          symbol={selectedStock}
         />
       </div>
 

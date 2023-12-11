@@ -9,6 +9,8 @@ export function useTechnicalAnalysis() {
 
 export function TechnicalAnalysisProvider({ children }) {
   const [filteredStocks, setFilteredStocks] = useState();
+  const [selectedIndicators, setSelectedIndicators] = useState();
+  const [selectedStock, setSelectedStock] = useState();
 
   async function consolidatingStocksFilter({
     numberOfCandles,
@@ -46,6 +48,10 @@ export function TechnicalAnalysisProvider({ children }) {
     setFilteredStocks,
     consolidatingStocksFilter,
     japaneseCandlestickFilter,
+    selectedIndicators,
+    setSelectedIndicators,
+    selectedStock,
+    setSelectedStock,
   };
 
   return (

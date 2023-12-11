@@ -1,35 +1,69 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
-import { Container } from "react-bootstrap";
-import CompnentLayout from "components/CompnentLayout";
+import Indicators from "./Indicators";
+import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 
 const CandlestickAndIndicatorsChart = ({
   series,
   symbol,
-  indcators,
+  indicators,
   drawLines,
 }) => {
-  const [stockData, setStockData] = useState();
-  const [indicators, setIndicators] = useState();
+  const { selectedIndicators, setSelectedIndicators } = useTechnicalAnalysis();
+
   const chartContainerId = `chart-container-${symbol}`;
 
-  const chartElRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
-  const chartRefs = [useRef(), useRef(), useRef(), useRef()];
+  const chartElRefs = Array.from({ length: indicators?.length }, () =>
+    React.createRef(null)
+  );
 
-  useEffect(() => {
-    setStockData(formatCandleStickData(series));
-    setIndicators(indcators);
-    // setIndicators(formatIndicatorkData(indcators));
-  }, [series, symbol]);
+  const chartRefs = Array.from({ length: indicators?.length }, () =>
+    React.createRef()
+  );
+  let isChartRemoved = Array(indicators?.length).fill(false);
 
+  function removeChart(index, pane) {
+    chartRefs.forEach((chartRef, i) => {
+      if (index === i) {
+        if (!isChartRemoved[index] && chartRef.current) {
+          if (pane === 0) {
+            isChartRemoved[index] = true; // Update the flag to indicate removal
+
+            // chartRef.current.setData([]);
+          } else {
+            chartRef.current.remove();
+            isChartRemoved[index] = true; // Update the flag to indicate removal
+          }
+        }
+      }
+    });
+  }
+
+  function removeAllCharts() {
+    let removedPanes = new Set();
+    chartRefs.map((c, index) => {
+      const chart = c.current;
+      let pane = indicators[index]?.pane;
+      if (chart && !removedPanes.has(pane) && !isChartRemoved[index]) {
+        removedPanes.add(pane);
+        isChartRemoved[index] = true; // Update the flag to indicate removal
+
+        chart.remove();
+      }
+    });
+    isChartRemoved = Array(indicators?.length).fill(false);
+    removedPanes = new Set();
+  }
   useEffect(() => {
-    if (!stockData) return;
+    if (!series || series == []) return;
+
     const container = document.getElementById("responsive-chart");
     // Get the available width and height of the container
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
     const chartOptions = {
       width: containerWidth,
+      // height: containerHeight / indicators?.length, // Divide height equally between two charts
       height: containerHeight / 4, // Divide height equally between two charts
       layout: {
         textColor: "black",
@@ -59,7 +93,7 @@ const CandlestickAndIndicatorsChart = ({
 
     const chart = createChart(chartContainerId, chartOptions);
     const candlestickSeries = chart.addCandlestickSeries();
-    candlestickSeries.setData(stockData);
+    candlestickSeries.setData(formatCandleStickData(series));
     if (indicators) {
       if (chartElRefs.find((r) => !r.current)) {
         return;
@@ -110,22 +144,10 @@ const CandlestickAndIndicatorsChart = ({
     }
     addVolumeHistogram(chart, series);
     createTooltip(chartContainerId, chart, candlestickSeries);
-
     return () => {
-      let removedPanes = new Set();
-
-      const charts = chartRefs.map((c, index) => {
-        const chart = c.current;
-        let pane = indicators[index]?.pane;
-        if (chart && !removedPanes.has(pane)) {
-          removedPanes.add(pane);
-          chart.remove();
-        }
-        return chart;
-      });
-      removedPanes = new Set();
+      removeAllCharts();
     };
-  }, [symbol]);
+  }, [symbol, selectedIndicators]);
 
   function createTooltip(chartContainerId, chart, series) {
     const container = document.getElementById(chartContainerId);
@@ -249,12 +271,20 @@ const CandlestickAndIndicatorsChart = ({
     }));
     // .filter((data) => data !== null); // Filter out null values
   };
+  const handleDelete = (name, pane, index) => {
+    removeChart(index, pane);
 
+    const updatedIndicators = indicators.filter(
+      (indicator) => indicator.name !== name
+    );
+    console.log(updatedIndicators);
+    setSelectedIndicators(updatedIndicators);
+  };
   return (
     <>
-      {series && indcators ? (
+      {series && indicators ? (
         <>
-          {" "}
+          <Indicators indicators={indicators} onDelete={handleDelete} />
           <div id={chartContainerId} />
           {chartElRefs.map((ref, i) => (
             <div
