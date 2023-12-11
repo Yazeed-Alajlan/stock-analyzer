@@ -140,7 +140,7 @@ const AdvancedChart = () => {
         />
       </div>
 
-      {/* <SelectionTabs tabs={tabs} /> */}
+      <SelectionTabs tabs={tabs} />
     </div>
   );
 };
