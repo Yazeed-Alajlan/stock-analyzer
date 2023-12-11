@@ -131,7 +131,7 @@ const AdvancedChart = () => {
           ]}
         />
       </Toolbar>
-      <div id="responsive-chart" className="h-75">
+      <div id="responsive-chart" className="h-100">
         <CandlestickAndIndicatorsChart
           series={stockPriceData}
           indicators={selectedIndicators}
