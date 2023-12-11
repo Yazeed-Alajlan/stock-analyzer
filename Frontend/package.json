@@ -16,7 +16,7 @@
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "framer-motion": "^10.12.16",
-    "lightweight-charts": "^4.0.1",
+    "lightweight-charts": "git+https://github.com/ntf/lightweight-charts.git",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
