@@ -15,6 +15,7 @@ export default function SelectToolbar({
   hoverText,
   showSearch,
   showValueAsText,
+  onSelectFunction,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
@@ -33,6 +34,7 @@ export default function SelectToolbar({
 
   const handleSelectChange = (newValue) => {
     setSelectedValue(newValue);
+    onSelectFunction();
     setIsOpen(false);
   };
 
@@ -55,7 +57,8 @@ export default function SelectToolbar({
         >
           {text}
           {Icon && <Icon />}
-          {selectedValue ? selectedValue.label : "Select a State"}
+          {"Indicators"}
+          {/* {selectedValue ? selectedValue.label : "Select a State"} */}
         </Dropdown.Toggle>
       </OverlayTrigger>
       <Dropdown.Menu>

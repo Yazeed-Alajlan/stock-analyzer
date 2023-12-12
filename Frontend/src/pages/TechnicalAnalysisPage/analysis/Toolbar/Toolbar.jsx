@@ -42,11 +42,16 @@ const SelectTool = ({
   options,
   defaultValue,
   children,
+  onSelectFunction,
 }) => {
   return (
     <span>
       {/* <Tool icon={icon} hoverText={hoverText} onClick={onClick} text={text} /> */}
-      <SelectToolbar options={options} defaultValue={defaultValue} />
+      <SelectToolbar
+        options={options}
+        defaultValue={defaultValue}
+        onSelectFunction={onSelectFunction}
+      />
       {children}
     </span>
   );

@@ -129,6 +129,9 @@ const AdvancedChart = () => {
             { value: "ca", label: "California" },
             { value: "tx", label: "Texas" },
           ]}
+          onSelectFunction={() => {
+            console.log("hahaha");
+          }}
         />
       </Toolbar>
       <div id="responsive-chart" className="h-100 ">
