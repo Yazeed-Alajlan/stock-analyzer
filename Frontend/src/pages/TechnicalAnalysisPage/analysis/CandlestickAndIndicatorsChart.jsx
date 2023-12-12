@@ -209,8 +209,11 @@ const CandlestickAndIndicatorsChart = ({
     <>
       {series && indicators ? (
         <>
-          <Indicators indicators={indicators} onDelete={handleDelete} />
-          <div id={chartContainerId} />
+          <div className="position-relative" id={chartContainerId}>
+            <span className="position-absolute z-3 top-0 start-0 mx-5">
+              <Indicators indicators={indicators} onDelete={handleDelete} />
+            </span>
+          </div>
         </>
       ) : (
         <>loading</>
