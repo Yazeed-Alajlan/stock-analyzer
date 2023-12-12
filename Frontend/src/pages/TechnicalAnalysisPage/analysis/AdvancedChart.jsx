@@ -37,7 +37,7 @@ const AdvancedChart = () => {
         if (selectedStock) {
           const indicators = [
             {
-              name: "SMA-EMA-PANE0",
+              name: "SMA-EMA",
               pane: 0,
               lines: [
                 {
