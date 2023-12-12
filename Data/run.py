@@ -6,9 +6,9 @@ from scripts.Files.TechnicalAnalysisAutomation.flags_pennants import *
 # from scripts.moving_average.main import *
 from database.main import *
 #------------------------------------------------------------------------------#
-import pandas as pd
+import talib
+
 import flask 
-import yfinance as yf
 
 app = flask.Flask(__name__)
 
@@ -99,6 +99,37 @@ def vsa():
     
     data.index = data.index.strftime('%Y-%m-%d')
     data=data.fillna(0)
+    return data.to_json()
+
+
+
+
+def calculate_indicator(stock_data, indicator, *args, **kwargs):
+    close_prices = stock_data['close']
+    
+    try:
+        # Dynamically call the TA-Lib function based on the indicator name
+        indicator_function = getattr(talib, indicator)
+        
+        # Calculate the indicator based on the provided arguments
+        result = indicator_function(*args, **kwargs, real=close_prices)
+        return result
+    except AttributeError:
+        print("Indicator not found or supported by TA-Lib.")
+        return None
+
+@app.route("/api/stocks/<symbol>/indicators/<indicator>")
+def indicators(symbol,indicator):
+    print(symbol)
+    print("---------------------------------------------------")
+    print(indicator)
+    stock_data=get_price_data(symbol) 
+    data=calculate_indicator(stock_data,indicator,timeperiod=50)        
+    data=data.fillna(0)
+
+    data.index = data.index.strftime('%Y-%m-%d')
+    print(data)
+
     return data.to_json()
 
 

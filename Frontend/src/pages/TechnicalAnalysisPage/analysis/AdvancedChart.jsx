@@ -37,48 +37,48 @@ const AdvancedChart = () => {
         if (selectedStock) {
           const indicators = [
             {
-              name: "pane0-a",
+              name: "SMA-EMA-PANE0",
               pane: 0,
               lines: [
                 {
-                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  vas: await getIndicatorData(selectedStock, "SMA"),
                   color: "#fff",
                 },
                 {
-                  ema_21: await getIndicatorData(selectedStock, "vsa"),
+                  ema_21: await getIndicatorData(selectedStock, "EMA"),
                   color: "#bbb",
                 },
               ],
             },
 
             {
-              name: "pane0",
+              name: "SMA",
 
               pane: 0,
               lines: [
                 {
-                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  vas: await getIndicatorData(selectedStock, "SMA"),
                   color: "#ccc",
                 },
               ],
             },
 
             {
-              name: "pane1",
+              name: "EMA",
               pane: 1,
               lines: [
                 {
-                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  vas: await getIndicatorData(selectedStock, "EMA"),
                   color: "#009999",
                 },
               ],
             },
             {
-              name: "pane2",
+              name: "EMA",
               pane: 2,
               lines: [
                 {
-                  vas: await getIndicatorData(selectedStock, "vsa"),
+                  vas: await getIndicatorData(selectedStock, "EMA"),
                   color: "#ff0000",
                 },
               ],
