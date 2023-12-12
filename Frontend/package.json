@@ -34,7 +34,9 @@
     "yahoo-finance": "^0.3.8",
     "yahoo-finance2": "^2.4.1",
     "eslint": "^8.55.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "lightweight-charts": "git+https://github.com/ntf/lightweight-charts.git"
+
   },
   "scripts": {
     "start": "react-scripts start",
