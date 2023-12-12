@@ -5,6 +5,11 @@ import { TbX, TbSettings } from "react-icons/tb";
 
 const Indicators = ({ indicators, onDelete }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
+  console.log(indicators);
+  // Check if indicators exist and are not empty
+  if (!indicators || indicators.length === 0) {
+    return <></>; // Display a message or a default component
+  }
 
   return (
     <div className=" d-flex flex-column align-items-start">

@@ -70,7 +70,7 @@ const CandlestickAndIndicatorsChart = ({
     }
 
     addVolumeHistogram(chart, series);
-    createTooltip(chartContainerId, chart, candlestickSeries);
+    // createTooltip(chartContainerId, chart, candlestickSeries);
     return () => {
       chart.remove();
     };
@@ -202,12 +202,11 @@ const CandlestickAndIndicatorsChart = ({
     const updatedIndicators = indicators.filter(
       (indicator) => indicator.name !== name
     );
-    console.log(updatedIndicators);
     setSelectedIndicators(updatedIndicators);
   };
   return (
     <>
-      {series && indicators ? (
+      {series ? (
         <>
           <div className="position-relative" id={chartContainerId}>
             <span className="position-absolute z-3 top-0 start-0 mx-5">

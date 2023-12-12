@@ -9,7 +9,7 @@ export function useTechnicalAnalysis() {
 
 export function TechnicalAnalysisProvider({ children }) {
   const [filteredStocks, setFilteredStocks] = useState();
-  const [selectedIndicators, setSelectedIndicators] = useState();
+  const [selectedIndicators, setSelectedIndicators] = useState([]);
   const [selectedStock, setSelectedStock] = useState();
 
   async function consolidatingStocksFilter({

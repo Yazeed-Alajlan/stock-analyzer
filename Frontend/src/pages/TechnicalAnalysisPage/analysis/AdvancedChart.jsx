@@ -34,58 +34,31 @@ const AdvancedChart = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
+        // if (selectedStock) {
+        //   setStockPriceData(await getStockPriceData(selectedStock));
+        //   setSelectedIndicators([]);
+        // }
         if (selectedStock) {
-          const indicators = [
-            {
-              name: "SMA-EMA",
-              pane: 0,
-              lines: [
-                {
-                  vas: await getIndicatorData(selectedStock, "SMA"),
-                  color: "#fff",
-                },
-                {
-                  ema_21: await getIndicatorData(selectedStock, "EMA"),
-                  color: "#bbb",
-                },
-              ],
-            },
-
-            {
-              name: "SMA",
-
-              pane: 0,
-              lines: [
-                {
-                  vas: await getIndicatorData(selectedStock, "SMA"),
-                  color: "#ccc",
-                },
-              ],
-            },
-
-            {
-              name: "EMA",
-              pane: 1,
-              lines: [
-                {
-                  vas: await getIndicatorData(selectedStock, "EMA"),
-                  color: "#009999",
-                },
-              ],
-            },
-            {
-              name: "EMA",
-              pane: 2,
-              lines: [
-                {
-                  vas: await getIndicatorData(selectedStock, "EMA"),
-                  color: "#ff0000",
-                },
-              ],
-            },
-          ];
           setStockPriceData(await getStockPriceData(selectedStock));
-          setSelectedIndicators(indicators);
+
+          // Update indicators for the new selectedStock
+          const updatedIndicators = await Promise.all(
+            selectedIndicators.map(async (indicator) => {
+              const newData = await getIndicatorData(
+                selectedStock,
+                indicator.name
+              );
+              return {
+                ...indicator,
+                lines: [
+                  {
+                    [indicator.name]: newData,
+                  },
+                ],
+              };
+            })
+          );
+          setSelectedIndicators(updatedIndicators);
         }
       } catch (error) {
         // Handle any errors if the promise rejects
@@ -125,12 +98,29 @@ const AdvancedChart = () => {
 
         <SelectTool
           options={[
-            { value: "ny", label: "New York" },
-            { value: "ca", label: "California" },
-            { value: "tx", label: "Texas" },
+            { value: "EMA", label: "Exponential Moving Average" },
+            { value: "SMA", label: "Simple Moving Average" },
           ]}
-          onSelectFunction={() => {
-            console.log("hahaha");
+          onSelectFunction={async (value) => {
+            console.log("hi");
+            console.log(value);
+            const newIndicator = {
+              name: value.value,
+              pane: 0, // Assuming pane value increments for each new indicator
+              lines: [
+                {
+                  [value.value]: await getIndicatorData(
+                    selectedStock,
+                    value.value
+                  ),
+                },
+              ],
+            };
+            console.log(newIndicator);
+            setSelectedIndicators((prevIndicators) => [
+              ...prevIndicators,
+              newIndicator,
+            ]);
           }}
         />
       </Toolbar>

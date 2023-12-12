@@ -34,7 +34,7 @@ export default function SelectToolbar({
 
   const handleSelectChange = (newValue) => {
     setSelectedValue(newValue);
-    onSelectFunction();
+    onSelectFunction(newValue);
     setIsOpen(false);
   };
 
