@@ -37,7 +37,7 @@ const AdvancedChart = () => {
               const newData = await getIndicatorData(
                 selectedStock,
                 indicator.name,
-                200
+                14
               );
               return {
                 ...indicator,
@@ -91,6 +91,8 @@ const AdvancedChart = () => {
           options={[
             { value: "EMA", label: "Exponential Moving Average" },
             { value: "SMA", label: "Simple Moving Average" },
+            { value: "RSI", label: "Simple Moving Average" },
+            { value: "MACD", label: "Simple Moving Average" },
           ]}
           onSelectFunction={async (value) => {
             console.log("hi");
@@ -103,7 +105,7 @@ const AdvancedChart = () => {
                   [value.value]: await getIndicatorData(
                     selectedStock,
                     value.value,
-                    100
+                    14
                   ),
                 },
               ],

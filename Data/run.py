@@ -142,7 +142,6 @@ def calculate_requested_indicators(stock_data, indicators_list, period=None):
     }
     
     # Calculate the requested indicators based on the user input
-    indicators_data = {}
     for indicator_name in indicators_list:
             indicator_func = getattr(talib, indicator_name)
             indicator_info_data = indicator_info.get(indicator_name, {})
@@ -152,31 +151,11 @@ def calculate_requested_indicators(stock_data, indicators_list, period=None):
                 indicator_default_period = indicator_info_data.get('default_period')
             else:
                 indicator_default_period = period
-
-            # # Check if the indicator function requires a period (timeperiod)
-            # args = inspect.getfullargspec(indicator_func).args
-            # if 'timeperiod' in args:
-            #     if indicator_default_period is None:
-            #         raise ValueError(f"Period required for {indicator_name} calculation")
-            #     indicator_values = indicator_func(close_prices, timeperiod=indicator_default_period)
-            # else:
             indicator_values = indicator_func(close_prices,indicator_default_period)
 
     return indicator_values
 
-def calculate_indicator(stock_data, indicator, *args, **kwargs):
-    close_prices = stock_data['close']
-    
-    try:
-        # Dynamically call the TA-Lib function based on the indicator name
-        indicator_function = getattr(talib, indicator)
-        
-        # Calculate the indicator based on the provided arguments
-        result = indicator_function(*args, **kwargs, real=close_prices)
-        return result
-    except AttributeError:
-        print("Indicator not found or supported by TA-Lib.")
-        return None
+
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
@@ -184,13 +163,41 @@ def indicators(symbol,indicator):
     print(period)
     stock_data=get_price_data(symbol)
     data=calculate_requested_indicators(stock_data,[indicator],int(period))
-    # data=calculate_indicator(stock_data,indicator,timeperiod=10)        
-    data=data.fillna(0)
+    if isinstance(data, tuple):  # Check if data is a tuple
+        result_dict = {}
+        for index, series in enumerate(data):
+            # Fill NaN values with 0
+            series = series.fillna(0)
+            # Convert index to '%Y-%m-%d' format
+            series.index = series.index.strftime('%Y-%m-%d')
+            # Add to the dictionary
+            result_dict[f"series_{index + 1}"] = series
+        # print(result_dict)
+        # data=calculate_requested_indicators(stock_data,["SMA"],100)
+        # data=data.fillna(0)
+        # data.index = data.index.strftime('%Y-%m-%d')
+        # print("TUPLE!!!")
+        return result_dict
+    else:
+        print(type(data))
+        data=data.fillna(0)
+        data.index = data.index.strftime('%Y-%m-%d')
+        return data.to_json()
 
-    data.index = data.index.strftime('%Y-%m-%d')
-    print(data)
-
-    return data.to_json()
+    # if isinstance(data, dict):  # Check if data is a dictionary
+    #     if indicator in data:
+    #         selected_data = data[indicator]
+    #     else:
+    #         return flask.jsonify({"error": f"Indicator '{indicator}' not found"})
+    # else:
+    #     selected_data = data  # If not a dictionary, assume it's the required indicator data
+    
+    # if isinstance(selected_data, pd.DataFrame):  # Check if selected_data is a DataFrame
+    #     selected_data = selected_data.fillna(0)
+    #     selected_data.index = selected_data.index.strftime('%Y-%m-%d')
+    #     return selected_data.to_json()
+    # else:
+    #     return flask.jsonify({"error": "Invalid data format"})
 
 
 
