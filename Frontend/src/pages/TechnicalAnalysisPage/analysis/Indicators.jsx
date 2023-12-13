@@ -12,11 +12,11 @@ const Indicators = ({ indicators, onDelete }) => {
   }
 
   return (
-    <div className=" d-flex flex-column align-items-start">
+    <div className=" d-flex flex-column align-items-start ">
       {indicators.map((indicator, index) => (
         <div
           key={index}
-          className={`d-inline-flex align-items-center  border ${
+          className={`d-inline-flex flex-row-reverse gap-2 align-items-center  border ${
             hoverIndex === index ? "border-primary" : "border-transparent "
           } rounded p-2`}
           onMouseEnter={() => setHoverIndex(index)}

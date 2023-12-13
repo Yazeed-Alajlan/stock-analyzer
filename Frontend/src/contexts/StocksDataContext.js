@@ -60,11 +60,12 @@ export function StocksDataProvider({ children }) {
 
     return response.data;
   }
-  async function getIndicatorData(symbol, indicator) {
+  async function getIndicatorData(symbol, indicator, period) {
     let response;
+    console.log(period);
     try {
       response = await axios.get(
-        `http://localhost:5000/python-api/${symbol}/indicators/${indicator}`
+        `http://localhost:5000/python-api/${symbol}/indicators/${indicator}?period=${period}`
       );
       // console.log(response.data);
     } catch (error) {

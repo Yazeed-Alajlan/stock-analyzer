@@ -16,16 +16,6 @@ import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 const AdvancedChart = () => {
   const navigate = useNavigate();
 
-  const tabs = [
-    {
-      id: 1,
-      name: "معلومات السهم",
-      to: ``,
-    },
-    { id: 2, name: "Tab 2", to: "" },
-    { id: 3, name: "Tab 3", to: "" },
-    { id: 4, name: "Tab 4", to: `` },
-  ];
   const [stockPriceData, setStockPriceData] = useState();
   const { getStockPriceData, getIndicatorData } = useStocksData();
   const { selectedStock, selectedIndicators, setSelectedIndicators } =
@@ -46,7 +36,8 @@ const AdvancedChart = () => {
             selectedIndicators.map(async (indicator) => {
               const newData = await getIndicatorData(
                 selectedStock,
-                indicator.name
+                indicator.name,
+                200
               );
               return {
                 ...indicator,
@@ -111,7 +102,8 @@ const AdvancedChart = () => {
                 {
                   [value.value]: await getIndicatorData(
                     selectedStock,
-                    value.value
+                    value.value,
+                    100
                   ),
                 },
               ],
@@ -132,8 +124,6 @@ const AdvancedChart = () => {
           symbol={selectedStock}
         />
       </div>
-
-      {/* <SelectionTabs tabs={tabs} /> */}
     </div>
   );
 };

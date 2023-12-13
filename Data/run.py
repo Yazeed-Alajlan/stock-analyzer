@@ -9,6 +9,8 @@ from database.main import *
 import talib
 
 import flask 
+import inspect
+
 
 app = flask.Flask(__name__)
 
@@ -102,7 +104,65 @@ def vsa():
     return data.to_json()
 
 
+import talib
 
+indicator_info = {
+    'SMA': {'name': 'Simple Moving Average', 'default_period': 20},
+    'EMA': {'name': 'Exponential Moving Average', 'default_period': 14},
+    'WMA': {'name': 'Weighted Moving Average', 'default_period': None},  # No default period specified
+    'RSI': {'name': 'Relative Strength Index', 'default_period': 14},
+    'MACD': {'name': 'Moving Average Convergence Divergence', 'default_period': None},  # No default period specified
+    'STOCH': {'name': 'Stochastic Oscillator', 'default_period': None},  # No default period specified
+    'ADX': {'name': 'Average Directional Movement Index', 'default_period': 14},
+    'ATR': {'name': 'Average True Range', 'default_period': 14},
+    # Add more indicators with names and default periods
+    'CUSTOM_INDICATOR_1': {'name': 'Custom Indicator 1', 'default_period': None},
+    'CUSTOM_INDICATOR_2': {'name': 'Custom Indicator 2', 'default_period': None},
+    'DEFAULT_INDICATOR': {'name': 'Default Indicator Name', 'default_period': None},
+}
+
+
+
+import talib
+
+def calculate_requested_indicators(stock_data, indicators_list, period=None):
+    # Fetch historical data for the symbol (assuming stock_data contains 'close' prices)
+    close_prices = stock_data['close']
+
+    indicator_info = {
+        'SMA': {'name': 'Simple Moving Average', 'default_period': 4},
+        'EMA': {'name': 'Exponential Moving Average', 'default_period': 10},
+        'WMA': {'name': 'Weighted Moving Average', 'default_period': None},  # No default period specified
+        'RSI': {'name': 'Relative Strength Index', 'default_period': 14},
+        'MACD': {'name': 'Moving Average Convergence Divergence', 'default_period': None},  # No default period specified
+        'STOCH': {'name': 'Stochastic Oscillator', 'default_period': None},  # No default period specified
+        'ADX': {'name': 'Average Directional Movement Index', 'default_period': 14},
+        'ATR': {'name': 'Average True Range', 'default_period': 14},
+        # Add more indicators with names and default periods
+    }
+    
+    # Calculate the requested indicators based on the user input
+    indicators_data = {}
+    for indicator_name in indicators_list:
+            indicator_func = getattr(talib, indicator_name)
+            indicator_info_data = indicator_info.get(indicator_name, {})
+            
+            # Set the default period if not provided by the user
+            if period is None:
+                indicator_default_period = indicator_info_data.get('default_period')
+            else:
+                indicator_default_period = period
+
+            # # Check if the indicator function requires a period (timeperiod)
+            # args = inspect.getfullargspec(indicator_func).args
+            # if 'timeperiod' in args:
+            #     if indicator_default_period is None:
+            #         raise ValueError(f"Period required for {indicator_name} calculation")
+            #     indicator_values = indicator_func(close_prices, timeperiod=indicator_default_period)
+            # else:
+            indicator_values = indicator_func(close_prices,indicator_default_period)
+
+    return indicator_values
 
 def calculate_indicator(stock_data, indicator, *args, **kwargs):
     close_prices = stock_data['close']
@@ -120,11 +180,11 @@ def calculate_indicator(stock_data, indicator, *args, **kwargs):
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
-    print(symbol)
-    print("---------------------------------------------------")
-    print(indicator)
-    stock_data=get_price_data(symbol) 
-    data=calculate_indicator(stock_data,indicator,timeperiod=50)        
+    period = flask.request.args.get("period")
+    print(period)
+    stock_data=get_price_data(symbol)
+    data=calculate_requested_indicators(stock_data,[indicator],int(period))
+    # data=calculate_indicator(stock_data,indicator,timeperiod=10)        
     data=data.fillna(0)
 
     data.index = data.index.strftime('%Y-%m-%d')
