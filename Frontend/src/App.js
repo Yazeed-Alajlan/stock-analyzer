@@ -38,7 +38,7 @@ function App() {
   return (
     <Container
       fluid
-      className="bg-light p-0"
+      className="bg-light p-0 dark-theme"
       style={{ minHeight: "100vh", width: "100%" }}
       dir="rtl"
     >

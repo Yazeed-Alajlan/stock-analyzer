@@ -91,21 +91,19 @@ const AdvancedChart = () => {
           options={[
             { value: "EMA", label: "Exponential Moving Average" },
             { value: "SMA", label: "Simple Moving Average" },
-            { value: "RSI", label: "Simple Moving Average" },
-            { value: "MACD", label: "Simple Moving Average" },
+            { value: "RSI", label: "Relative Strength Index" },
+            // { value: "MACD", label: "Moving average convergence/divergence " },
           ]}
-          onSelectFunction={async (value) => {
-            console.log("hi");
-            console.log(value);
+          onSelectFunction={async (indicatorName) => {
+            console.log(indicatorName);
             const newIndicator = {
-              name: value.value,
-              pane: 0, // Assuming pane value increments for each new indicator
+              name: indicatorName,
+              pane: 1, // Assuming pane value increments for each new indicator
               lines: [
                 {
-                  [value.value]: await getIndicatorData(
+                  [indicatorName]: await getIndicatorData(
                     selectedStock,
-                    value.value,
-                    14
+                    indicatorName
                   ),
                 },
               ],
@@ -131,3 +129,53 @@ const AdvancedChart = () => {
 };
 
 export default AdvancedChart;
+
+//  const indicators = [
+//    {
+//      name: "SMA-EMA",
+//      pane: 0,
+//      lines: [
+//        {
+//          vas: await getIndicatorData(selectedStock, "SMA"),
+//          color: "#fff",
+//        },
+//        {
+//          ema_21: await getIndicatorData(selectedStock, "EMA"),
+//          color: "#bbb",
+//        },
+//      ],
+//    },
+
+//    {
+//      name: "SMA",
+
+//      pane: 0,
+//      lines: [
+//        {
+//          vas: await getIndicatorData(selectedStock, "SMA"),
+//          color: "#ccc",
+//        },
+//      ],
+//    },
+
+//    {
+//      name: "EMA",
+//      pane: 1,
+//      lines: [
+//        {
+//          vas: await getIndicatorData(selectedStock, "EMA"),
+//          color: "#009999",
+//        },
+//      ],
+//    },
+//    {
+//      name: "EMA",
+//      pane: 2,
+//      lines: [
+//        {
+//          vas: await getIndicatorData(selectedStock, "EMA"),
+//          color: "#ff0000",
+//        },
+//      ],
+//    },
+//  ];

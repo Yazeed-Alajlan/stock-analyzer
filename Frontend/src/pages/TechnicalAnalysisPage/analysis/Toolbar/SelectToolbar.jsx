@@ -32,9 +32,10 @@ export default function SelectToolbar({
     }
   }, [options, defaultValue, value]);
 
-  const handleSelectChange = (newValue) => {
-    setSelectedValue(newValue);
-    onSelectFunction(newValue);
+  const handleSelectChange = (indicatorName) => {
+    setSelectedValue(indicatorName);
+    console.log(indicatorName.value);
+    onSelectFunction(indicatorName.value);
     setIsOpen(false);
   };
 

@@ -149,56 +149,41 @@ def calculate_requested_indicators(stock_data, indicators_list, period=None):
             # Set the default period if not provided by the user
             if period is None:
                 indicator_default_period = indicator_info_data.get('default_period')
+                if indicator_default_period is None:
+                    indicator_values = indicator_func(close_prices)
+                    print(indicator_func(close_prices))
+                else:
+                    indicator_values = indicator_func(close_prices,indicator_default_period)
+
             else:
-                indicator_default_period = period
-            indicator_values = indicator_func(close_prices,indicator_default_period)
+                indicator_values = indicator_func(close_prices,indicator_default_period)
 
     return indicator_values
-
 
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
     period = flask.request.args.get("period")
-    print(period)
-    stock_data=get_price_data(symbol)
-    data=calculate_requested_indicators(stock_data,[indicator],int(period))
+    stock_data = get_price_data(symbol)
+    if period =="undefined":
+        data = calculate_requested_indicators(stock_data, [indicator])
+    else:
+        data = calculate_requested_indicators(stock_data, [indicator], period)
+
+
     if isinstance(data, tuple):  # Check if data is a tuple
         result_dict = {}
         for index, series in enumerate(data):
-            # Fill NaN values with 0
-            series = series.fillna(0)
-            # Convert index to '%Y-%m-%d' format
+            series = series.dropna(how='any',axis=0) 
             series.index = series.index.strftime('%Y-%m-%d')
-            # Add to the dictionary
             result_dict[f"series_{index + 1}"] = series
-        # print(result_dict)
-        # data=calculate_requested_indicators(stock_data,["SMA"],100)
-        # data=data.fillna(0)
-        # data.index = data.index.strftime('%Y-%m-%d')
-        # print("TUPLE!!!")
+        print(result_dict)
         return result_dict
     else:
-        print(type(data))
-        data=data.fillna(0)
+        data = data.dropna(how='any',axis=0) 
+
         data.index = data.index.strftime('%Y-%m-%d')
         return data.to_json()
-
-    # if isinstance(data, dict):  # Check if data is a dictionary
-    #     if indicator in data:
-    #         selected_data = data[indicator]
-    #     else:
-    #         return flask.jsonify({"error": f"Indicator '{indicator}' not found"})
-    # else:
-    #     selected_data = data  # If not a dictionary, assume it's the required indicator data
-    
-    # if isinstance(selected_data, pd.DataFrame):  # Check if selected_data is a DataFrame
-    #     selected_data = selected_data.fillna(0)
-    #     selected_data.index = selected_data.index.strftime('%Y-%m-%d')
-    #     return selected_data.to_json()
-    # else:
-    #     return flask.jsonify({"error": "Invalid data format"})
-
 
 
 
