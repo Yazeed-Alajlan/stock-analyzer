@@ -30,8 +30,7 @@ const FinancialsChart = ({ stockFinancialData }) => {
       options: balanceSheetKeys.map((key) => ({ value: key, label: key })),
     },
   ];
-
-  // State to hold the selected options and chart data
+  console.log(groupedOptions);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [chartData, setChartData] = useState(null);
 
@@ -52,6 +51,8 @@ const FinancialsChart = ({ stockFinancialData }) => {
         });
       });
       setChartData(result);
+    } else {
+      setChartData([]);
     }
   }, [selectedOptions, stockFinancialData]);
 
@@ -71,9 +72,9 @@ const FinancialsChart = ({ stockFinancialData }) => {
         options={groupedOptions}
         isMulti={true}
         onChange={handleSelectChange}
-        value={selectedOptions}
+        defaultValue={selectedOptions}
       />
-      <DynamicChart data={chartData} />
+      {chartData && <DynamicChart data={chartData} />}
     </div>
   );
 };

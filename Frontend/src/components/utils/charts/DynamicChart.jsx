@@ -49,11 +49,10 @@ const convertDataFormat = (data) => {
   return formatData; // Returning with correct
 };
 
-const DynamicChart = ({ type, data }) => {
+const DynamicChart = ({ type, data, isShowtabele }) => {
   const [chartType, setChartType] = useState(type);
   const [chartData, setChartData] = useState();
   const [modal, setModal] = useState(false);
-  console.log(data);
   const options = {
     scales: {
       y: {
@@ -64,11 +63,6 @@ const DynamicChart = ({ type, data }) => {
 
   useEffect(() => {
     const convertedData = convertDataFormat(data);
-    console.log(data);
-    console.log([
-      { name: "John Doe", age: 30, location: "New York" },
-      { name: "Jane Smith", age: 25, location: "San Francisco" },
-    ]);
     setChartData(convertedData);
   }, [data]);
 
@@ -100,12 +94,18 @@ const DynamicChart = ({ type, data }) => {
             buttons={chartTypeButtons}
             parentSetState={setChartType}
           />
-          <CustomButton
-            icon={TbTable}
-            onClick={() => {
-              setModal(!modal);
-            }}
-          />
+          {isShowtabele ? (
+            <>
+              <CustomButton
+                icon={TbTable}
+                onClick={() => {
+                  setModal(!modal);
+                }}
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </div>
 
         {chartData && data && (
@@ -113,7 +113,7 @@ const DynamicChart = ({ type, data }) => {
         )}
       </motion.div>
 
-      {chartData && data && (
+      {isShowtabele === true && chartData && data && (
         <CustomModal {...{ modal, setModal }}>
           <Table
             columns={[

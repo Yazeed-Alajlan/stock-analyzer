@@ -15,6 +15,7 @@ const InputSelect = ({
   defaultValue,
   menuIsOpen,
 }) => {
+  console.log(defaultValue);
   return (
     <CompnentLayout>
       <div className="d-flex gap-2 ">
