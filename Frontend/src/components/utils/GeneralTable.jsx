@@ -2,20 +2,20 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
 
-const GeneralTable = ({ columns, data }) => {
-  columns = React.useMemo(() => {
-    if (data.length === 0) {
+const GeneralTable = ({ tableData, tableColumns }) => {
+  const columns = React.useMemo(() => {
+    if (tableData.length === 0) {
       return [];
     }
-    const keys = Object.keys(data[0]);
+    const keys = Object.keys(tableData[0]);
     const filteredKeys = keys.filter((key) => key !== "_id");
     const generatedColumns = filteredKeys.map((key) => ({
       Header: formatKey(key),
       accessor: key,
     }));
-
+    console.log(generatedColumns);
     return generatedColumns;
-  }, [data]);
+  }, [tableData, tableColumns]);
 
   const {
     getTableProps,
@@ -30,8 +30,8 @@ const GeneralTable = ({ columns, data }) => {
     state: { pageIndex },
   } = useTable(
     {
-      columns,
-      data,
+      columns: tableColumns ? tableColumns : columns,
+      data: tableData,
       initialState: { pageIndex: 0 },
     },
     useSortBy,
@@ -39,36 +39,44 @@ const GeneralTable = ({ columns, data }) => {
   );
 
   return (
-    <Container>
-      <table {...getTableProps()} className="table">
-        <thead className="thead-dark text-center">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render("Header")}
-                  <span>
-                    {column.isSorted ? (column.isSortedDesc ? "🔽" : "🔼") : ""}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="text-center" {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+    <Container style={{ overflowX: "auto" }}>
+      <div style={{ maxWidth: "100%", overflowX: "auto" }}>
+        {" "}
+        <table {...getTableProps()} className="table">
+          <thead className="">
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Header")}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? "🔽"
+                          : "🔼"
+                        : ""}
+                    </span>
+                  </th>
                 ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className="d-flex justify-content-center align-items-center">
+            ))}
+          </thead>
+          <tbody className="" {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="d-flex justify-content-center align-items-center mt-2">
         <button
           className="btn btn-primary mx-2"
           onClick={() => previousPage()}
@@ -86,7 +94,7 @@ const GeneralTable = ({ columns, data }) => {
         <span className="ml-2">
           Page
           <strong>
-            {pageIndex + 1} of {Math.ceil(data.length / 10)}
+            {pageIndex + 1} of {Math.ceil(tableData.length / 10)}
           </strong>
         </span>
       </div>
