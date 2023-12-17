@@ -46,42 +46,52 @@ def calculatePenetrations(df, sma_period):
             
     return penetration_count, penetration_indices
 
-def calculateBounces(df, sma_period):
+def calculateBouncesAndPenetrations(df, sma_period):
     bounce_count = 0
+    penetration_count = 0
     bounce_indices = []
-    is_in_bounce = False
-    bounce_possibility=False
+    penetration_indices = []
+    flag=False
+    penetration_possibility=False
 
     for i in range(1, len(df)):
         in_downtrend = df['Close'][i] < df[f'SMA_{sma_period}'][i]
         if in_downtrend:
             if  df['Upper_Bound'][i] >= df['Close'][i] >= df['Lower_Bound'][i]:
-                bounce_possibility=True
-            elif df['Close'][i] < df['Lower_Bound'][i] and bounce_possibility:
+                flag=True
+            elif df['Close'][i] < df['Lower_Bound'][i] and flag:
                 bounce_count += 1
-                bounce_possibility=False
+                flag=False
                 bounce_indices.append(i)
+            elif df['Close'][i] > df['Upper_Bound'][i] and flag:
+                penetration_count += 1
+                penetration_indices.append(i)
+                flag=False
             else:
-                bounce_possibility=False
+                flag=False
 
         else:
             if  df['Upper_Bound'][i] >= df['Close'][i] >= df['Lower_Bound'][i]:
                 bounce_possibility=True
-            elif df['Close'][i] > df['Upper_Bound'][i] and bounce_possibility:
-                bounce_count += 1
-                bounce_possibility=False
-                bounce_indices.append(i)
+            elif df['Close'][i] > df['Upper_Bound'][i] and flag:
+                penetration_count += 1
+                penetration_indices.append(i)
+                flag=False
+            elif df['Close'][i] < df['Lower_Bound'][i] and flag:
+                penetration_count += 1
+                penetration_indices.append(i)
+                flag=False
             else:
-                bounce_possibility=False
-            
-    return bounce_count, bounce_indices
+                flag=False
+    print(bounce_count,penetration_count)
+    return bounce_count, bounce_indices, penetration_count, penetration_indices
 
 
 def findBestSMA(max_period):
     best_sma = 0
     best_count = 0
 
-    for sma_period in range(2, max_period):
+    for sma_period in range(50, max_period):
         data = prepData(sma_period)
         breakout_count, _ = calculateBreakouts(data, sma_period)
         penetration_count, _ = calculatePenetrations(data, sma_period)
@@ -94,7 +104,7 @@ def findBestSMA(max_period):
     return best_sma, best_count
 
 
-max_sma_period = 20
+max_sma_period = 51
 best_sma, best_count = findBestSMA(max_sma_period)
 
 data = prepData(best_sma)
@@ -112,37 +122,27 @@ ax.plot(data['Date'], data[f'SMA_{best_sma}'], label=f'Best SMA ({best_sma}-peri
 # Fill the area between upper and lower bounds
 ax.fill_between(data['Date'], data['Lower_Bound'], data['Upper_Bound'], color='yellow', alpha=0.5, label='Upper/Lower Bounds')
 
-# Add markers for breakouts
-# breakout_count, breakout_indices = calculateBreakouts(data, best_sma)
-# breakout_dates = data['Date'][breakout_indices]
-# breakout_prices = data['Close'][breakout_indices]
-# ax.scatter(breakout_dates, breakout_prices, marker='^', color='green', label='Breakout')
 
-# Add markers for penetrations
-# penetration_count, penetration_indices = calculatePenetrations(data, best_sma)
-# penetration_dates = data['Date'][penetration_indices]
-# penetration_prices = data['Close'][penetration_indices]
-# ax.scatter(penetration_dates, penetration_prices, marker='v', color='red', label='Penetration')
 
 # Add markers for bounces
-bounce_count, bounce_indices = calculateBounces(data, best_sma)
+bounce_count, bounce_indices, penetration_count, penetration_indices= calculateBouncesAndPenetrations(data, best_sma)
 bounce_dates = data['Date'][bounce_indices]
 bounce_prices = data['Close'][bounce_indices]
+penetration_dates = data['Date'][penetration_indices]
+penetration_prices = data['Close'][penetration_indices]
 ax.scatter(bounce_dates, bounce_prices, marker='v', color='black', label='Bounce')
+ax.scatter(penetration_dates, penetration_prices, marker='v', color='green', label='Penetration')
 
-# Annotate points with close prices
-# for i in range(len(breakout_indices)):
-#     ax.annotate(f'{breakout_prices.iloc[i]:.2f}', (breakout_dates.iloc[i], breakout_prices.iloc[i]), textcoords="offset points", xytext=(0, 10), ha='center')
 
 # Add circles for the close price without displaying the value
-ax.scatter(data['Date'], data['Close'], s=20, marker='o', color='yellow')
-
-# for i in range(len(data)):
-#     ax.annotate(f'{data["Close"].iloc[i]:.2f}', (data["Date"].iloc[i], data["Close"].iloc[i]), textcoords="offset points", xytext=(0, 10), ha='center')
+ax.scatter(data['Date'], data['Close'], s=20, marker='o', color='red')
 
 for i in range(len(bounce_indices)):
     ax.annotate(f'{bounce_prices.iloc[i]:.2f}', (bounce_dates.iloc[i], bounce_prices.iloc[i]), textcoords="offset points", xytext=(0, 10), ha='center')
 
+# Annotate penetration points
+for i in range(len(penetration_indices)):
+    ax.annotate(f'{penetration_prices.iloc[i]:.2f}', (penetration_dates.iloc[i], penetration_prices.iloc[i]), textcoords="offset points", xytext=(0, 10), ha='center')
 # Set labels and title
 ax.set_xlabel('Date')
 ax.set_ylabel('Price')

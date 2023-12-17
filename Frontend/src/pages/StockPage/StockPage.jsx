@@ -65,9 +65,17 @@ const StockPage = () => {
           <Col xs={"12"} lg={"8"}>
             <Row>
               <Container className="d-flex gap-2">
-                <Link to={"/companies/all"}>الشركات</Link>/
-                <Link to={`/companies/${sector}`}>{sector}</Link>/
-                <p>{stockInformationData.tradingNameAr}</p>
+                <Link className="text-decoration-none" to={"/companies/all"}>
+                  الشركات
+                </Link>
+                /
+                <Link
+                  className="text-decoration-none"
+                  to={`/companies/${sector}`}
+                >
+                  {sector}
+                </Link>
+                /<p>{stockInformationData.tradingNameAr}</p>
               </Container>
             </Row>
             <Row>

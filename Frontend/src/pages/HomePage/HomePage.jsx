@@ -33,7 +33,7 @@ const HomePage = () => {
               stocksData.map((stock) => ({
                 value: stock.symbol,
                 label: `${stock.tradingNameAr} (${stock.symbol})`,
-                sector: stock.sectorNameEn,
+                sector: stock.sectorNameAr,
               }))
             }
             isSearchable={true}

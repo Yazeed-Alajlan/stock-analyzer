@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Line, Bar, Radar } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import { motion } from "framer-motion";
 import { TbChartBar, TbChartLine, TbTable } from "react-icons/tb";
 import Table from "../Table";
@@ -89,7 +89,10 @@ const DynamicChart = ({ type, data, isShowtabele }) => {
         }}
         transition={{ type: "spring", bounce: 0, duration: 0.4 }}
       >
-        <div className="d-flex justify-content-between">
+        {chartData && data && (
+          <ChartComponent data={chartData} options={options} />
+        )}
+        <div className="d-flex justify-content-between mt-4">
           <ButtonsGroup
             buttons={chartTypeButtons}
             parentSetState={setChartType}
@@ -107,10 +110,6 @@ const DynamicChart = ({ type, data, isShowtabele }) => {
             <></>
           )}
         </div>
-
-        {chartData && data && (
-          <ChartComponent data={chartData} options={options} />
-        )}
       </motion.div>
 
       {isShowtabele === true && chartData && data && (

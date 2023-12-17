@@ -139,7 +139,7 @@ const StocksPage = () => {
                 <tbody>
                   {filteredData.map((item, index) => {
                     const lastElement = item.summary.length - 1;
-
+                    console.log(filteredData);
                     return (
                       <tr key={index}>
                         <td>

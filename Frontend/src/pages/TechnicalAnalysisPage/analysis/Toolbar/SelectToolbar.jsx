@@ -42,7 +42,6 @@ export default function SelectToolbar({
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchText.toLowerCase())
   );
-
   return (
     <Dropdown show={isOpen} onToggle={(isOpen) => setIsOpen(isOpen)}>
       <OverlayTrigger
@@ -56,10 +55,13 @@ export default function SelectToolbar({
           className="text-center text-grey fw-bolder m-2 p-2 border-0"
           variant="outline-dark-light"
         >
-          {text}
+          {showValueAsText
+            ? selectedValue
+              ? selectedValue.label
+              : "Select a State"
+            : text}
+          {/* {text} */}
           {Icon && <Icon />}
-          {"Indicators"}
-          {/* {selectedValue ? selectedValue.label : "Select a State"} */}
         </Dropdown.Toggle>
       </OverlayTrigger>
       <Dropdown.Menu>

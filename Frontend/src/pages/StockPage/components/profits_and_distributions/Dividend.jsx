@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import SelectionTitle from "components/utils/SelectionTitle";
 import { CustomCard } from "components/utils/cards/CustomCard";
 import { Container, Table } from "react-bootstrap";
+import GeneralTable from "components/utils/GeneralTable";
 
 const Dividend = () => {
   const { stockFinancialData } = useOutletContext();
@@ -32,6 +33,7 @@ const Dividend = () => {
               ))}
             </tbody>
           </Table>
+          <GeneralTable data={stockFinancialData.dividends} />
         </CustomCard>
       ) : (
         <p>loading</p>

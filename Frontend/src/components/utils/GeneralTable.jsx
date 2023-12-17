@@ -2,7 +2,21 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
 
-const Table = ({ columns, data }) => {
+const GeneralTable = ({ columns, data }) => {
+  columns = React.useMemo(() => {
+    if (data.length === 0) {
+      return [];
+    }
+    const keys = Object.keys(data[0]);
+    const filteredKeys = keys.filter((key) => key !== "_id");
+    const generatedColumns = filteredKeys.map((key) => ({
+      Header: formatKey(key),
+      accessor: key,
+    }));
+
+    return generatedColumns;
+  }, [data]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -54,9 +68,9 @@ const Table = ({ columns, data }) => {
           })}
         </tbody>
       </table>
-      <div>
+      <div className="d-flex justify-content-center align-items-center">
         <button
-          className="btn btn-primary mr-2"
+          className="btn btn-primary mx-2"
           onClick={() => previousPage()}
           disabled={!canPreviousPage}
         >
@@ -80,4 +94,17 @@ const Table = ({ columns, data }) => {
   );
 };
 
-export default Table;
+const formatKey = (key) => {
+  // Replace underscores with spaces
+  const formattedKey = key.replace(/_/g, " ");
+
+  // Convert camelCase to Title Case
+  const titleCaseKey = formattedKey.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
+
+  return titleCaseKey;
+};
+
+export default GeneralTable;

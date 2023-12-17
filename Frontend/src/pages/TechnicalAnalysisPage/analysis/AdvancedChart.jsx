@@ -69,13 +69,7 @@ const AdvancedChart = () => {
             navigate("/");
           }}
         />
-        <ToolSeparator />
 
-        <ButtonTool
-          icon={TbX}
-          hoverText="Tool 1"
-          onClick={() => console.log("Tool 1 clicked")}
-        />
         <ToolSeparator />
         <ModalTool
           icon={TbSearch}
@@ -83,11 +77,11 @@ const AdvancedChart = () => {
           text={selectedStock}
           title={"Search"}
         >
-          <div> aksdkadlsdksdlak</div>
+          <div> Search for symbol</div>
         </ModalTool>
         <ToolSeparator />
-
         <SelectTool
+          text="Indicators"
           options={[
             { value: "EMA", label: "Exponential Moving Average" },
             { value: "SMA", label: "Simple Moving Average" },
@@ -108,12 +102,26 @@ const AdvancedChart = () => {
                 },
               ],
             };
-            console.log(newIndicator);
             setSelectedIndicators((prevIndicators) => [
               ...prevIndicators,
               newIndicator,
             ]);
           }}
+          hoverText={"Indicators"}
+        />
+        <ToolSeparator />
+        <SelectTool
+          options={[
+            { value: "D", label: "1 Day" },
+            { value: "W", label: "1 Week" },
+            { value: "M", label: "1 Month" },
+          ]}
+          defaultValue={"D"}
+          showValueAsText
+          onSelectFunction={(value) => {
+            console.log(value);
+          }}
+          hoverText={"Frame"}
         />
       </Toolbar>
       <div id="responsive-chart" className="h-100 ">

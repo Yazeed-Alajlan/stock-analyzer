@@ -43,6 +43,7 @@ const SelectTool = ({
   defaultValue,
   children,
   onSelectFunction,
+  showValueAsText,
 }) => {
   return (
     <span>
@@ -51,6 +52,10 @@ const SelectTool = ({
         options={options}
         defaultValue={defaultValue}
         onSelectFunction={onSelectFunction}
+        text={text}
+        hoverText={hoverText}
+        icon={icon}
+        showValueAsText={showValueAsText}
       />
       {children}
     </span>
