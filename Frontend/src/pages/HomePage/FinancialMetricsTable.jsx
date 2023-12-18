@@ -1,10 +1,10 @@
+import { CustomCard } from "components/utils/cards/CustomCard";
+import InputSelect from "components/utils/inputs/InputSelect";
 import React, { useMemo, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
-import InputSelect from "./inputs/InputSelect";
-import { CustomCard } from "./cards/CustomCard";
 
-const GeneralTable = ({
+const FinancialMetricsTable = ({
   header,
   tableData,
   tableColumns,
@@ -96,21 +96,23 @@ const GeneralTable = ({
                   />
                 )}
                 {filterBy && (
-                  <InputSelect
-                    label={"القطاع"}
-                    placeholder="البحث عن قطاع"
-                    value={filterOption}
-                    options={[
-                      ...uniqueFilter.map((sector, index) => ({
-                        value: sector,
-                        label: sector,
-                      })),
-                    ]}
-                    onChange={(e) => {
-                      setFilterOption(e && e.value);
-                    }}
-                    isSearchable={true}
-                  />
+                  <div className="w-50">
+                    <InputSelect
+                      label={"القطاع"}
+                      placeholder="البحث عن قطاع"
+                      value={filterOption}
+                      options={[
+                        ...uniqueFilter.map((sector, index) => ({
+                          value: sector,
+                          label: sector,
+                        })),
+                      ]}
+                      onChange={(e) => {
+                        setFilterOption(e && e.value);
+                      }}
+                      isSearchable={true}
+                    />
+                  </div>
                 )}
               </Form>
             ))}
@@ -127,7 +129,7 @@ const GeneralTable = ({
               {...getTableProps()}
               className="table table-striped table-borderless table-hover text-center"
             >
-              <thead className="position-sticky top-0 ">
+              <thead className="position-sticky top-0 fs-5 ">
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
@@ -154,9 +156,23 @@ const GeneralTable = ({
                   prepareRow(row);
                   return (
                     <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                      ))}
+                      {row.cells.map((cell, index) => {
+                        const [symbol, name] = cell.value.split(" - ");
+                        return (
+                          <td {...cell.getCellProps()} key={index}>
+                            {index === 0 ? (
+                              <div>
+                                <span className="bg-light fw-bold ms-2">
+                                  {symbol}
+                                </span>
+                                <span>{name}</span>
+                              </div>
+                            ) : (
+                              cell.render("Cell")
+                            )}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}
@@ -207,4 +223,4 @@ const formatKey = (key) => {
   return titleCaseKey;
 };
 
-export default GeneralTable;
+export default FinancialMetricsTable;

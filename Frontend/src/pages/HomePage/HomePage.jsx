@@ -1,11 +1,10 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { useStocksData } from "../../contexts/StocksDataContext";
+import FinancialMetricsTable from "./FinancialMetricsTable";
 import GeneralTable from "components/utils/GeneralTable";
-import { CustomCard } from "components/utils/cards/CustomCard";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -64,13 +63,26 @@ const HomePage = () => {
           />
         </div>
       </div>
-      <GeneralTable
-        header={"ربحية السهم الأساسية الأساسية"}
-        tableData={earningsData}
-        isScrollable
-        filterBy={"sectorNameAr"}
-        removeFilterFromColumn
-      />
+      <Row className="d-flex flex-wrap">
+        <Col xs={6}>
+          <FinancialMetricsTable
+            header={"ربحية السهم الأساسية الأساسية"}
+            tableData={earningsData}
+            isScrollable
+            filterBy={"sectorNameAr"}
+            removeFilterFromColumn
+          />
+        </Col>
+        <Col xs={6}>
+          <FinancialMetricsTable
+            header={"ربحية السهم الأساسية الأساسية"}
+            tableData={earningsData}
+            isScrollable
+            filterBy={"sectorNameAr"}
+            removeFilterFromColumn
+          />
+        </Col>
+      </Row>
     </Container>
   );
 };

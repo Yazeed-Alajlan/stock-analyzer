@@ -22,7 +22,7 @@ const InputSelect = ({
         <Select
           menuPortalTarget={document.body}
           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-          className={`w-100   ${className}`}
+          className={`w-100    ${className}`}
           placeholder={placeholder}
           options={options}
           value={selectedOption}
