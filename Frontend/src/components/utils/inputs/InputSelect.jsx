@@ -15,7 +15,6 @@ const InputSelect = ({
   defaultValue,
   menuIsOpen,
 }) => {
-  console.log(defaultValue);
   return (
     <CompnentLayout>
       <div className="d-flex gap-2 ">
@@ -23,7 +22,7 @@ const InputSelect = ({
         <Select
           menuPortalTarget={document.body}
           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-          className={`w-75   ${className}`}
+          className={`w-100   ${className}`}
           placeholder={placeholder}
           options={options}
           value={selectedOption}

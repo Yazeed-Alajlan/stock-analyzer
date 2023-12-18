@@ -8,7 +8,7 @@ const FilterCard = ({ className, children }) => {
   return (
     <CustomCard>
       <Row
-        className={`d-flex align-items-center align-content-center py-3 ${className}`}
+        className={`d-flex justify-content-evenly align-items-center align-content-center px-1 py-3 ${className}`}
       >
         {children}
       </Row>

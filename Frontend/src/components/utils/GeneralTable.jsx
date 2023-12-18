@@ -1,9 +1,9 @@
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { useMemo, useState } from "react";
+import { Container, Form } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
 
-const GeneralTable = ({ tableData, tableColumns }) => {
-  const columns = React.useMemo(() => {
+const GeneralTable = ({ tableData, tableColumns, searchBy }) => {
+  const columns = useMemo(() => {
     if (tableData.length === 0) {
       return [];
     }
@@ -13,9 +13,22 @@ const GeneralTable = ({ tableData, tableColumns }) => {
       Header: formatKey(key),
       accessor: key,
     }));
-    console.log(generatedColumns);
     return generatedColumns;
-  }, [tableData, tableColumns]);
+  }, [tableData]);
+
+  const [searchText, setSearchText] = useState("");
+
+  const filteredData = useMemo(() => {
+    let data = tableData;
+    if (searchText) {
+      data = data.filter(
+        (row) =>
+          row[`${searchBy}`] &&
+          row[`${searchBy}`].toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    return data;
+  }, [tableData, searchText]);
 
   const {
     getTableProps,
@@ -31,7 +44,7 @@ const GeneralTable = ({ tableData, tableColumns }) => {
   } = useTable(
     {
       columns: tableColumns ? tableColumns : columns,
-      data: tableData,
+      data: filteredData,
       initialState: { pageIndex: 0 },
     },
     useSortBy,
@@ -41,7 +54,17 @@ const GeneralTable = ({ tableData, tableColumns }) => {
   return (
     <Container style={{ overflowX: "auto" }}>
       <div style={{ maxWidth: "100%", overflowX: "auto" }}>
-        {" "}
+        {searchBy && (
+          <Form className="mb-2">
+            <Form.Control
+              type="text"
+              placeholder="Filter by Company"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </Form>
+        )}
+
         <table {...getTableProps()} className="table">
           <thead className="">
             {headerGroups.map((headerGroup) => (
@@ -94,7 +117,7 @@ const GeneralTable = ({ tableData, tableColumns }) => {
         <span className="ml-2">
           Page
           <strong>
-            {pageIndex + 1} of {Math.ceil(tableData.length / 10)}
+            {pageIndex + 1} of {Math.ceil(filteredData.length / 10)}
           </strong>
         </span>
       </div>

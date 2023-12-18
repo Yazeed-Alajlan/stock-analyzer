@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Card, Table, Col } from "react-bootstrap";
 import { useStocksData } from "contexts/StocksDataContext";
 import PageLayout from "components/PageLayout";
 import { CustomCard } from "components/utils/cards/CustomCard";
-import FilterCard from "components/utils/inputs/FilterCard";
-import InputSelect from "components/utils/inputs/InputSelect";
-import CustomButton from "components/utils/buttons/CustomButton";
-import GeneralTable from "components/utils/GeneralTable";
-import { filter } from "lodash";
+
+import StocksMainTable from "./StocksMainTable";
 
 const StocksPage = () => {
   let { sector } = useParams();
@@ -21,6 +17,8 @@ const StocksPage = () => {
       console.log(stocksData);
       const formattedData = stocksData.map((data) => ({
         company: data.symbol + " - " + data.tradingNameAr,
+        sectorNameAr: data.sectorNameAr,
+
         ...data.summary[data.summary.length - 1],
       }));
       setFilteredData(formattedData);
@@ -32,7 +30,7 @@ const StocksPage = () => {
     <PageLayout title={"الشركات"} className="d-flex flex-column gap-4">
       <CustomCard>
         {filteredData && (
-          <GeneralTable
+          <StocksMainTable
             tableData={filteredData}
             tableColumns={[
               {

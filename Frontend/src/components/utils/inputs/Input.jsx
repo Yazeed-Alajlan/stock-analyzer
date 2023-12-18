@@ -18,7 +18,7 @@ const Input = ({
       <div className="d-flex gap-2">
         <p className="fs-5 my-auto">{label}</p>
         <input
-          className="w-75 z-2"
+          className="w-100 z-2"
           type={type}
           placeholder={placeholder}
           value={value}
