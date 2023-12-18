@@ -64,19 +64,13 @@ const HomePage = () => {
           />
         </div>
       </div>
-      <CustomCard>
-        <GeneralTable
-          tableData={earningsData}
-          isScrollable
-          filterBy={"sectorNameAr"}
-          removeFilterFromColumn
-        />
-        <br />
-        <br />
-        <br />
-        <br />
-        <GeneralTable tableData={earningsData} filterBy={"sectorNameAr"} />
-      </CustomCard>
+      <GeneralTable
+        header={"ربحية السهم الأساسية الأساسية"}
+        tableData={earningsData}
+        isScrollable
+        filterBy={"sectorNameAr"}
+        removeFilterFromColumn
+      />
     </Container>
   );
 };

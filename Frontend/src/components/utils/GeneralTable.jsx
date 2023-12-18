@@ -2,8 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
 import InputSelect from "./inputs/InputSelect";
+import { CustomCard } from "./cards/CustomCard";
 
 const GeneralTable = ({
+  header,
   tableData,
   tableColumns,
   searchBy,
@@ -16,8 +18,9 @@ const GeneralTable = ({
       return [];
     }
     const keys = Object.keys(tableData[0]);
-    const filteredKeys = keys.filter(
-      (key) => key !== filterBy && key !== "_id"
+
+    const filteredKeys = keys.filter((key) =>
+      removeFilterFromColumn ? key !== filterBy && key !== "_id" : true
     );
 
     console.log(filteredKeys);
@@ -78,7 +81,7 @@ const GeneralTable = ({
   );
 
   return (
-    <Container style={{ overflowX: "auto" }}>
+    <CustomCard header={header} style={{ overflowX: "auto" }}>
       {tableData && (
         <>
           {searchBy ||
@@ -207,7 +210,7 @@ const GeneralTable = ({
           )}
         </>
       )}
-    </Container>
+    </CustomCard>
   );
 };
 

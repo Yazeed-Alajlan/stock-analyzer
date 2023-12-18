@@ -83,7 +83,7 @@ def calculateBouncesAndPenetrations(df, sma_period):
                 flag=False
             else:
                 flag=False
-    print(bounce_count,penetration_count)
+    print(bounce_countpenetration_count)
     return bounce_count, bounce_indices, penetration_count, penetration_indices
 
 

@@ -33,7 +33,6 @@ export const CustomCard = ({ className, children, header, subHeader }) => {
           },
         }}
       >
-        {" "}
         <Card
           className={`CARD bg-white bg-dark border-0 shadow rounded-4 w-100 my-2 p-0 ${className}`}
         >
@@ -42,7 +41,7 @@ export const CustomCard = ({ className, children, header, subHeader }) => {
               {header != null || subHeader != null ? (
                 <div>
                   {header != null ? (
-                    <div className="text-primary fs-3"> {header}</div>
+                    <div className="text-primary fw-bold fs-3"> {header}</div>
                   ) : null}
                   {subHeader != null ? (
                     <div className="fs-5"> {subHeader}</div>
