@@ -4,11 +4,34 @@ import { Container } from "react-bootstrap";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { useStocksData } from "../../contexts/StocksDataContext";
+import GeneralTable from "components/utils/GeneralTable";
+import { CustomCard } from "components/utils/cards/CustomCard";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const { stocksData, selectedStock, setSelectedStock } = useStocksData();
+  const {
+    stocksData,
+    selectedStock,
+    setSelectedStock,
+    getAllBasicEarningsPerShareTTM,
+  } = useStocksData();
+
+  const [earningsData, setEarningsData] = useState([]);
+
+  useEffect(() => {
+    const fetchEarningsData = async () => {
+      try {
+        const data = await getAllBasicEarningsPerShareTTM();
+        setEarningsData(data);
+      } catch (error) {
+        // Handle error if necessary
+        console.error("Error fetching earnings data:", error);
+      }
+    };
+
+    fetchEarningsData();
+  }, [getAllBasicEarningsPerShareTTM]);
 
   const handleStockSelect = (selectedOption) => {
     setSelectedStock(selectedOption);
@@ -41,6 +64,19 @@ const HomePage = () => {
           />
         </div>
       </div>
+      <CustomCard>
+        <GeneralTable
+          tableData={earningsData}
+          isScrollable
+          filterBy={"sectorNameAr"}
+          removeFilterFromColumn
+        />
+        <br />
+        <br />
+        <br />
+        <br />
+        <GeneralTable tableData={earningsData} filterBy={"sectorNameAr"} />
+      </CustomCard>
     </Container>
   );
 };

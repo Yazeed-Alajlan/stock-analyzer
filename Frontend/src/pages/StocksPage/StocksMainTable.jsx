@@ -79,7 +79,7 @@ const StocksMainTable = ({ tableData, tableColumns }) => {
           <Col xs={8} xl={5}>
             <Input
               type={"text"}
-              placeholder="البحث عن شركة"
+              placeholder="ابحث حسب اسم الشركة أو الرمز"
               onChange={(e) => setCompanyFilter(e.target.value)}
               value={companyFilter}
               label={"الشركة"}
@@ -140,10 +140,24 @@ const StocksMainTable = ({ tableData, tableColumns }) => {
               return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell, index) => {
-                    if (index === 0) {
-                      const [symbol, name] = cell.value.split(" - ");
-                      return (
-                        <td {...cell.getCellProps()} key={index}>
+                    const columnsToCheck = [5, 6]; // Define columns to check for color change
+
+                    const isColored = columnsToCheck.includes(index); // Check if this column needs coloring
+                    console.log(isColored);
+                    const [symbol, name] = cell.value.split(" - ");
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        key={index}
+                        className={
+                          isColored
+                            ? cell.value.includes("-")
+                              ? "text-danger"
+                              : "text-success"
+                            : "text-black" // Black color for columns not in columnsToCheck
+                        }
+                      >
+                        {index === 0 ? (
                           <Link
                             className="text-decoration-none"
                             to={`/companies/${row.original.sectorNameAr}/${symbol}/information`}
@@ -155,20 +169,16 @@ const StocksMainTable = ({ tableData, tableColumns }) => {
                               });
                             }}
                           >
-                            <span className="bg-light  fw-bold ms-2">
+                            <span className="bg-light fw-bold ms-2">
                               {symbol}
                             </span>
                             <span>{name}</span>
                           </Link>
-                        </td>
-                      );
-                    } else {
-                      return (
-                        <td {...cell.getCellProps()} key={index}>
-                          {cell.render("Cell")}
-                        </td>
-                      );
-                    }
+                        ) : (
+                          cell.render("Cell")
+                        )}
+                      </td>
+                    );
                   })}
                 </tr>
               );

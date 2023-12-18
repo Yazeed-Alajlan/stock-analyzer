@@ -11,7 +11,7 @@ const Dividend = () => {
     <>
       {stockFinancialData ? (
         <CustomCard header={"الأرباح و التوزيعات"}>
-          <Table className="fs-5" responsive hover>
+          {/* <Table className="fs-5" responsive hover>
             <thead>
               <tr>
                 <th>تاريخ الإعلان </th>
@@ -32,8 +32,8 @@ const Dividend = () => {
                 </tr>
               ))}
             </tbody>
-          </Table>
-          <GeneralTable data={stockFinancialData.dividends} />
+          </Table> */}
+          <GeneralTable tableData={stockFinancialData.dividends} />
         </CustomCard>
       ) : (
         <p>loading</p>
