@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useStocksData } from "../../contexts/StocksDataContext";
 import FinancialMetricsTable from "./FinancialMetricsTable";
 import GeneralTable from "components/utils/GeneralTable";
+import FinancialMetricsComparisonTable from "./FinancialMetricsComparisonTable";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -14,15 +15,18 @@ const HomePage = () => {
     selectedStock,
     setSelectedStock,
     getAllBasicEarningsPerShareTTM,
+    prepareFinancialMetricsComparisonTableData,
   } = useStocksData();
 
   const [earningsData, setEarningsData] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchEarningsData = async () => {
       try {
         const data = await getAllBasicEarningsPerShareTTM();
         setEarningsData(data);
+        setData(await prepareFinancialMetricsComparisonTableData());
       } catch (error) {
         // Handle error if necessary
         console.error("Error fetching earnings data:", error);
@@ -82,6 +86,19 @@ const HomePage = () => {
             removeFilterFromColumn
           />
         </Col>
+      </Row>
+      <Row>
+        {data && (
+          <Col>
+            <FinancialMetricsComparisonTable
+              header={"قارن البيانات المالية"}
+              tableData={data}
+              isScrollable
+              filterBy={"sectorNameAr"}
+              removeFilterFromColumn
+            />
+          </Col>
+        )}
       </Row>
     </Container>
   );

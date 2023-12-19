@@ -90,7 +90,33 @@ export function StocksDataProvider({ children }) {
     }
     return [];
   }
+  async function getAllBasicEarningsPerShareTTM() {
+    if (stocksData) {
+      const formattedData = stocksData.map((data) => ({
+        company: data.symbol + " - " + data.tradingNameAr,
+        sectorNameAr: data.sectorNameAr,
+        basic_earnings_per_share_ttm:
+          data.summary[data.summary.length - 1].basic_earnings_per_share_ttm,
+      }));
 
+      return formattedData;
+    }
+    return [];
+  }
+  async function prepareFinancialMetricsComparisonTableData() {
+    if (stocksData) {
+      const formattedData = stocksData.map((data) => ({
+        symbol: data.symbol,
+        name: data.tradingNameAr,
+        sectorNameAr: data.sectorNameAr,
+        ...data.summary[data.summary.length - 1],
+        ...data.capital[data.capital.length - 1],
+      }));
+      console.log(formattedData);
+      return formattedData;
+    }
+    return [];
+  }
   const value = {
     stocksData,
     setStocksData,
@@ -101,6 +127,7 @@ export function StocksDataProvider({ children }) {
     getStockPriceData,
     getIndicatorData,
     getAllBasicEarningsPerShareTTM,
+    prepareFinancialMetricsComparisonTableData,
   };
 
   return (

@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
 
-const FinancialMetricsTable = ({
+const FinancialMetricsComparisonTable = ({
   header,
   tableData,
   tableColumns,
@@ -30,6 +30,24 @@ const FinancialMetricsTable = ({
     return generatedColumns;
   }, [tableData, tableColumns]);
 
+  const [selectedColumns, setSelectedColumns] = useState(tableColumns || []);
+
+  const handleColumnChange = (selected) => {
+    setSelectedColumns(selected);
+  };
+
+  const generateColumnOptions = () => {
+    return columns.map((column) => ({
+      value: column.accessor,
+      label: column.Header,
+    }));
+  };
+
+  const visibleColumns = useMemo(
+    () => columns.filter((column) => selectedColumns.includes(column.accessor)),
+    [columns, selectedColumns]
+  );
+
   const [searchText, setSearchText] = useState("");
   const [filterOption, setFilterOption] = useState("");
 
@@ -54,9 +72,9 @@ const FinancialMetricsTable = ({
 
   const uniqueFilter = useMemo(() => {
     const filters = [...new Set(tableData.map((row) => row[`${filterBy}`]))];
-    console.log(filters.filter((filter) => filter));
     return filters.filter((filter) => filter);
   }, [tableData]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -71,52 +89,63 @@ const FinancialMetricsTable = ({
     state: { pageIndex },
   } = useTable(
     {
-      columns: tableColumns ? tableColumns : columns,
+      columns: visibleColumns, // Use visibleColumns instead of tableColumns
       data: filteredData,
       initialState: { pageIndex: 0 },
-      layout: { custom: true, horizontalScroll: true },
     },
     useSortBy,
     usePagination
   );
+
   const dataToMap = isScrollable ? rows : page;
 
   return (
-    <CustomCard header={header}>
+    <CustomCard header={header} style={{ overflowX: "auto" }}>
       {tableData && (
         <>
-          {searchBy ||
-            (filterBy && (
-              <Form className="mb-2">
-                {searchBy && (
-                  <Form.Control
-                    type="text"
-                    placeholder="Filter by Company"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                  />
-                )}
-                {filterBy && (
-                  <div className="w-50">
-                    <InputSelect
-                      label={"القطاع"}
-                      placeholder="تصفية حسب القطاع"
-                      value={filterOption}
-                      options={[
-                        ...uniqueFilter.map((sector, index) => ({
-                          value: sector,
-                          label: sector,
-                        })),
-                      ]}
-                      onChange={(e) => {
-                        setFilterOption(e && e.value);
-                      }}
-                      isSearchable={true}
-                    />
-                  </div>
-                )}
-              </Form>
-            ))}
+          <div className="mb-2">
+            <InputSelect
+              label="Select Columns"
+              placeholder="Select columns to display"
+              value={selectedColumns}
+              options={generateColumnOptions()}
+              isMulti
+              onChange={(selected) =>
+                handleColumnChange(selected.map((item) => item.value))
+              }
+              isSearchable={true}
+            />
+          </div>
+
+          <Form className="mb-2">
+            {searchBy && (
+              <Form.Control
+                type="text"
+                placeholder="Filter by Company"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+            )}
+            {filterBy && (
+              <div className="w-50">
+                <InputSelect
+                  label="القطاع"
+                  placeholder="تصفية حسب القطاع"
+                  value={filterOption}
+                  options={[
+                    ...uniqueFilter.map((sector, index) => ({
+                      value: sector,
+                      label: sector,
+                    })),
+                  ]}
+                  onChange={(e) => {
+                    setFilterOption(e && e.value);
+                  }}
+                  isSearchable={true}
+                />
+              </div>
+            )}
+          </Form>
 
           <div
             style={{
@@ -159,19 +188,9 @@ const FinancialMetricsTable = ({
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell, index) => {
-                        const [symbol, name] = cell.value.split(" - ");
                         return (
-                          <td {...cell.getCellProps()} key={index}>
-                            {index === 0 ? (
-                              <div>
-                                <span className="bg-light fw-bold ms-2">
-                                  {symbol}
-                                </span>
-                                <span>{name}</span>
-                              </div>
-                            ) : (
-                              cell.render("Cell")
-                            )}
+                          <td {...cell.getCellProps()}>
+                            {cell.render("Cell")}
                           </td>
                         );
                       })}
@@ -212,17 +231,11 @@ const FinancialMetricsTable = ({
 };
 
 const formatKey = (key) => {
-  // Replace underscores with spaces
   const formattedKey = key.replace(/_/g, " ");
-
-  // Convert camelCase to Title Case
   const titleCaseKey = formattedKey
-    // Handle camelCase by inserting a space before capital letters
     .replace(/([a-z])([A-Z])/g, "$1 $2")
-    // Capitalize the first letter of each word
     .replace(/\b\w/g, (char) => char.toUpperCase());
-
   return titleCaseKey;
 };
 
-export default FinancialMetricsTable;
+export default FinancialMetricsComparisonTable;
