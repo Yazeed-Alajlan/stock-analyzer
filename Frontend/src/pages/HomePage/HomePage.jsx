@@ -18,14 +18,13 @@ const HomePage = () => {
     prepareFinancialMetricsComparisonTableData,
   } = useStocksData();
 
-  const [earningsData, setEarningsData] = useState([]);
-  const [data, setData] = useState([]);
+  const [earningsData, setEarningsData] = useState();
+  const [data, setData] = useState();
 
   useEffect(() => {
     const fetchEarningsData = async () => {
       try {
-        const data = await getAllBasicEarningsPerShareTTM();
-        setEarningsData(data);
+        setEarningsData(await getAllBasicEarningsPerShareTTM());
         setData(await prepareFinancialMetricsComparisonTableData());
       } catch (error) {
         // Handle error if necessary
@@ -34,7 +33,7 @@ const HomePage = () => {
     };
 
     fetchEarningsData();
-  }, [getAllBasicEarningsPerShareTTM]);
+  }, []);
 
   const handleStockSelect = (selectedOption) => {
     setSelectedStock(selectedOption);
@@ -69,34 +68,29 @@ const HomePage = () => {
       </div>
       <Row className="d-flex flex-wrap">
         <Col xs={6}>
-          <FinancialMetricsTable
-            header={"ربحية السهم الأساسية الأساسية"}
-            tableData={earningsData}
-            isScrollable
-            filterBy={"sectorNameAr"}
-            removeFilterFromColumn
-          />
-        </Col>
-        <Col xs={6}>
-          <FinancialMetricsTable
-            header={"ربحية السهم الأساسية الأساسية"}
-            tableData={earningsData}
-            isScrollable
-            filterBy={"sectorNameAr"}
-            removeFilterFromColumn
-          />
+          {earningsData && (
+            <FinancialMetricsTable
+              header={"ربحية السهم الأساسية الأساسية"}
+              tableData={earningsData}
+              isScrollable
+              filterBy={"sectorNameAr"}
+              removeFilterFromColumn
+            />
+          )}
         </Col>
       </Row>
       <Row>
         {data && (
           <Col>
-            <FinancialMetricsComparisonTable
-              header={"قارن البيانات المالية"}
-              tableData={data}
-              isScrollable
-              filterBy={"sectorNameAr"}
-              removeFilterFromColumn
-            />
+            {data && (
+              <FinancialMetricsComparisonTable
+                header={"قارن البيانات المالية"}
+                tableData={data}
+                isScrollable
+                filterBy={"sectorNameAr"}
+                removeFilterFromColumn
+              />
+            )}
           </Col>
         )}
       </Row>

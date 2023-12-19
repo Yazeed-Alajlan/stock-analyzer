@@ -54,7 +54,6 @@ const FinancialMetricsTable = ({
 
   const uniqueFilter = useMemo(() => {
     const filters = [...new Set(tableData.map((row) => row[`${filterBy}`]))];
-    console.log(filters.filter((filter) => filter));
     return filters.filter((filter) => filter);
   }, [tableData]);
   const {

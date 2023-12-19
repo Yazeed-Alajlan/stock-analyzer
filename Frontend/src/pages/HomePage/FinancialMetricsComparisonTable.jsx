@@ -13,6 +13,7 @@ const FinancialMetricsComparisonTable = ({
   removeFilterFromColumn,
   isScrollable,
 }) => {
+  console.log("LOGOGOGOGO");
   const columns = useMemo(() => {
     if (!tableData || tableData.length === 0) {
       return [];
@@ -28,7 +29,7 @@ const FinancialMetricsComparisonTable = ({
       accessor: key,
     }));
     return generatedColumns;
-  }, [tableData, tableColumns]);
+  }, []);
 
   const [selectedColumns, setSelectedColumns] = useState(tableColumns || []);
 

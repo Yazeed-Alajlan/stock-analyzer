@@ -105,12 +105,14 @@ export function StocksDataProvider({ children }) {
   }
   async function prepareFinancialMetricsComparisonTableData() {
     if (stocksData) {
+      console.log(stocksData);
       const formattedData = stocksData.map((data) => ({
         symbol: data.symbol,
         name: data.tradingNameAr,
         sectorNameAr: data.sectorNameAr,
         ...data.summary[data.summary.length - 1],
         ...data.capital[data.capital.length - 1],
+        ...data.profile[data.profile.length - 1],
       }));
       console.log(formattedData);
       return formattedData;

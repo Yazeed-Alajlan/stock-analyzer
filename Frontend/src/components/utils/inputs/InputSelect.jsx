@@ -1,6 +1,7 @@
 import React from "react";
 import CompnentLayout from "components/CompnentLayout";
 import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 const InputSelect = ({
   label,
@@ -15,6 +16,8 @@ const InputSelect = ({
   defaultValue,
   menuIsOpen,
 }) => {
+  const animatedComponents = makeAnimated();
+
   return (
     <CompnentLayout>
       <div className="d-flex gap-2 ">
@@ -30,6 +33,7 @@ const InputSelect = ({
           isDisabled={isDisabled}
           isClearable
           isSearchable
+          closeMenuOnSelect={isMulti ? false : true}
           isMulti={isMulti}
           defaultValue={options.find((option) => option.value === defaultValue)}
           menuIsOpen={menuIsOpen}
