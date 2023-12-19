@@ -21,7 +21,7 @@ const InputSelect = ({
   return (
     <CompnentLayout>
       <div className="d-flex gap-2 ">
-        <p className="fs-5 my-auto">{label}</p>
+        <p className="fs-5 my-auto text-nowrap">{label}</p>
         <Select
           menuPortalTarget={document.body}
           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}

@@ -13,7 +13,6 @@ const FinancialMetricsComparisonTable = ({
   removeFilterFromColumn,
   isScrollable,
 }) => {
-  console.log("LOGOGOGOGO");
   const columns = useMemo(() => {
     if (!tableData || tableData.length === 0) {
       return [];
@@ -104,19 +103,7 @@ const FinancialMetricsComparisonTable = ({
     <CustomCard header={header} style={{ overflowX: "auto" }}>
       {tableData && (
         <>
-          <div className="mb-2">
-            <InputSelect
-              label="Select Columns"
-              placeholder="Select columns to display"
-              value={selectedColumns}
-              options={generateColumnOptions()}
-              isMulti
-              onChange={(selected) =>
-                handleColumnChange(selected.map((item) => item.value))
-              }
-              isSearchable={true}
-            />
-          </div>
+          <div className="mb-2"></div>
 
           <Form className="mb-2">
             {searchBy && (
@@ -128,7 +115,7 @@ const FinancialMetricsComparisonTable = ({
               />
             )}
             {filterBy && (
-              <div className="w-50">
+              <div className="d-flex w-100">
                 <InputSelect
                   label="القطاع"
                   placeholder="تصفية حسب القطاع"
@@ -142,6 +129,17 @@ const FinancialMetricsComparisonTable = ({
                   onChange={(e) => {
                     setFilterOption(e && e.value);
                   }}
+                  isSearchable={true}
+                />
+                <InputSelect
+                  label="إختر الأعمدة"
+                  placeholder="إختر الأعمدة"
+                  value={selectedColumns}
+                  options={generateColumnOptions()}
+                  isMulti
+                  onChange={(selected) =>
+                    handleColumnChange(selected.map((item) => item.value))
+                  }
                   isSearchable={true}
                 />
               </div>
