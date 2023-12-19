@@ -86,7 +86,7 @@ const AdvancedChart = () => {
             { value: "EMA", label: "Exponential Moving Average" },
             { value: "SMA", label: "Simple Moving Average" },
             { value: "RSI", label: "Relative Strength Index" },
-            // { value: "MACD", label: "Moving average convergence/divergence " },
+            { value: "MACD", label: "Moving average convergence/divergence " },
           ]}
           onSelectFunction={async (indicatorName) => {
             console.log(indicatorName);

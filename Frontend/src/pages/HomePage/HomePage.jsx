@@ -34,7 +34,7 @@ const HomePage = () => {
 
     fetchEarningsData();
   }, []);
-
+  console.log(data);
   const handleStockSelect = (selectedOption) => {
     setSelectedStock(selectedOption);
     navigate(

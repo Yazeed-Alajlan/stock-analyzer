@@ -28,7 +28,7 @@ const FinancialMetricsComparisonTable = ({
       accessor: key,
     }));
     return generatedColumns;
-  }, []);
+  }, [tableData]);
 
   const [selectedColumns, setSelectedColumns] = useState(tableColumns || []);
 
@@ -37,6 +37,7 @@ const FinancialMetricsComparisonTable = ({
   };
 
   const generateColumnOptions = () => {
+    console.log(columns);
     return columns.map((column) => ({
       value: column.accessor,
       label: column.Header,

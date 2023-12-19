@@ -7,9 +7,7 @@ from scripts.Files.TechnicalAnalysisAutomation.flags_pennants import *
 from database.main import *
 #------------------------------------------------------------------------------#
 import talib
-
 import flask 
-import inspect
 
 
 app = flask.Flask(__name__)
@@ -104,7 +102,6 @@ def vsa():
     return data.to_json()
 
 
-import talib
 
 indicator_info = {
     'SMA': {'name': 'Simple Moving Average', 'default_period': 20},
@@ -151,7 +148,6 @@ def calculate_requested_indicators(stock_data, indicators_list, period=None):
                 indicator_default_period = indicator_info_data.get('default_period')
                 if indicator_default_period is None:
                     indicator_values = indicator_func(close_prices)
-                    print(indicator_func(close_prices))
                 else:
                     indicator_values = indicator_func(close_prices,indicator_default_period)
 
@@ -161,10 +157,44 @@ def calculate_requested_indicators(stock_data, indicators_list, period=None):
     return indicator_values
 
 
+def calculate_macd(data):
+    close_prices = data['close'].values
+    macd, signal, x = talib.MACD(close_prices, fastperiod=12, slowperiod=26, signalperiod=9)
+    data['MACD'] = macd
+    data['Signal Line'] = signal
+
+    return data
+
+
+def calculate_ta_indicator(indicator_name, data, *args, **kwargs):
+    try:
+        indicator_func = getattr(talib, indicator_name)
+        result = indicator_func(data["close"], *args, **kwargs)
+        return result
+    except AttributeError:
+        print(f"Indicator '{indicator_name}' not found in TA-Lib.")
+        return None
+
+
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
+    print("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
     period = flask.request.args.get("period")
     stock_data = get_price_data(symbol)
+    # calculate_macd(stock_data)
+    # Example: Calculate RSI with period=14
+    # rsi = calculate_ta_indicator('RSI', stock_data, timeperiod=14)
+    # print("RSI:", rsi)
+    # Example: Calculate MACD with fastperiod=12, slowperiod=26, signalperiod=9
+    macd, macdsignal, macdhist = calculate_ta_indicator('MACD', stock_data)
+    print("MACD:", macd)
+    print("MACD Signal:", macdsignal)
+    print("MACD Histogram:", macdhist)
+
+    # Example: Calculate SMA with timeperiod=20
+    # sma = calculate_ta_indicator('SMA', stock_data, timeperiod=20)
+    # print("SMA:", sma)
+
     if period =="undefined":
         data = calculate_requested_indicators(stock_data, [indicator])
     else:
@@ -177,8 +207,7 @@ def indicators(symbol,indicator):
             series = series.dropna(how='any',axis=0) 
             series.index = series.index.strftime('%Y-%m-%d')
             result_dict[f"series_{index + 1}"] = series
-        print(result_dict)
-        return result_dict
+        return result_dict["series_1"].to_json()
     else:
         data = data.dropna(how='any',axis=0) 
 
