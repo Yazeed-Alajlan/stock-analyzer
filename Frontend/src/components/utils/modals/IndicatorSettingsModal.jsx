@@ -23,15 +23,19 @@ const IndicatorSettingsModal = ({ indicatorName, showModal, handleClose }) => {
       selectedIndicators.map(async (indicator) => {
         const { name } = indicator;
 
-        // Update params
-        const updatedParams = {
-          ...indicator.params,
-          kwargs: {
-            ...indicator.params.kwargs,
-            ...updatedSettings, // Apply updated settings
-          },
-        };
+        // Update params if the name matches indicatorName
+        let updatedParams = indicator.params;
+        if (name === indicatorName) {
+          updatedParams = {
+            ...indicator.params,
+            kwargs: {
+              ...indicator.params.kwargs,
+              ...updatedSettings, // Apply updated settings
+            },
+          };
+        }
 
+        // Fetch updated value based on indicatorName
         const updatedValue = await getIndicatorData(
           selectedStock,
           indicatorName,
@@ -39,9 +43,11 @@ const IndicatorSettingsModal = ({ indicatorName, showModal, handleClose }) => {
             [indicatorName]: updatedParams,
           }
         );
-        // Update lines
+
+        // Update lines if the name matches the indicator's name
         const updatedLines = indicator.lines.map((line) => {
           if (line.hasOwnProperty(name)) {
+            // Only update the line matching the indicator's name
             return {
               [name]: updatedValue,
             };
@@ -56,6 +62,7 @@ const IndicatorSettingsModal = ({ indicatorName, showModal, handleClose }) => {
         };
       })
     );
+
     console.log(updatedIndicators);
     setSelectedIndicators(updatedIndicators);
     handleClose();
