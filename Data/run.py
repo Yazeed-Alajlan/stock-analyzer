@@ -104,67 +104,6 @@ def vsa():
 
 
 
-indicator_info = {
-    'SMA': {'name': 'Simple Moving Average', 'default_period': 20},
-    'EMA': {'name': 'Exponential Moving Average', 'default_period': 14},
-    'WMA': {'name': 'Weighted Moving Average', 'default_period': None},  # No default period specified
-    'RSI': {'name': 'Relative Strength Index', 'default_period': 14},
-    'MACD': {'name': 'Moving Average Convergence Divergence', 'default_period': None},  # No default period specified
-    'STOCH': {'name': 'Stochastic Oscillator', 'default_period': None},  # No default period specified
-    'ADX': {'name': 'Average Directional Movement Index', 'default_period': 14},
-    'ATR': {'name': 'Average True Range', 'default_period': 14},
-    # Add more indicators with names and default periods
-    'CUSTOM_INDICATOR_1': {'name': 'Custom Indicator 1', 'default_period': None},
-    'CUSTOM_INDICATOR_2': {'name': 'Custom Indicator 2', 'default_period': None},
-    'DEFAULT_INDICATOR': {'name': 'Default Indicator Name', 'default_period': None},
-}
-
-
-
-import talib
-
-def calculate_requested_indicators(stock_data, indicators_list, period=None):
-    # Fetch historical data for the symbol (assuming stock_data contains 'close' prices)
-    close_prices = stock_data['close']
-
-    indicator_info = {
-        'SMA': {'name': 'Simple Moving Average', 'default_period': 4},
-        'EMA': {'name': 'Exponential Moving Average', 'default_period': 10},
-        'WMA': {'name': 'Weighted Moving Average', 'default_period': None},  # No default period specified
-        'RSI': {'name': 'Relative Strength Index', 'default_period': 14},
-        'MACD': {'name': 'Moving Average Convergence Divergence', 'default_period': None},  # No default period specified
-        'STOCH': {'name': 'Stochastic Oscillator', 'default_period': None},  # No default period specified
-        'ADX': {'name': 'Average Directional Movement Index', 'default_period': 14},
-        'ATR': {'name': 'Average True Range', 'default_period': 14},
-        # Add more indicators with names and default periods
-    }
-    
-    # Calculate the requested indicators based on the user input
-    for indicator_name in indicators_list:
-            indicator_func = getattr(talib, indicator_name)
-            indicator_info_data = indicator_info.get(indicator_name, {})
-            
-            # Set the default period if not provided by the user
-            if period is None:
-                indicator_default_period = indicator_info_data.get('default_period')
-                if indicator_default_period is None:
-                    indicator_values = indicator_func(close_prices)
-                else:
-                    indicator_values = indicator_func(close_prices,indicator_default_period)
-
-            else:
-                indicator_values = indicator_func(close_prices,indicator_default_period)
-
-    return indicator_values
-
-
-def calculate_macd(data):
-    close_prices = data['close'].values
-    macd, signal, x = talib.MACD(close_prices, fastperiod=12, slowperiod=26, signalperiod=9)
-    data['MACD'] = macd
-    data['Signal Line'] = signal
-
-    return data
 
 def calculate_ta_indicator_with_params(params):
     try:
@@ -199,29 +138,26 @@ def indicators(symbol,indicator):
     'data': stock_data["close"],  # Replace this with your actual stock data
     'kwargs': kwargs
     }
-
     data = calculate_ta_indicator_with_params(indicator_params)
-    print(params)
-    print("------------------------------------------------------")
-    print(data)
-    data = data.dropna(how='any',axis=0) 
-    data.index = data.index.strftime('%Y-%m-%d')
-    
 
 
+    result_dict = {}
+    if isinstance(data, tuple):  # Check if data is a tuple
+        for index, series in enumerate(data):
+            print(series)
+            print("##############################################################################")
+            series = series.dropna(how='any',axis=0) 
+            series.index = series.index.strftime('%Y-%m-%d')
+            result_dict[list(kwargs.keys())[index]] = series
+        print(result_dict)
+    else:
+        data = data.dropna(how='any',axis=0) 
+        data.index = data.index.strftime('%Y-%m-%d')
+        result_dict[list(kwargs.keys())[0]] = data
+        print(result_dict)
 
-    # if isinstance(data, tuple):  # Check if data is a tuple
-    #     result_dict = {}
-    #     for index, series in enumerate(data):
-    #         series = series.dropna(how='any',axis=0) 
-    #         series.index = series.index.strftime('%Y-%m-%d')
-    #         result_dict[f"series_{index + 1}"] = series
-    #     return result_dict["series_1"].to_json()
-    # else:
-    #     data = data.dropna(how='any',axis=0) 
-
-    #     data.index = data.index.strftime('%Y-%m-%d')
-    return data.to_json()
+    return result_dict
+    # return data.to_json()
 
 
 

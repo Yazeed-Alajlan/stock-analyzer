@@ -22,7 +22,7 @@ const IndicatorSettingsModal = ({ indicatorName, showModal, handleClose }) => {
     const updatedIndicators = await Promise.all(
       selectedIndicators.map(async (indicator) => {
         const { name } = indicator;
-
+        console.log(indicator);
         // Update params if the name matches indicatorName
         let updatedParams = indicator.params;
         if (name === indicatorName) {
@@ -33,33 +33,25 @@ const IndicatorSettingsModal = ({ indicatorName, showModal, handleClose }) => {
               ...updatedSettings, // Apply updated settings
             },
           };
-        }
 
-        // Fetch updated value based on indicatorName
-        const updatedValue = await getIndicatorData(
-          selectedStock,
-          indicatorName,
-          {
-            [indicatorName]: updatedParams,
-          }
-        );
-
-        // Update lines if the name matches the indicator's name
-        const updatedLines = indicator.lines.map((line) => {
-          if (line.hasOwnProperty(name)) {
-            // Only update the line matching the indicator's name
-            return {
-              [name]: updatedValue,
-            };
-          }
-          return line;
-        });
-
-        return {
-          ...indicator,
-          params: updatedParams,
-          lines: updatedLines,
-        };
+          // Fetch updated value based on indicatorName
+          const updatedValue = await getIndicatorData(
+            selectedStock,
+            indicatorName,
+            {
+              [indicatorName]: updatedParams,
+            }
+          );
+          return {
+            ...indicator,
+            params: updatedParams,
+            lines: [
+              {
+                [indicatorName]: updatedValue,
+              },
+            ],
+          };
+        } else return indicator;
       })
     );
 

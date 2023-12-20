@@ -93,7 +93,7 @@ const AdvancedChart = () => {
           onSelectFunction={async (indicatorName) => {
             const newIndicator = {
               name: indicatorName,
-              pane: 1, // Assuming pane value increments for each new indicator
+              pane: indicatorName === "SMA" || indicatorName === "EMA" ? 0 : 1, // Assuming pane value increments for each new indicator
               params: IndicatorsList[indicatorName],
               lines: [
                 {

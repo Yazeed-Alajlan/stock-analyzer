@@ -53,8 +53,10 @@ const CandlestickAndIndicatorsChart = ({
     const chart = createChart(chartContainerId, chartOptions);
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(formatCandleStickData(series));
+    console.log(indicators);
     if (indicators) {
       indicators.forEach((indicator, index) => {
+        console.log(indicator);
         indicator.lines.map((data) => {
           chart
             .addLineSeries({
