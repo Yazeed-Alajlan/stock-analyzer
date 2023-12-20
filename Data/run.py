@@ -8,6 +8,7 @@ from database.main import *
 #------------------------------------------------------------------------------#
 import talib
 import flask 
+import json
 
 
 app = flask.Flask(__name__)
@@ -165,55 +166,62 @@ def calculate_macd(data):
 
     return data
 
-
-def calculate_ta_indicator(indicator_name, data, *args, **kwargs):
+def calculate_ta_indicator_with_params(params):
     try:
+        indicator_name = params.get('indicator_name')
+        data = params.get('data')
+        args = params.get('args', [])
+        kwargs = params.get('kwargs', {})
+
+        # Convert DataFrame to NumPy array if data is a DataFrame
+        if isinstance(data, pd.DataFrame):
+            data = data.to_numpy()
+
         indicator_func = getattr(talib, indicator_name)
-        result = indicator_func(data["close"], *args, **kwargs)
+        result = indicator_func(data, *args, **kwargs)
         return result
     except AttributeError:
-        print(f"Indicator '{indicator_name}' not found in TA-Lib.")
         return None
+
 
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
-    print("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
-    period = flask.request.args.get("period")
+    params = flask.request.args.get("params")
     stock_data = get_price_data(symbol)
-    # calculate_macd(stock_data)
-    # Example: Calculate RSI with period=14
-    # rsi = calculate_ta_indicator('RSI', stock_data, timeperiod=14)
-    # print("RSI:", rsi)
-    # Example: Calculate MACD with fastperiod=12, slowperiod=26, signalperiod=9
-    macd, macdsignal, macdhist = calculate_ta_indicator('MACD', stock_data)
-    print("MACD:", macd)
-    print("MACD Signal:", macdsignal)
-    print("MACD Histogram:", macdhist)
+    print(params)
 
-    # Example: Calculate SMA with timeperiod=20
-    # sma = calculate_ta_indicator('SMA', stock_data, timeperiod=20)
-    # print("SMA:", sma)
+    parsed_data = json.loads(params)
+    indicator_name = list(parsed_data.keys())[0]  # Get the indicator name (e.g., RSI)
+    kwargs = parsed_data[indicator_name]["kwargs"]  # Get the kwargs for the indicator
+    indicator_params = {
+    'indicator_name': indicator_name,
+    'data': stock_data["close"],  # Replace this with your actual stock data
+    'kwargs': kwargs
+    }
 
-    if period =="undefined":
-        data = calculate_requested_indicators(stock_data, [indicator])
-    else:
-        data = calculate_requested_indicators(stock_data, [indicator], period)
+    data = calculate_ta_indicator_with_params(indicator_params)
+    print(params)
+    print("------------------------------------------------------")
+    print(data)
+    data = data.dropna(how='any',axis=0) 
+    data.index = data.index.strftime('%Y-%m-%d')
+    
 
 
-    if isinstance(data, tuple):  # Check if data is a tuple
-        result_dict = {}
-        for index, series in enumerate(data):
-            series = series.dropna(how='any',axis=0) 
-            series.index = series.index.strftime('%Y-%m-%d')
-            result_dict[f"series_{index + 1}"] = series
-        return result_dict["series_1"].to_json()
-    else:
-        data = data.dropna(how='any',axis=0) 
 
-        data.index = data.index.strftime('%Y-%m-%d')
-        return data.to_json()
+    # if isinstance(data, tuple):  # Check if data is a tuple
+    #     result_dict = {}
+    #     for index, series in enumerate(data):
+    #         series = series.dropna(how='any',axis=0) 
+    #         series.index = series.index.strftime('%Y-%m-%d')
+    #         result_dict[f"series_{index + 1}"] = series
+    #     return result_dict["series_1"].to_json()
+    # else:
+    #     data = data.dropna(how='any',axis=0) 
 
+    #     data.index = data.index.strftime('%Y-%m-%d')
+    return data.to_json()
 
 
 

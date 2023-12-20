@@ -122,12 +122,12 @@ router.get("/flags-pennants", async (req, res) => {
 router.get("/:symbol/indicators/:indicator", async (req, res) => {
   const symbol = req.params.symbol;
   const indicator = req.params.indicator;
-  const { period } = req.query;
-  console.log(period);
+  const { params } = req.query;
+  console.log(params);
   console.log(symbol + "----------------------------------");
   axios
     .get(
-      `http://127.0.0.1:4000/api/stocks/${symbol}/indicators/${indicator}?period=${period}`,
+      `http://127.0.0.1:4000/api/stocks/${symbol}/indicators/${indicator}?params=${params}`,
       {
         // .get(`http://127.0.0.1:4000/api/stocks/vsa?symbol=${symbol}`, {
         headers: {

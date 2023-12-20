@@ -1,15 +1,22 @@
 import IconButton from "components/utils/buttons/IconButton";
+import IndicatorSettingsModal from "components/utils/modals/IndicatorSettingsModal";
 import React, { useState } from "react";
 import { ListGroup } from "react-bootstrap";
 import { TbX, TbSettings } from "react-icons/tb";
+import IndicatorsList from "../IndicatorsList";
 
 const Indicators = ({ indicators, onDelete }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
-  console.log(indicators);
+  const [showModalIndex, setShowModalIndex] = useState(null);
+
   // Check if indicators exist and are not empty
   if (!indicators || indicators.length === 0) {
     return <></>; // Display a message or a default component
   }
+
+  const handleToggleModal = (index) => {
+    setShowModalIndex(showModalIndex === index ? null : index);
+  };
 
   return (
     <div className=" d-flex flex-column align-items-start ">
@@ -37,7 +44,15 @@ const Indicators = ({ indicators, onDelete }) => {
             <IconButton
               icon={TbSettings}
               size={"sm"}
-              onClick={() => onDelete(indicator.name, indicator.pane, index)}
+              onClick={() => handleToggleModal(index)}
+            />
+
+            <IndicatorSettingsModal
+              key={index} // Ensure each modal has a unique key
+              indicatorName={indicator.name}
+              settings={IndicatorsList[indicator.name]}
+              showModal={showModalIndex === index}
+              handleClose={() => setShowModalIndex(null)}
             />
           </div>
         </div>

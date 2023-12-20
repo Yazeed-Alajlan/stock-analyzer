@@ -12,7 +12,7 @@ import { useStocksData } from "contexts/StocksDataContext";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { useNavigate } from "react-router-dom";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
-
+import IndicatorsList from "../IndicatorsList";
 const AdvancedChart = () => {
   const navigate = useNavigate();
 
@@ -20,35 +20,35 @@ const AdvancedChart = () => {
   const { getStockPriceData, getIndicatorData } = useStocksData();
   const { selectedStock, selectedIndicators, setSelectedIndicators } =
     useTechnicalAnalysis();
+  console.log(selectedIndicators);
   // Dummy data for the select options
   useEffect(() => {
-    const fetchStockData = async () => {
+    const fetchDataAndIndicators = async () => {
       try {
-        // if (selectedStock) {
-        //   setStockPriceData(await getStockPriceData(selectedStock));
-        //   setSelectedIndicators([]);
-        // }
         if (selectedStock) {
+          // Fetch stock data
           setStockPriceData(await getStockPriceData(selectedStock));
 
-          // Update indicators for the new selectedStock
+          // Update indicators based on selected stock
           const updatedIndicators = await Promise.all(
             selectedIndicators.map(async (indicator) => {
-              const newData = await getIndicatorData(
-                selectedStock,
-                indicator.name,
-                14
-              );
+              const { name, stock } = indicator;
+              console.log(name, selectedStock);
+              const updatedValue = await getIndicatorData(selectedStock, name, {
+                [name]: IndicatorsList[name],
+              });
+
               return {
                 ...indicator,
                 lines: [
                   {
-                    [indicator.name]: newData,
+                    [name]: updatedValue,
                   },
                 ],
               };
             })
           );
+
           setSelectedIndicators(updatedIndicators);
         }
       } catch (error) {
@@ -57,8 +57,15 @@ const AdvancedChart = () => {
       }
     };
 
-    fetchStockData();
+    fetchDataAndIndicators();
   }, [selectedStock]);
+
+  function transformIndicatorsToList(indicators) {
+    return Object.keys(indicators).map((key) => ({
+      value: key,
+      label: indicators[key].name || key, // Use the full name if available, otherwise use the key
+    }));
+  }
   return (
     <div className="d-flex flex-column" style={{ height: "100vh" }}>
       <Toolbar>
@@ -82,22 +89,18 @@ const AdvancedChart = () => {
         <ToolSeparator />
         <SelectTool
           text="Indicators"
-          options={[
-            { value: "EMA", label: "Exponential Moving Average" },
-            { value: "SMA", label: "Simple Moving Average" },
-            { value: "RSI", label: "Relative Strength Index" },
-            { value: "MACD", label: "Moving average convergence/divergence " },
-          ]}
+          options={transformIndicatorsToList(IndicatorsList)}
           onSelectFunction={async (indicatorName) => {
-            console.log(indicatorName);
             const newIndicator = {
               name: indicatorName,
               pane: 1, // Assuming pane value increments for each new indicator
+              params: IndicatorsList[indicatorName],
               lines: [
                 {
                   [indicatorName]: await getIndicatorData(
                     selectedStock,
-                    indicatorName
+                    indicatorName,
+                    { [indicatorName]: IndicatorsList[indicatorName] }
                   ),
                 },
               ],

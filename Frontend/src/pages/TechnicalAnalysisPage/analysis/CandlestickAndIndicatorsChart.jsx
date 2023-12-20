@@ -65,7 +65,6 @@ const CandlestickAndIndicatorsChart = ({
             })
             .setData(formatIndicatorkData(Object.values(data)[0]));
         });
-        console.log(indicator.name);
       });
     }
 

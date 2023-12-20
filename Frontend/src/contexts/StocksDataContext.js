@@ -60,12 +60,14 @@ export function StocksDataProvider({ children }) {
 
     return response.data;
   }
-  async function getIndicatorData(symbol, indicator, period) {
+  async function getIndicatorData(symbol, indicator, params) {
     let response;
-    console.log(period);
+    console.log(params);
+    const stringParams = JSON.stringify(params); // Stringify the params object
+
     try {
       response = await axios.get(
-        `http://localhost:5000/python-api/${symbol}/indicators/${indicator}?period=${period}`
+        `http://localhost:5000/python-api/${symbol}/indicators/${indicator}?params=${stringParams}`
       );
       // console.log(response.data);
     } catch (error) {
