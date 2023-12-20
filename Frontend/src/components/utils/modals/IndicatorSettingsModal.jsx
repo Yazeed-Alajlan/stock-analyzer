@@ -45,11 +45,7 @@ const IndicatorSettingsModal = ({ indicatorName, showModal, handleClose }) => {
           return {
             ...indicator,
             params: updatedParams,
-            lines: [
-              {
-                [indicatorName]: updatedValue,
-              },
-            ],
+            lines: [updatedValue],
           };
         } else return indicator;
       })

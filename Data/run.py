@@ -148,12 +148,12 @@ def indicators(symbol,indicator):
             print("##############################################################################")
             series = series.dropna(how='any',axis=0) 
             series.index = series.index.strftime('%Y-%m-%d')
-            result_dict[list(kwargs.keys())[index]] = series
+            result_dict[list(kwargs.keys())[index]] = series.to_dict()
         print(result_dict)
     else:
         data = data.dropna(how='any',axis=0) 
         data.index = data.index.strftime('%Y-%m-%d')
-        result_dict[list(kwargs.keys())[0]] = data
+        result_dict[list(kwargs.keys())[0]] = data.to_dict()
         print(result_dict)
 
     return result_dict

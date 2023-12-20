@@ -73,7 +73,7 @@ export function StocksDataProvider({ children }) {
     } catch (error) {
       console.error("Error fetching stock data:", error);
     }
-
+    console.log(response.data);
     return response.data;
   }
 

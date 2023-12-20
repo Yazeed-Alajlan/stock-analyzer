@@ -40,11 +40,7 @@ const AdvancedChart = () => {
 
               return {
                 ...indicator,
-                lines: [
-                  {
-                    [name]: updatedValue,
-                  },
-                ],
+                lines: [updatedValue],
               };
             })
           );
@@ -93,18 +89,15 @@ const AdvancedChart = () => {
           onSelectFunction={async (indicatorName) => {
             const newIndicator = {
               name: indicatorName,
-              pane: indicatorName === "SMA" || indicatorName === "EMA" ? 0 : 1, // Assuming pane value increments for each new indicator
+              pane: indicatorName === "SMA" || indicatorName === "EMA" ? 0 : 1,
               params: IndicatorsList[indicatorName],
               lines: [
-                {
-                  [indicatorName]: await getIndicatorData(
-                    selectedStock,
-                    indicatorName,
-                    { [indicatorName]: IndicatorsList[indicatorName] }
-                  ),
-                },
+                await getIndicatorData(selectedStock, indicatorName, {
+                  [indicatorName]: IndicatorsList[indicatorName],
+                }),
               ],
             };
+            console.log(newIndicator);
             setSelectedIndicators((prevIndicators) => [
               ...prevIndicators,
               newIndicator,
