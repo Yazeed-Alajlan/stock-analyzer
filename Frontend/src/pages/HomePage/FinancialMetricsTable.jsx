@@ -158,19 +158,17 @@ const FinancialMetricsTable = ({
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell, index) => {
-                        const [symbol, name] = cell.value.split(" - ");
                         return (
                           <td {...cell.getCellProps()} key={index}>
-                            {index === 0 ? (
-                              <div>
-                                <span className="bg-light fw-bold ms-2">
-                                  {symbol}
-                                </span>
-                                <span>{name}</span>
-                              </div>
-                            ) : (
-                              cell.render("Cell")
-                            )}
+                            {index === 0
+                              ? cell.render("Cell")
+                              : // <div>
+                                //   <span className="bg-light fw-bold ms-2">
+                                //     {symbol}
+                                //   </span>
+                                //   <span>{name}</span>
+                                // </div>
+                                cell.render("Cell")}
                           </td>
                         );
                       })}

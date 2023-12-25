@@ -16,18 +16,22 @@ const HomePage = () => {
     setSelectedStock,
     getAllBasicEarningsPerShareTTM,
     prepareFinancialMetricsComparisonTableData,
-    getStocksWorkingCapitalRatio,
+    getFinancialMetric,
   } = useStocksData();
 
-  const [earningsData, setEarningsData] = useState();
   const [data, setData] = useState();
+  const [earningsData, setEarningsData] = useState();
+  const [workingCapitalRatioData, setWorkingCapitalRatioData] = useState();
 
   useEffect(() => {
-    getStocksWorkingCapitalRatio();
     const fetchEarningsData = async () => {
       try {
         setEarningsData(await getAllBasicEarningsPerShareTTM());
         setData(await prepareFinancialMetricsComparisonTableData());
+        setWorkingCapitalRatioData(
+          await getFinancialMetric("Leverage")
+          //GrossProfitMargin - NetProfitMargin - Leverage - DebtToEquityRatio
+        );
       } catch (error) {
         // Handle error if necessary
         console.error("Error fetching earnings data:", error);
@@ -74,6 +78,17 @@ const HomePage = () => {
             <FinancialMetricsTable
               header={"ربحية السهم الأساسية الأساسية"}
               tableData={earningsData}
+              isScrollable
+              filterBy={"sectorNameAr"}
+              removeFilterFromColumn
+            />
+          )}
+        </Col>
+        <Col xs={6}>
+          {workingCapitalRatioData && (
+            <FinancialMetricsTable
+              header={"نسبة رأس المال العامل"}
+              tableData={workingCapitalRatioData}
               isScrollable
               filterBy={"sectorNameAr"}
               removeFilterFromColumn
