@@ -16,12 +16,14 @@ const HomePage = () => {
     setSelectedStock,
     getAllBasicEarningsPerShareTTM,
     prepareFinancialMetricsComparisonTableData,
+    getStocksWorkingCapitalRatio,
   } = useStocksData();
 
   const [earningsData, setEarningsData] = useState();
   const [data, setData] = useState();
 
   useEffect(() => {
+    getStocksWorkingCapitalRatio();
     const fetchEarningsData = async () => {
       try {
         setEarningsData(await getAllBasicEarningsPerShareTTM());

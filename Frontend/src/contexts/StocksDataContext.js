@@ -71,7 +71,7 @@ export function StocksDataProvider({ children }) {
       );
       // console.log(response.data);
     } catch (error) {
-      console.error("Error fetching stock data:", error);
+      console.log("Error fetching stock data:", error);
     }
     console.log(response.data);
     return response.data;
@@ -121,6 +121,46 @@ export function StocksDataProvider({ children }) {
     }
     return [];
   }
+  async function getStocksWorkingCapitalRatio() {
+    try {
+      if (stocksData) {
+        const formattedData = [];
+
+        for (const stock of stocksData) {
+          const financialData = await getStockFinancialData(stock.symbol);
+          console.log(financialData);
+          if (financialData) {
+            const workingCapitalRatio =
+              calculateWorkingCapitalRatio(financialData);
+
+            formattedData.push({
+              symbol: stock.symbol,
+              name: stock.tradingNameAr,
+              sectorNameAr: stock.sectorNameAr,
+              WorkingCapitalRatio: workingCapitalRatio,
+            });
+          }
+        }
+
+        return formattedData;
+      }
+      return [];
+    } catch (error) {
+      // Handle errors here
+      console.error("Error while calculating working capital ratios:", error);
+      return [];
+    }
+  }
+
+  function calculateWorkingCapitalRatio(financialData) {
+    // Your calculation logic here based on the financial data
+    // Example: extracting current assets and liabilities and calculating ratio
+    const currentAssets = financialData.current_assets;
+    const currentLiabilities = financialData.current_liabilities;
+
+    const workingCapitalRatio = currentAssets / currentLiabilities;
+    return workingCapitalRatio;
+  }
   const value = {
     stocksData,
     setStocksData,
@@ -132,6 +172,7 @@ export function StocksDataProvider({ children }) {
     getIndicatorData,
     getAllBasicEarningsPerShareTTM,
     prepareFinancialMetricsComparisonTableData,
+    getStocksWorkingCapitalRatio,
   };
 
   return (

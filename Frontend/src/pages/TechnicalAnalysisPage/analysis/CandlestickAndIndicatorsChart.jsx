@@ -55,17 +55,30 @@ const CandlestickAndIndicatorsChart = ({
     candlestickSeries.setData(formatCandleStickData(series));
     console.log(indicators);
     if (indicators) {
+      console.log(indicators);
       indicators.forEach((indicator, index) => {
         console.log(indicator);
         indicator.lines.map((data) => {
-          chart
-            .addLineSeries({
-              title: indicator.name,
-
-              pane: indicator.pane,
-              color: data.color,
-            })
-            .setData(formatIndicatorkData(Object.values(data)[0]));
+          Object.entries(data).map((line) => {
+            if (line[0] == "signalperiod") {
+              chart
+                .addHistogramSeries({
+                  title: line[0],
+                  pane: indicator.pane,
+                  color: data.color,
+                })
+                .setData(formatIndicatorkData(Object.values(line)[1]));
+            } else {
+              chart
+                .addLineSeries({
+                  title: line[0],
+                  pane: indicator.pane,
+                  color: data.color,
+                })
+                .setData(formatIndicatorkData(Object.values(line)[1]));
+            }
+          });
+          console.log(data);
         });
       });
     }

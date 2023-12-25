@@ -33,12 +33,12 @@ const TechnicalAnalysisPage = () => {
           </>
         )} */}
         <ResizableComponent />
-        {/* <CardWithLink
+        <CardWithLink
           to="/monthly-returns"
           label="Monthly Returns"
           icon={<TbReportAnalytics size={50} />}
-        /> */}
-        {/* <CardWithLink
+        />
+        <CardWithLink
           to="/consolidating-stocks"
           label="Consolidating Stocks"
           icon={<FaChartBar size={50} />}
@@ -63,7 +63,7 @@ const TechnicalAnalysisPage = () => {
           to="/vsa"
           label="VSA"
           icon={<TbDeviceAnalytics size={50} />}
-        /> */}
+        />
         {/* <CardWithLink
           to="/"
           label="volume Seasonality Daily"
