@@ -13,7 +13,7 @@ data = yf.download(symbol, start=start_date, end=end_date)
 closing_prices = data['Close']
 
 # Calculate SMA and ATR
-sma_periods = [5, 10, 20, 50, 100]  # Define a range of SMA values to test
+sma_periods = [10,20,30,40,50,60,70,80,90,100]  # Define a range of SMA values to test
 atr_period = 14
 
 # Initialize variables to keep track of best SMA and intersections
@@ -51,6 +51,30 @@ for sma_period in sma_periods:
         best_sma_indices_above = above_bound_indices
         best_sma_indices_below = below_bound_indices
 
+merged_indices = [(idx, 'above') for idx in best_sma_indices_above] + [(idx, 'below') for idx in best_sma_indices_below]
+merged_indices.sort()
+
+# Identify consecutive bounces and penetrations, then mark on the chart
+support_penetrations = []
+resistance_bounces = []
+resistance_penetrations = []
+support_bounces = []
+
+# Loop to identify support and resistance
+for i in range(1, len(merged_indices)):
+    current_idx, current_pos = merged_indices[i]
+    prev_idx, prev_pos = merged_indices[i - 1]
+
+    if current_pos == 'above' and prev_pos == 'below':  # Support Penetration
+        resistance_penetrations.append(current_idx)
+    elif current_pos == 'below' and prev_pos == 'below':  # Resistance Bounce
+        resistance_bounces.append(current_idx)
+    elif current_pos == 'below' and prev_pos == 'above':  # Resistance Penetration
+        support_penetrations.append(current_idx)
+    elif current_pos == 'above' and prev_pos == 'above':  # Support Bounce
+        support_bounces.append(current_idx)
+
+
 # Plotting for the best SMA only
 plt.figure(figsize=(10, 6))
 plt.plot(data.index, closing_prices, label='Price')
@@ -67,14 +91,25 @@ intersection_prices_below = closing_prices.loc[best_sma_indices_below]
 plt.scatter(intersection_prices_below.index, intersection_prices_below,
             marker='o', color='red', label='Below Lower Bound')
 
+# Marking consecutive bounces on the chart
+for idx in support_bounces:
+    plt.axvline(x=idx, color='green', linestyle='--')  # Marking the index on the plot in yellow
+
+for idx in support_penetrations:
+    plt.axvline(x=idx, color='red', linestyle='--')  # Marking penetrations in orange
+
+
+
+print(best_sma)
+# Printing counts for each category
+print(f"Number of Support Penetrations: {len(support_penetrations)}")
+print(f"Number of Resistance Bounces: {len(resistance_bounces)}")
+print(f"Number of Resistance Penetrations: {len(resistance_penetrations)}")
+print(f"Number of Support Bounces: {len(support_bounces)}")
+
 plt.title(f'{symbol} Stock Price and Custom Bounds for Best SMA')
 plt.xlabel('Date')
 plt.ylabel('Price')
 plt.legend()
 plt.grid(True)
 plt.show()
-
-print(f"Best SMA based on intersections: {best_sma} days.")
-print(f"Number of intersections for best SMA: {best_sma_intersections} times.")
-print(f"Above upper bound intersection indices for best SMA: {best_sma_indices_above}")
-print(f"Below lower bound intersection indices for best SMA: {best_sma_indices_below}")
