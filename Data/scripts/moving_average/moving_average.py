@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # Fetch stock data
 symbol = 'AAPL'
-start_date = '2022-01-01'
+start_date = '2020-01-01'
 end_date = '2023-01-01'
 data = yf.download(symbol, start=start_date, end=end_date)
 
@@ -15,8 +15,10 @@ closing_prices = data['Close']
 # Calculate bounce percentage for different SMA periods
 bounce_percentages = []
 penetration_percentages = []
-# sma_periods = list(range(2, 201))  # Modify the range from 2 to 200
-sma_periods = [50] 
+support_bounces_percentages=[]
+resistance_bounces_percentages=[]
+sma_periods = list(range(2, 201))  # Modify the range from 2 to 200
+# sma_periods = [50] 
 
 atr_period = 14
 
@@ -68,14 +70,17 @@ for sma_period in sma_periods:
 
     penetration_percentage = ((len(resistance_penetrations) + len(support_penetrations)) / total_intersections) * 100
     penetration_percentages.append(penetration_percentage)
-print(len(support_bounces))
-print(len(support_penetrations))
-print(len(resistance_bounces))
-print(len(resistance_penetrations))
+
+    support_bounces_percentage=((len(support_bounces))/ (len(support_bounces) + len(support_penetrations)))
+    resistance_bounces_percentage=((len(resistance_bounces))/ (len(resistance_bounces) + len(resistance_penetrations)))
+    support_bounces_percentages.append(support_bounces_percentage)
+    resistance_bounces_percentages.append(resistance_bounces_percentage)
+
+
 # Plotting bounce percentage against SMA periods
 plt.figure(figsize=(10, 6))
-plt.plot(sma_periods, bounce_percentages, linestyle='-', color='blue')
-plt.plot(sma_periods, penetration_percentages, linestyle='-', color='yellow')
+plt.plot(sma_periods, support_bounces_percentages, linestyle='-', color='blue')
+plt.plot(sma_periods, resistance_bounces_percentages, linestyle='-', color='yellow')
 plt.title('Bounce Percentage for Different SMA Periods')
 plt.xlabel('SMA Period')
 plt.ylabel('Bounce Percentage')

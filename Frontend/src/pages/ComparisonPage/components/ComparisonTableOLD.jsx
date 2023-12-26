@@ -8,10 +8,6 @@ import { Container } from "react-bootstrap";
 import { useStocksData } from "contexts/StocksDataContext";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import Tabs from "components/utils/Tabs";
-import Tab from "components/utils/Tab";
-import FinancialsTable from "pages/StockPage/components/financials/FinancialsTable";
-import ButtonsGroup from "components/utils/buttons/ButtonsGroup";
 
 const ComparisonTable = () => {
   const { getStockFinancialData, getStockInformationData, stocksData } =
@@ -20,7 +16,7 @@ const ComparisonTable = () => {
   const [stockInformationData, setStockInformationData] = useState();
   const [stockFinancialData, setStockFinancialData] = useState();
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const maxSelected = 3; // Change this to your desired maximum limit
+  const maxSelected = 2; // Change this to your desired maximum limit
   const animatedComponents = makeAnimated();
 
   const [selectedTab, setSelectedTab] = useState("Balance Sheet");
@@ -37,7 +33,6 @@ const ComparisonTable = () => {
         });
 
         const fetchedData = await Promise.all(fetchedDataPromises);
-        console.log(fetchedData);
         // Combine the first elements of each specified array from the fetchedData array
         const combinedObject = {
           balanceSheet: [
@@ -147,48 +142,51 @@ const ComparisonTable = () => {
         {stockFinancialData && selectedOptions.length == 2 ? (
           <Container className="py-4">
             <div className="d-flex justify-content-between align-items-center pb-5">
-              <Tabs activeTab={1}>
-                <Tab text={"المركز المالي"}>
-                  <FinancialsTable
-                    header={
-                      (stockFinancialData.tradingNameAr,
-                      stockFinancialData.tradingNameAr)
-                    }
-                    title={"المركز المالي"}
-                    data={stockFinancialData.balanceSheet}
-                  />
-                </Tab>
-                <Tab text={"قائمة الدخل"}>
-                  <FinancialsTable
-                    header={
-                      (stockFinancialData.tradingNameAr,
-                      stockFinancialData.tradingNameAr)
-                    }
-                    title={"قائمة الدخل"}
-                    data={stockFinancialData.incomeSheet}
-                  />
-                </Tab>
-                <Tab text={"التدفق النقدي"}>
-                  <FinancialsTable
-                    header={
-                      (stockFinancialData.tradingNameAr,
-                      stockFinancialData.tradingNameAr)
-                    }
-                    title={"التدفق النقدي"}
-                    data={stockFinancialData.cashFlow}
-                  />
-                </Tab>
-              </Tabs>
-
-              <ButtonsGroup
-                label={"المدة"}
-                icon={<BsCalendar3 />}
-                buttons={[
-                  { id: 1, text: "سنوي" },
-                  { id: 2, text: "ربع سنوي" },
-                ]}
-                parentSetState={setDisplayAnnual}
-              />
+              <ButtonGroup className="gap-2">
+                <CustomButton
+                  variant={
+                    selectedTab === "Balance Sheet"
+                      ? "primary"
+                      : "outline-primary"
+                  }
+                  onClick={() => handleTabClick("Balance Sheet")}
+                  title={"المركز المالي"}
+                />
+                <CustomButton
+                  variant={
+                    selectedTab === "Statment of Income"
+                      ? "primary"
+                      : "outline-primary"
+                  }
+                  onClick={() => handleTabClick("Statment of Income")}
+                  title={"قائمة الدخل"}
+                />
+                <CustomButton
+                  variant={
+                    selectedTab === "Cash Flow" ? "primary" : "outline-primary"
+                  }
+                  onClick={() => handleTabClick("Cash Flow")}
+                  title={"التدفق النقدي"}
+                />
+              </ButtonGroup>
+              <ButtonGroup className="gap-2">
+                <div className="fs-3">
+                  <span className="mx-2">
+                    <BsCalendar3 />
+                  </span>
+                  المدة:
+                </div>
+                <CustomButton
+                  variant={displayAnnual ? "primary" : "outline-primary"}
+                  onClick={() => handleDisplayButtonClick(true)}
+                  title={"سنوي"}
+                />
+                <CustomButton
+                  variant={displayAnnual ? "outline-primary" : "primary"}
+                  onClick={() => handleDisplayButtonClick(false)}
+                  title={"ربع سنوي"}
+                />
+              </ButtonGroup>
             </div>
 
             <div>

@@ -52,7 +52,6 @@ const Financials = () => {
     { id: 1, text: "سنوي" },
     { id: 2, text: "ربع سنوي" },
   ];
-  console.log(financialData);
   return (
     <div>
       {financialData ? (
