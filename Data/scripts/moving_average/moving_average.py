@@ -14,6 +14,7 @@ closing_prices = data['Close']
 
 # Calculate bounce percentage for different SMA periods
 bounce_percentages = []
+penetration_percentages = []
 sma_periods = list(range(2, 201))  # Modify the range from 2 to 200
 
 atr_period = 14
@@ -64,9 +65,13 @@ for sma_period in sma_periods:
     bounce_percentage = ((len(support_bounces) + len(resistance_bounces)) / total_intersections) * 100
     bounce_percentages.append(bounce_percentage)
 
+    penetration_percentage = ((len(resistance_penetrations) + len(support_penetrations)) / total_intersections) * 100
+    penetration_percentages.append(penetration_percentage)
+
 # Plotting bounce percentage against SMA periods
 plt.figure(figsize=(10, 6))
-plt.plot(sma_periods, bounce_percentages, marker='o', linestyle='-', color='blue')
+plt.plot(sma_periods, bounce_percentages, linestyle='-', color='blue')
+plt.plot(sma_periods, penetration_percentages, linestyle='-', color='yellow')
 plt.title('Bounce Percentage for Different SMA Periods')
 plt.xlabel('SMA Period')
 plt.ylabel('Bounce Percentage')
