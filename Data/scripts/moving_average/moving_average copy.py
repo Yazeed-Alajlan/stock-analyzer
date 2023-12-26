@@ -13,7 +13,7 @@ data = yf.download(symbol, start=start_date, end=end_date)
 closing_prices = data['Close']
 
 # Calculate SMA and ATR
-sma_periods = [10,20,30,40,50,60,70,80,90,100]  # Define a range of SMA values to test
+sma_periods = [50]  # Define a range of SMA values to test
 atr_period = 14
 
 # Initialize variables to keep track of best SMA and intersections
