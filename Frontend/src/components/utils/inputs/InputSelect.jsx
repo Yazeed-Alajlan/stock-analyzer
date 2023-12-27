@@ -35,7 +35,10 @@ const InputSelect = ({
           isSearchable
           closeMenuOnSelect={isMulti ? false : true}
           isMulti={isMulti}
-          defaultValue={options.find((option) => option.value === defaultValue)}
+          defaultValue={
+            defaultValue &&
+            options.find((option) => option.value === defaultValue)
+          }
           menuIsOpen={menuIsOpen}
         />
       </div>

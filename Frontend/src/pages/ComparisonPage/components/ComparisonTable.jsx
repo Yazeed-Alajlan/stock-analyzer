@@ -20,7 +20,7 @@ const ComparisonTable = () => {
   const [stockInformationData, setStockInformationData] = useState();
   const [stockFinancialData, setStockFinancialData] = useState();
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const maxSelected = 3; // Change this to your desired maximum limit
+  const maxSelected = 2; // Change this to your desired maximum limit
   const animatedComponents = makeAnimated();
 
   const [selectedTab, setSelectedTab] = useState("Balance Sheet");

@@ -30,7 +30,6 @@ const FinancialsChart = ({ stockFinancialData }) => {
       options: balanceSheetKeys.map((key) => ({ value: key, label: key })),
     },
   ];
-  console.log(groupedOptions);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [chartData, setChartData] = useState(null);
 
