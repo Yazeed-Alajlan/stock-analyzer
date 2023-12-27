@@ -9,19 +9,17 @@ import mplfinance as mpf
 
 def prepData():
     # Fetch historical data from Yahoo Finance
-    df = yf.download("2222.SR", start="2020-01-1", end="2023-10-19")
+    df = yf.download("2222.SR", start="2022-01-1", end="2023-10-19")
     df.reset_index(inplace=True)
 
     # Calculate VSA indicators
     close_prices = df['Adj Close']
     volume = df['Volume']
 
-    # Calculate On Balance Volume (OBV)
     df['OBV'] = talib.OBV(close_prices, volume)
     
-    # Calculate Candle Range to Volume Ratio (VAS)
-    # df['VAS'] = calculateCandleRangeToVolumeRatio(df)
-    df['VAS'] = vsa_indicator(df)
+
+    df['VAS'] = vsa_indicator(df,7)
     return df
 
 
@@ -50,7 +48,6 @@ def vsa_indicator(data: pd.DataFrame, norm_lookback: int = 168):
        
         pred_range = intercept + slope * norm_vol[i]
         range_dev[i] = norm_range[i] - pred_range
-    print(range_dev)
     return pd.Series(range_dev, index=data.index)
 
 
@@ -63,7 +60,6 @@ def calculateCandleRangeToVolumeRatio(df):
     
     return range_to_volume_ratio
 
-import matplotlib.pyplot as plt
 
 def plotVSAIndicators(df):
     # Create a single figure for all VSA indicators
@@ -77,7 +73,7 @@ def plotVSAIndicators(df):
 
     # Plot On Balance Volume (OBV) on the second subplot
     plt.subplot(3, 1, 2)
-    plt.plot(df['Date'], df['OBV'], label='OBV')
+    plt.plot(df['Date'], df['Volume'], label='Volume')
     plt.title('On Balance Volume (OBV)')
     plt.legend()
 
