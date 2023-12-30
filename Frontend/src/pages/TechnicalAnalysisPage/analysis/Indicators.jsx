@@ -19,18 +19,18 @@ const Indicators = ({ indicators, onDelete }) => {
   };
 
   return (
-    <div className=" d-flex flex-column align-items-start ">
+    <div className=" d-flex flex-column  align-items-start ">
       {indicators.map((indicator, index) => (
         <div
           key={index}
-          className={`d-inline-flex flex-row-reverse gap-2 align-items-center  border ${
+          className={`d-inline-flex  gap-4 align-items-center rounded p-1  border ${
             hoverIndex === index ? "border-primary" : "border-transparent "
-          } rounded p-2`}
+          } `}
           onMouseEnter={() => setHoverIndex(index)}
           onMouseLeave={() => setHoverIndex(null)}
         >
-          <div>{indicator.name}</div>
-          <div
+          <span>{indicator.name}</span>
+          <span
             style={{
               opacity: hoverIndex === index ? 1 : 0,
               transition: "opacity 0.3s",
@@ -54,7 +54,7 @@ const Indicators = ({ indicators, onDelete }) => {
               showModal={showModalIndex === index}
               handleClose={() => setShowModalIndex(null)}
             />
-          </div>
+          </span>
         </div>
       ))}
     </div>

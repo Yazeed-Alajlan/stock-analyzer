@@ -9,8 +9,8 @@ const ResizableComponent = () => {
   const { selectedStock } = useTechnicalAnalysis();
 
   return (
-    <div>
-      <PanelGroup direction="horizontal" className="d-flex flex-row-reverse">
+    <div dir="ltr">
+      <PanelGroup direction="horizontal" className="d-flex ">
         <Panel minSizePercentage={80}>
           {selectedStock ? (
             <>

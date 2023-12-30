@@ -223,7 +223,7 @@ const CandlestickAndIndicatorsChart = ({
       {series ? (
         <>
           <div className="position-relative" id={chartContainerId}>
-            <span className="position-absolute z-3 top-0 start-0 mx-5">
+            <span className=" d-inline-flex flex-column position-absolute z-3 top-0 start-0 mx-3">
               <Indicators indicators={indicators} onDelete={handleDelete} />
             </span>
           </div>
