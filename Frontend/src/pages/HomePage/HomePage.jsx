@@ -27,12 +27,12 @@ const HomePage = () => {
   useEffect(() => {
     const fetchEarningsData = async () => {
       try {
-        // setEarningsData(await getAllBasicEarningsPerShareTTM());
-        // setData(await prepareFinancialMetricsComparisonTableData());
-        // setWorkingCapitalRatioData(
-        //   await getFinancialMetric("Leverage")
-        //   //GrossProfitMargin - NetProfitMargin - Leverage - DebtToEquityRatio
-        // );
+        setEarningsData(await getAllBasicEarningsPerShareTTM());
+        setData(await prepareFinancialMetricsComparisonTableData());
+        setWorkingCapitalRatioData(
+          await getFinancialMetric("Leverage")
+          //GrossProfitMargin - NetProfitMargin - Leverage - DebtToEquityRatio
+        );
         const apiKey = "IQQ9D5BH9HYWE4UF";
         const symbol = "8180.SR"; // Aramco's stock symbol
 
@@ -87,7 +87,7 @@ const HomePage = () => {
           />
         </div>
       </div>
-      {/* <Row className="d-flex flex-wrap">
+      <Row className="d-flex flex-wrap">
         <Col xs={6}>
           {earningsData && (
             <FinancialMetricsTable
@@ -125,7 +125,7 @@ const HomePage = () => {
             )}
           </Col>
         )}
-      </Row> */}
+      </Row>
     </Container>
   );
 };
