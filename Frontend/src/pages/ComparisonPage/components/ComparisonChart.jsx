@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DynamicChart from "components/utils/charts/DynamicChart";
 import InputSelect from "components/utils/inputs/InputSelect";
+import { CustomCard } from "components/utils/cards/CustomCard";
 
 const ComparisonChart = ({ stockFinancialData }) => {
   console.log(stockFinancialData);
@@ -39,20 +40,18 @@ const ComparisonChart = ({ stockFinancialData }) => {
 
     if (selectedOptions.length > 0) {
       selectedOptions.forEach((option) => {
-        result[option.label] = []; // Initialize an array for each option
-
         stockFinancialData.forEach((dataItem) => {
+          result[option.label + "-" + dataItem.symbol] = []; // Initialize an array for each option
           dataItem[option.groupLabel].forEach((item) => {
             let obj = {
               year: item["year"],
               value: item[option.value], // Changed to option.value for the correct property access
             };
 
-            result[option.label].push(obj); // Push object into the respective option's array
+            result[option.label + "-" + dataItem.symbol].push(obj); // Push object into the respective option's array
           });
         });
       });
-      console.log(result);
       setChartData(result);
     } else {
       setChartData([]);
@@ -70,15 +69,17 @@ const ComparisonChart = ({ stockFinancialData }) => {
   };
 
   return (
-    <div>
+    <>
       <InputSelect
+        label={"اختر المؤشرات المالية"}
         options={groupedOptions}
         isMulti={true}
         onChange={handleSelectChange}
         defaultValue={selectedOptions}
       />
+      <hr />
       {chartData && <DynamicChart data={chartData} />}
-    </div>
+    </>
   );
 };
 

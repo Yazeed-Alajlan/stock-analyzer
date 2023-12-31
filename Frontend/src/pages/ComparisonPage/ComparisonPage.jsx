@@ -4,6 +4,7 @@ import ComparisonTable from "./components/ComparisonTable";
 import ComparisonChart from "./components/ComparisonChart";
 import { useStocksData } from "contexts/StocksDataContext";
 import InputSelect from "components/utils/inputs/InputSelect";
+import { CustomCard } from "components/utils/cards/CustomCard";
 const ComparisonPage = () => {
   const { getStockFinancialData, stocksData } = useStocksData();
   const [selectedStocks, setSelectedStocks] = useState([]);
@@ -19,7 +20,6 @@ const ComparisonPage = () => {
           return financialData;
         });
         const fetchedData = await Promise.all(fetchedDataPromises);
-        console.log(fetchedData);
         setStockFinancialData(fetchedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -32,41 +32,44 @@ const ComparisonPage = () => {
   }, [selectedStocks]);
   return (
     <PageLayout>
-      <InputSelect
-        isMulti
-        options={
-          stocksData &&
-          stocksData
-            .filter((stock) => {
-              if (
-                selectedStocks.length === 0 ||
-                selectedStocks.every(
-                  (selectedOption) =>
-                    selectedOption.sector === stock.sectorNameEn
-                )
-              ) {
-                return true;
-              }
-              return false;
-            })
-            .map((stock) => ({
-              value: stock.symbol,
-              label: `${stock.tradingNameAr} (${stock.symbol})`,
-              sector: stock.sectorNameEn,
-            }))
-        }
-        maxMenuHeight={200}
-        value={selectedStocks}
-        onChange={(selected) => {
-          if (selected.length <= maxSelectedOptions) {
-            setSelectedStocks(selected);
+      <CustomCard>
+        <InputSelect
+          label={"اختر شركتين للمقارنة من نفس القطاع"}
+          isMulti
+          options={
+            stocksData &&
+            stocksData
+              .filter((stock) => {
+                if (
+                  selectedStocks.length === 0 ||
+                  selectedStocks.every(
+                    (selectedOption) =>
+                      selectedOption.sector === stock.sectorNameEn
+                  )
+                ) {
+                  return true;
+                }
+                return false;
+              })
+              .map((stock) => ({
+                value: stock.symbol,
+                label: `${stock.tradingNameAr} (${stock.symbol})`,
+                sector: stock.sectorNameEn,
+              }))
           }
-        }}
-      />
-      {stockFinancialData && (
-        <ComparisonChart stockFinancialData={stockFinancialData} />
-      )}
-      <ComparisonTable />
+          maxMenuHeight={200}
+          value={selectedStocks}
+          onChange={(selected) => {
+            if (selected.length <= maxSelectedOptions) {
+              setSelectedStocks(selected);
+            }
+          }}
+        />
+        {stockFinancialData && (
+          <ComparisonChart stockFinancialData={stockFinancialData} />
+        )}
+        <ComparisonTable />
+      </CustomCard>
     </PageLayout>
   );
 };

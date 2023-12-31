@@ -37,7 +37,6 @@ const ComparisonTable = () => {
         });
 
         const fetchedData = await Promise.all(fetchedDataPromises);
-        console.log(fetchedData);
         // Combine the first elements of each specified array from the fetchedData array
         const combinedObject = {
           balanceSheet: [
@@ -81,7 +80,6 @@ const ComparisonTable = () => {
             fetchedData[1].tradingNameAr,
           ],
         };
-        console.log(combinedObject);
         // Set stock financial data
         setStockFinancialData(combinedObject);
       } catch (error) {

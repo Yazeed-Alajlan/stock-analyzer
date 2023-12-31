@@ -6,6 +6,7 @@ import { useStocksData } from "../../contexts/StocksDataContext";
 import FinancialMetricsTable from "./FinancialMetricsTable";
 import GeneralTable from "components/utils/GeneralTable";
 import FinancialMetricsComparisonTable from "./FinancialMetricsComparisonTable";
+import axios from "axios";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -26,12 +27,27 @@ const HomePage = () => {
   useEffect(() => {
     const fetchEarningsData = async () => {
       try {
-        setEarningsData(await getAllBasicEarningsPerShareTTM());
-        setData(await prepareFinancialMetricsComparisonTableData());
-        setWorkingCapitalRatioData(
-          await getFinancialMetric("Leverage")
-          //GrossProfitMargin - NetProfitMargin - Leverage - DebtToEquityRatio
-        );
+        // setEarningsData(await getAllBasicEarningsPerShareTTM());
+        // setData(await prepareFinancialMetricsComparisonTableData());
+        // setWorkingCapitalRatioData(
+        //   await getFinancialMetric("Leverage")
+        //   //GrossProfitMargin - NetProfitMargin - Leverage - DebtToEquityRatio
+        // );
+        const apiKey = "IQQ9D5BH9HYWE4UF";
+        const symbol = "8180.SR"; // Aramco's stock symbol
+
+        const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${apiKey}`;
+
+        axios
+          .get(apiUrl)
+          .then((response) => {
+            // Extract stock data from the response and set it to state
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+        //IQQ9D5BH9HYWE4UF
       } catch (error) {
         // Handle error if necessary
         console.error("Error fetching earnings data:", error);
@@ -40,7 +56,6 @@ const HomePage = () => {
 
     fetchEarningsData();
   }, []);
-  console.log(data);
   const handleStockSelect = (selectedOption) => {
     setSelectedStock(selectedOption);
     navigate(
@@ -72,7 +87,7 @@ const HomePage = () => {
           />
         </div>
       </div>
-      <Row className="d-flex flex-wrap">
+      {/* <Row className="d-flex flex-wrap">
         <Col xs={6}>
           {earningsData && (
             <FinancialMetricsTable
@@ -110,7 +125,7 @@ const HomePage = () => {
             )}
           </Col>
         )}
-      </Row>
+      </Row> */}
     </Container>
   );
 };

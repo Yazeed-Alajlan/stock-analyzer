@@ -143,7 +143,6 @@ const StocksMainTable = ({ tableData, tableColumns }) => {
                     const columnsToCheck = [5, 6]; // Define columns to check for color change
 
                     const isColored = columnsToCheck.includes(index); // Check if this column needs coloring
-                    console.log(isColored);
                     const [symbol, name] = cell.value.split(" - ");
                     return (
                       <td
