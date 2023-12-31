@@ -6,6 +6,7 @@ import puppeteer from "puppeteer";
 import fs from "fs";
 import yahooFinance from "yahoo-finance2";
 import moment from "moment-timezone";
+import axios from "axios";
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/stockDB", {
@@ -421,6 +422,59 @@ async function saveStockforeignOwnership(stockData, foreignOwnershipData) {
 
 // Stocks Prices ------------------------------------------------------------------------------------------------------------
 
+async function saveStockPricesMohlel() {
+  try {
+    const symbols = await getStocksInformation();
+    for (const stock of symbols) {
+      const symbol = stock.symbol;
+      console.log(symbol);
+      const url = `https://bk.mohlel.com/api/v1/company/financial/prices?from=2022-1-1&to=2023-12-31&code=${symbol}`;
+      const response = await axios.get(url);
+      console.log(response.data.data);
+
+      const existingDocument = await StockPrices.findOne({ symbol });
+      if (existingDocument) {
+        // If the document exists, update it with the new data
+        for (const data of response.data.data) {
+          const existingDataPoint = existingDocument.quotes.find(
+            (dataPoint) =>
+              dataPoint.date.toLocaleDateString("en-GB") ===
+              new Date(data.date).toLocaleDateString("en-GB")
+          );
+          if (!existingDataPoint) {
+            existingDocument.quotes.push({
+              date: new Date(data.date), // Convert the date string to a Date object
+              open: data.open,
+              close: data.close,
+              high: data.high,
+              low: data.low,
+              volume: data.volume,
+            });
+          }
+        }
+        await existingDocument.save();
+      } else {
+        // If the document does not exist, create a new one with the new data
+        const stockPriceData = {
+          symbol: symbol,
+          quotes: response.data.data.map((data) => ({
+            date: new Date(data.date), // Convert the date string to a Date object
+            open: data.open,
+            close: data.close,
+            high: data.high,
+            low: data.low,
+            volume: data.volume,
+          })),
+        };
+        const stockPrice = new StockPrices(stockPriceData);
+        await stockPrice.save();
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching and saving stock data:", error);
+    // res.status(500).json({ error: "Unable to fetch and save stock data" });
+  }
+}
 async function saveStockPrices() {
   try {
     const symbols = await getStocksInformation();
@@ -434,12 +488,14 @@ async function saveStockPrices() {
         stock.symbol + ".SR",
         queryOptions
       );
+
       if (!result || !result.quotes || result.quotes.length === 0) {
         throw new Error("Invalid stock symbol or no data available.");
       }
+      console.log(result.quotes);
+
       // Check if a document with the same symbol already exists in the database
       const existingDocument = await StockPrices.findOne({ symbol });
-      console.log(result.quotes);
       if (existingDocument) {
         // If the document exists, update it with the new data
         for (const quote of result.quotes) {
@@ -542,4 +598,5 @@ async function saveStockPricesHorly() {
 // saveStockPricesHorly();
 // saveStockPrices();
 // runStockInformatioScript();
-updatedStockSummary();
+// updatedStockSummary();
+saveStockPricesMohlel();
