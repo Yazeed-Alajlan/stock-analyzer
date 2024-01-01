@@ -134,6 +134,8 @@ const ChartPatterns = ({ symbol }) => {
         if (pattern == []) return;
         Object.entries(drawData[pattern]).map((item) => {
           item[1].map((draw) => {
+            console.log(new Date(draw[0]).toISOString().split("T")[0]);
+            console.log(draw);
             tldata.push({
               time: new Date(draw[0]).toISOString().split("T")[0],
               value: draw[1],

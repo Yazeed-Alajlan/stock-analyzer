@@ -61,6 +61,27 @@ router.get("/japanese-candlestick-patterns/:pattern", async (req, res) => {
     });
 });
 
+router.get("/japanese-candlestick-patterns-markers", async (req, res) => {
+  const { symbol } = req.query;
+  console.log(symbol);
+  axios
+    .get(
+      `http://127.0.0.1:4000/api/stocks/japanese-candlestick-patterns-markers?symbol=${symbol}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((response) => {
+      var data = response.data;
+      res.json(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
 router.get("/:symbol/hawkes-process", async (req, res) => {
   const symbol = req.params.symbol;
   axios

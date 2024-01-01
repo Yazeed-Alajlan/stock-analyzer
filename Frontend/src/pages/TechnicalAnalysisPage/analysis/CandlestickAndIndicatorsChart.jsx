@@ -8,8 +8,13 @@ const CandlestickAndIndicatorsChart = ({
   symbol,
   indicators,
   drawLines,
+  markers,
 }) => {
-  const { selectedIndicators, setSelectedIndicators } = useTechnicalAnalysis();
+  const {
+    selectedIndicators,
+    setSelectedIndicators,
+    japaneseCandlestickMarkers,
+  } = useTechnicalAnalysis();
 
   const chartContainerId = `chart-container-${symbol}`;
 
@@ -53,7 +58,34 @@ const CandlestickAndIndicatorsChart = ({
     const chart = createChart(chartContainerId, chartOptions);
     const candlestickSeries = chart.addCandlestickSeries();
     candlestickSeries.setData(formatCandleStickData(series));
-    console.log(indicators);
+    console.log(markers);
+    if (markers) {
+      const markers_list = [];
+      Object.keys(markers).forEach((pattern) => {
+        markers[pattern].forEach((timestampPattern) => {
+          const [timestamp, patternName] = timestampPattern;
+          const formattedDate = new Date(timestamp).toISOString().split("T")[0];
+
+          markers_list.push({
+            time: formattedDate,
+            position: "aboveBar",
+            color: "#f68410", // Change the color as needed
+            shape: "circle", // Change the shape if required
+            text: patternName || pattern, // Use the pattern name or default to the key
+          });
+        });
+      });
+      console.log(markers_list);
+      const sortedList = markers_list.sort((a, b) => {
+        const dateA = new Date(a.time);
+        const dateB = new Date(b.time);
+        return dateA - dateB;
+      });
+
+      console.log(sortedList);
+      candlestickSeries.setMarkers(markers_list);
+    }
+
     if (indicators) {
       console.log(indicators);
       indicators.forEach((indicator, index) => {
@@ -88,7 +120,7 @@ const CandlestickAndIndicatorsChart = ({
     return () => {
       chart.remove();
     };
-  }, [symbol, selectedIndicators]);
+  }, [symbol, selectedIndicators, markers]);
 
   function createTooltip(chartContainerId, chart, series) {
     const container = document.getElementById(chartContainerId);

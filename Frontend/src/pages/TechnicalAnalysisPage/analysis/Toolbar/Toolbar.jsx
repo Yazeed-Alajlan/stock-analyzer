@@ -33,6 +33,20 @@ const ButtonTool = ({ icon, text, hoverText, onClick, children }) => {
     </span>
   );
 };
+const CehckBoxTool = ({ text, onClick, isChecked, onCheckboxChange }) => {
+  return (
+    <span>
+      <label>
+        {text}
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={onCheckboxChange}
+        />
+      </label>
+    </span>
+  );
+};
 
 const SelectTool = ({
   icon,
@@ -98,4 +112,11 @@ const Toolbar = ({ children }) => {
   );
 };
 
-export { Toolbar, ToolSeparator, ButtonTool, SelectTool, ModalTool };
+export {
+  Toolbar,
+  ToolSeparator,
+  ButtonTool,
+  CehckBoxTool,
+  SelectTool,
+  ModalTool,
+};

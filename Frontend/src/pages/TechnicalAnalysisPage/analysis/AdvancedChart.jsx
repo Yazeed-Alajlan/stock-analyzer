@@ -6,6 +6,7 @@ import {
   ButtonTool,
   SelectTool,
   ModalTool,
+  CehckBoxTool,
 } from "./Toolbar/Toolbar";
 import { TbX, TbSearch, TbHome } from "react-icons/tb";
 import { useStocksData } from "contexts/StocksDataContext";
@@ -17,10 +18,15 @@ const AdvancedChart = () => {
   const navigate = useNavigate();
 
   const [stockPriceData, setStockPriceData] = useState();
+  const [markers, setMarkers] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
   const { getStockPriceData, getIndicatorData } = useStocksData();
-  const { selectedStock, selectedIndicators, setSelectedIndicators } =
-    useTechnicalAnalysis();
-  console.log(selectedIndicators);
+  const {
+    selectedStock,
+    selectedIndicators,
+    setSelectedIndicators,
+    japaneseCandlestickMarkers,
+  } = useTechnicalAnalysis();
   // Dummy data for the select options
   useEffect(() => {
     const fetchDataAndIndicators = async () => {
@@ -28,7 +34,7 @@ const AdvancedChart = () => {
         if (selectedStock) {
           // Fetch stock data
           setStockPriceData(await getStockPriceData(selectedStock));
-
+          // setMarkers(await japaneseCandlestickMarkers(selectedStock));
           // Update indicators based on selected stock
           const updatedIndicators = await Promise.all(
             selectedIndicators.map(async (indicator) => {
@@ -52,7 +58,7 @@ const AdvancedChart = () => {
         console.error("Error fetching data:", error);
       }
     };
-
+    console.log(markers);
     fetchDataAndIndicators();
   }, [selectedStock]);
 
@@ -62,6 +68,20 @@ const AdvancedChart = () => {
       label: indicators[key].name || key, // Use the full name if available, otherwise use the key
     }));
   }
+  const handleCheckboxChange = async (event) => {
+    setIsChecked(event.target.checked);
+
+    if (event.target.checked) {
+      console.log("HELLLO");
+      // Call japaneseCandlestickMarkers when checkbox is checked
+      setMarkers(await japaneseCandlestickMarkers(selectedStock));
+    } else {
+      console.log("REMOVE");
+
+      // Clear markers when checkbox is unchecked
+      setMarkers([]);
+    }
+  };
   return (
     <div className="d-flex flex-column" style={{ height: "100vh" }}>
       <Toolbar>
@@ -72,7 +92,11 @@ const AdvancedChart = () => {
             navigate("/");
           }}
         />
-
+        <CehckBoxTool
+          isChecked={isChecked}
+          text={"candle"}
+          onCheckboxChange={handleCheckboxChange}
+        />
         <ToolSeparator />
         <ModalTool
           icon={TbSearch}
@@ -126,6 +150,7 @@ const AdvancedChart = () => {
           indicators={selectedIndicators}
           selectedStock={selectedStock}
           symbol={selectedStock}
+          markers={markers}
         />
       </div>
     </div>

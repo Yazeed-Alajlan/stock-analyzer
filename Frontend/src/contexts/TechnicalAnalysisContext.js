@@ -42,6 +42,22 @@ export function TechnicalAnalysisProvider({ children }) {
       console.error("Error:", error);
     }
   }
+  async function japaneseCandlestickMarkers(symbol) {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/python-api/japanese-candlestick-patterns-markers?symbol=${symbol}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Failed to send pattern ");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   const value = {
     filteredStocks,
@@ -52,6 +68,7 @@ export function TechnicalAnalysisProvider({ children }) {
     setSelectedIndicators,
     selectedStock,
     setSelectedStock,
+    japaneseCandlestickMarkers,
   };
 
   return (

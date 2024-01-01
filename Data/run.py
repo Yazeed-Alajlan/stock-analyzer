@@ -87,6 +87,7 @@ def flags_pennants():
         "bull_pennants": data["bull_pennants"],
         "bear_pennants": data["bear_pennants"]
     } 
+    print(result_dict)
     return result_dict
 
 @app.route("/api/stocks/vsa")
@@ -102,6 +103,44 @@ def vsa():
     data=data.fillna(0)
     return data.to_json()
 
+@app.route("/api/stocks/japanese-candlestick-patterns-markers")
+def japanese_candlestick_patterns_markers():
+    symbol = flask.request.args.get("symbol")
+    print(symbol)
+    print("---------------------------------------------------")
+    data=get_japanese_candlestick_patterns_markers(symbol)
+
+    print(data)
+    return data
+
+
+@app.route("/api/stocks/<symbol>/indicators/<indicator>")
+def indicators(symbol,indicator):
+    params = flask.request.args.get("params")
+    stock_data = get_price_data(symbol)
+
+    parsed_data = json.loads(params)
+    indicator_name = list(parsed_data.keys())[0]  # Get the indicator name (e.g., RSI)
+    kwargs = parsed_data[indicator_name]["kwargs"]  # Get the kwargs for the indicator
+    indicator_params = {
+    'indicator_name': indicator_name,
+    'data': stock_data["close"],  # Replace this with your actual stock data
+    'kwargs': kwargs
+    }
+    data = calculate_ta_indicator_with_params(indicator_params)
+    result_dict = {}
+    if isinstance(data, tuple):  # Check if data is a tuple
+        for index, series in enumerate(data):
+            series = series.dropna(how='any',axis=0) 
+            series.index = series.index.strftime('%Y-%m-%d')
+            result_dict[list(kwargs.keys())[index]] = series.to_dict()
+    else:
+        data = data.dropna(how='any',axis=0) 
+        data.index = data.index.strftime('%Y-%m-%d')
+        result_dict[list(kwargs.keys())[0]] = data.to_dict()
+
+    return result_dict
+    # return data.to_json()
 
 
 
@@ -121,47 +160,6 @@ def calculate_ta_indicator_with_params(params):
         return result
     except AttributeError:
         return None
-
-
-
-@app.route("/api/stocks/<symbol>/indicators/<indicator>")
-def indicators(symbol,indicator):
-    params = flask.request.args.get("params")
-    stock_data = get_price_data(symbol)
-    print(params)
-
-    parsed_data = json.loads(params)
-    indicator_name = list(parsed_data.keys())[0]  # Get the indicator name (e.g., RSI)
-    kwargs = parsed_data[indicator_name]["kwargs"]  # Get the kwargs for the indicator
-    indicator_params = {
-    'indicator_name': indicator_name,
-    'data': stock_data["close"],  # Replace this with your actual stock data
-    'kwargs': kwargs
-    }
-    data = calculate_ta_indicator_with_params(indicator_params)
-
-
-    result_dict = {}
-    if isinstance(data, tuple):  # Check if data is a tuple
-        for index, series in enumerate(data):
-            print(series)
-            print("##############################################################################")
-            series = series.dropna(how='any',axis=0) 
-            series.index = series.index.strftime('%Y-%m-%d')
-            result_dict[list(kwargs.keys())[index]] = series.to_dict()
-        print(result_dict)
-    else:
-        data = data.dropna(how='any',axis=0) 
-        data.index = data.index.strftime('%Y-%m-%d')
-        result_dict[list(kwargs.keys())[0]] = data.to_dict()
-        print(result_dict)
-
-    return result_dict
-    # return data.to_json()
-
-
-
-
 
 
 

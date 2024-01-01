@@ -481,8 +481,11 @@ async function saveStockPrices() {
     for (const stock of symbols) {
       console.log(stock.symbol);
       const symbol = stock.symbol;
-      const period1 = "2022-01-01";
-      const period2 = new Date().toISOString().split("T")[0];
+      if (symbol !== "4323") continue;
+      console.log("FETCH DATA");
+      const period1 = "2020-01-01";
+      const period2 = "2023-12-31";
+      // const period2 = new Date().toISOString().split("T")[0];
       const queryOptions = { period1, period2 };
       const result = await yahooFinance._chart(
         stock.symbol + ".SR",
@@ -596,7 +599,7 @@ async function saveStockPricesHorly() {
 }
 
 // saveStockPricesHorly();
-// saveStockPrices();
+saveStockPrices();
 // runStockInformatioScript();
 // updatedStockSummary();
-saveStockPricesMohlel();
+// saveStockPricesMohlel();
