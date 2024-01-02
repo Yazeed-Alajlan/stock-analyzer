@@ -41,7 +41,7 @@ const IndicatorsSelection = ({ title, settings, setSettings }) => {
           <div style={{ maxHeight: "200px", overflowY: "auto" }}>
             {selectedType && (
               <div className="d-flex flex-column">
-                {settings[selectedType].options.map((option) => (
+                {settings[selectedType]?.options?.map((option) => (
                   <div
                     key={option.value}
                     className="p-1 "

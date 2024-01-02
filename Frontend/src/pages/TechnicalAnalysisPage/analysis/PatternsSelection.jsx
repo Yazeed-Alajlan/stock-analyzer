@@ -42,7 +42,7 @@ const PatternsSelection = ({ title, settings, setSettings }) => {
           <div style={{ maxHeight: "200px", overflowY: "auto" }}>
             {selectedType && (
               <div>
-                {settings[selectedType].options.map((option) => (
+                {settings[selectedType]?.options?.map((option) => (
                   <div
                     key={option.value}
                     className="d-flex align-items-center border-0 border-bottom  gap-2"

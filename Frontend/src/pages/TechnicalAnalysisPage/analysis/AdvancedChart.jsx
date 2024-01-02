@@ -14,6 +14,7 @@ import {
   TbHome,
   TbPencil,
   TbChartCandle,
+  TbFlag,
 } from "react-icons/tb";
 import { useStocksData } from "contexts/StocksDataContext";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
@@ -66,6 +67,13 @@ const AdvancedChart = () => {
         console.log(pattern);
       },
       options: transformIndicatorsToList(candlestick_patterns),
+    },
+    "Flags and Pennants": {
+      icon: TbFlag,
+      onSelectFunction: async (pattern) => {
+        console.log(pattern);
+      },
+      // options: transformIndicatorsToList(candlestick_patterns),
     },
   });
 

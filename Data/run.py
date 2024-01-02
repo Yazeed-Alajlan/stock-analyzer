@@ -118,17 +118,28 @@ def japanese_candlestick_patterns_markers():
 def indicators(symbol,indicator):
     params = flask.request.args.get("params")
     stock_data = get_price_data(symbol)
-
+    print(params)
     parsed_data = json.loads(params)
     indicator_name = list(parsed_data.keys())[0]  # Get the indicator name (e.g., RSI)
     kwargs = parsed_data[indicator_name]["kwargs"]  # Get the kwargs for the indicator
+    result_dict = {}
+
+    if(indicator_name=="VSA"):
+        print("HELLLLLLLLLLo")
+        stock_data=get_price_data(symbol) 
+        data=vsa_indicator(stock_data,norm_lookback=10)
+        data.index = data.index.strftime('%Y-%m-%d')
+        data=data.fillna(0)
+        result_dict["value"]=data.to_dict()
+        return result_dict
+    
+    print("AFTER METHOD")
     indicator_params = {
     'indicator_name': indicator_name,
     'data': stock_data["close"],  # Replace this with your actual stock data
     'kwargs': kwargs
     }
     data = calculate_ta_indicator_with_params(indicator_params)
-    result_dict = {}
     if isinstance(data, tuple):  # Check if data is a tuple
         for index, series in enumerate(data):
             series = series.dropna(how='any',axis=0) 
@@ -138,7 +149,7 @@ def indicators(symbol,indicator):
         data = data.dropna(how='any',axis=0) 
         data.index = data.index.strftime('%Y-%m-%d')
         result_dict[list(kwargs.keys())[0]] = data.to_dict()
-
+    print(result_dict)
     return result_dict
     # return data.to_json()
 

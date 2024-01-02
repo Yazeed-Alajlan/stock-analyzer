@@ -61,6 +61,10 @@ const IndicatorsList = {
     name: "Hilbert Transform - Trendline by - Trend vs Cycle Mode",
     kwargs: {},
   },
+  VSA: {
+    name: "Volume Spread Indicator",
+    kwargs: {},
+  },
   // Add more indicators and their kwargs as needed
 };
 
