@@ -10,12 +10,14 @@ const GlobalModal = ({
   footerContent,
   isModalOpen,
   setIsModalOpen,
+  size, // New prop for modal size
 }) => {
   return (
     <BootstrapModal
       show={isModalOpen}
       onHide={() => setIsModalOpen((isModalOpen) => !isModalOpen)}
       centered
+      size={size} // Applying size prop to the modal
     >
       <motion.div
         initial={{ opacity: 0, y: -50 }}

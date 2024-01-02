@@ -71,12 +71,21 @@ const SelectTool = ({
         icon={icon}
         showValueAsText={showValueAsText}
       />
+
       {children}
     </span>
   );
 };
 
-const ModalTool = ({ icon, text, hoverText, title, onClick, children }) => {
+const ModalTool = ({
+  icon,
+  text,
+  hoverText,
+  title,
+  onClick,
+  size,
+  children,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <span>
@@ -90,6 +99,7 @@ const ModalTool = ({ icon, text, hoverText, title, onClick, children }) => {
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
         title={title}
+        size={size}
       >
         {children}
       </GlobalModal>

@@ -8,12 +8,21 @@ import {
   ModalTool,
   CehckBoxTool,
 } from "./Toolbar/Toolbar";
-import { TbX, TbSearch, TbHome } from "react-icons/tb";
+import {
+  TbChartHistogram,
+  TbSearch,
+  TbHome,
+  TbPencil,
+  TbChartCandle,
+} from "react-icons/tb";
 import { useStocksData } from "contexts/StocksDataContext";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { useNavigate } from "react-router-dom";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 import IndicatorsList from "../IndicatorsList";
+import IndicatorsSelection from "./IndicatorsSelection";
+import PatternsSelection from "./PatternsSelection";
+import candlestick_patterns from "../candlestickPatterns";
 const AdvancedChart = () => {
   const navigate = useNavigate();
 
@@ -27,15 +36,44 @@ const AdvancedChart = () => {
     setSelectedIndicators,
     japaneseCandlestickMarkers,
   } = useTechnicalAnalysis();
-  // Dummy data for the select options
+  const [indicatorsSettings, setIndicatorsSettings] = useState({
+    Indicators: {
+      icon: TbChartHistogram,
+      onSelectFunction: async (indicatorName) => {
+        const newIndicator = {
+          name: indicatorName,
+          pane: indicatorName === "SMA" || indicatorName === "EMA" ? 0 : 1,
+          params: IndicatorsList[indicatorName],
+          lines: [
+            await getIndicatorData(selectedStock, indicatorName, {
+              [indicatorName]: IndicatorsList[indicatorName],
+            }),
+          ],
+        };
+        console.log(newIndicator);
+        setSelectedIndicators((prevIndicators) => [
+          ...prevIndicators,
+          newIndicator,
+        ]);
+      },
+      options: transformIndicatorsToList(IndicatorsList),
+    },
+  });
+  const [patternsSettings, setPatternsSettings] = useState({
+    "Japanese Candlestick": {
+      icon: TbChartCandle,
+      onSelectFunction: async (pattern) => {
+        console.log(pattern);
+      },
+      options: transformIndicatorsToList(candlestick_patterns),
+    },
+  });
+
   useEffect(() => {
     const fetchDataAndIndicators = async () => {
       try {
         if (selectedStock) {
-          // Fetch stock data
           setStockPriceData(await getStockPriceData(selectedStock));
-          // setMarkers(await japaneseCandlestickMarkers(selectedStock));
-          // Update indicators based on selected stock
           const updatedIndicators = await Promise.all(
             selectedIndicators.map(async (indicator) => {
               const { name, stock } = indicator;
@@ -43,42 +81,32 @@ const AdvancedChart = () => {
               const updatedValue = await getIndicatorData(selectedStock, name, {
                 [name]: IndicatorsList[name],
               });
-
               return {
                 ...indicator,
                 lines: [updatedValue],
               };
             })
           );
-
           setSelectedIndicators(updatedIndicators);
         }
       } catch (error) {
-        // Handle any errors if the promise rejects
         console.error("Error fetching data:", error);
       }
     };
-    console.log(markers);
     fetchDataAndIndicators();
   }, [selectedStock]);
 
   function transformIndicatorsToList(indicators) {
     return Object.keys(indicators).map((key) => ({
       value: key,
-      label: indicators[key].name || key, // Use the full name if available, otherwise use the key
+      label: indicators[key].name || key,
     }));
   }
   const handleCheckboxChange = async (event) => {
     setIsChecked(event.target.checked);
-
     if (event.target.checked) {
-      console.log("HELLLO");
-      // Call japaneseCandlestickMarkers when checkbox is checked
       setMarkers(await japaneseCandlestickMarkers(selectedStock));
     } else {
-      console.log("REMOVE");
-
-      // Clear markers when checkbox is unchecked
       setMarkers([]);
     }
   };
@@ -92,11 +120,7 @@ const AdvancedChart = () => {
             navigate("/");
           }}
         />
-        <CehckBoxTool
-          isChecked={isChecked}
-          text={"candle"}
-          onCheckboxChange={handleCheckboxChange}
-        />
+
         <ToolSeparator />
         <ModalTool
           icon={TbSearch}
@@ -107,28 +131,40 @@ const AdvancedChart = () => {
           <div> Search for symbol</div>
         </ModalTool>
         <ToolSeparator />
-        <SelectTool
-          text="Indicators"
-          options={transformIndicatorsToList(IndicatorsList)}
-          onSelectFunction={async (indicatorName) => {
-            const newIndicator = {
-              name: indicatorName,
-              pane: indicatorName === "SMA" || indicatorName === "EMA" ? 0 : 1,
-              params: IndicatorsList[indicatorName],
-              lines: [
-                await getIndicatorData(selectedStock, indicatorName, {
-                  [indicatorName]: IndicatorsList[indicatorName],
-                }),
-              ],
-            };
-            console.log(newIndicator);
-            setSelectedIndicators((prevIndicators) => [
-              ...prevIndicators,
-              newIndicator,
-            ]);
-          }}
-          hoverText={"Indicators"}
-        />
+
+        <ModalTool
+          icon={TbChartHistogram}
+          hoverText="Indicators"
+          text={"Indicators"}
+          title={"Indicators"}
+          size={"lg"}
+        >
+          <IndicatorsSelection
+            title={"Filter Data"}
+            settings={indicatorsSettings}
+            setSettings={setIndicatorsSettings}
+          />
+        </ModalTool>
+        <ToolSeparator />
+        <ModalTool
+          icon={TbPencil}
+          hoverText="Patterns"
+          text={"Patterns"}
+          title={"Patterns"}
+          size={"lg"}
+        >
+          <CehckBoxTool
+            isChecked={isChecked}
+            text={"candle"}
+            onCheckboxChange={handleCheckboxChange}
+          />
+          <PatternsSelection
+            title={"Filter Data"}
+            settings={patternsSettings}
+            setSettings={setPatternsSettings}
+          />
+        </ModalTool>
+
         <ToolSeparator />
         <SelectTool
           options={[

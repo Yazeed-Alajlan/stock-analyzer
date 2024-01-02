@@ -12,13 +12,13 @@ const IconButton = ({ icon: Icon, onClick, hoverText, size, text }) => {
       overlay={hoverText ? <Tooltip id="tooltip">{hoverText}</Tooltip> : <></>}
     >
       <Button
-        className={`text-center text-grey fw-bolder p-2 border-0 `}
+        className={`d-inline-flex align-items-center text-grey fw-bolder p-2 border-0`}
         onClick={onClick}
         size={size}
         variant="outline-dark-light"
       >
-        {text}
         {Icon && <Icon className={`${smClass} ${text ? "me-2" : ""}`} />}
+        {text}
       </Button>
     </OverlayTrigger>
   );
