@@ -4,13 +4,13 @@ import DynamicChart from "components/utils/charts/DynamicChart";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
-const MonthlyReturnTable = ({ symbols }) => {
+const MonthlyReturnTable = ({ symbol }) => {
   const [data, setData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `http://localhost:5000/python-api/${symbols}/price-summary`;
+        const url = `http://localhost:5000/python-api/${symbol}/price-summary`;
         const response = await axios.get(url);
 
         setData(response.data);
@@ -20,7 +20,7 @@ const MonthlyReturnTable = ({ symbols }) => {
       }
     };
     fetchData();
-  }, [symbols]);
+  }, [symbol]);
 
   let uniqueYears = [];
   let sortedMonths = [];

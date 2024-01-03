@@ -22,6 +22,7 @@ import MonthlyReturns from "pages/TechnicalAnalysisPage/components/MonthlyReturn
 import TechnicalAnalysisLayout from "components/routing/TechnicalAnalysisLayout";
 import TechnicalAnalysisAutomation from "pages/TechnicalAnalysisPage/components/TechnicalAnalysisAutomation";
 import Vsa from "pages/TechnicalAnalysisPage/components/Vsa";
+import StockAnalysis from "pages/StockPage/components/analysis/StockAnalysis";
 function App() {
   const [sideBar, setSideBar] = useState(false);
   const [modal, setModal] = useState(false);
@@ -83,6 +84,7 @@ function App() {
             <Route path="financials" element={<Financials />} />
             <Route path="chart" element={<StockChart />} />
             <Route path="dividend" element={<Dividend />} />
+            <Route path="analysis" element={<StockAnalysis />} />
           </Route>
         </Routes>
       </motion.div>

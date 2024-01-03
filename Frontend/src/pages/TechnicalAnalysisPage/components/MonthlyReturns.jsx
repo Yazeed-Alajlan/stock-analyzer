@@ -4,7 +4,7 @@ import { CustomCard } from "components/utils/cards/CustomCard";
 import FilterCard from "components/utils/inputs/FilterCard";
 import InputSelect from "components/utils/inputs/InputSelect";
 import { useStocksData } from "contexts/StocksDataContext";
-import MonthlyReturnTable from "pages/StockPage/components/price_summary/MonthlyReturnTable";
+import MonthlyReturnTable from "pages/StockPage/components/analysis/MonthlyReturnTable";
 import React, { useState } from "react";
 
 const MonthlyReturns = () => {

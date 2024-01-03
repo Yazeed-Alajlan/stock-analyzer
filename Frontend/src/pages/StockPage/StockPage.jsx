@@ -3,11 +3,13 @@ import { Row, Col, Container } from "react-bootstrap";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { SidebarSelection } from "../../components/routing/SidebarSelection";
 import {
-  FaInfoCircle,
-  FaChartLine,
-  FaChartPie,
-  FaMoneyBillAlt,
-} from "react-icons/fa";
+  TbInfoCircle,
+  TbBook,
+  TbChartHistogram,
+  TbReportMoney,
+  TbDeviceAnalytics,
+} from "react-icons/tb";
+
 import SmCardInformaiton from "components/utils/cards/SmCardInformaiton";
 import StockPriceCard from "./components/utils/StockPriceCard";
 import { useStocksData } from "contexts/StocksDataContext";
@@ -22,27 +24,33 @@ const StockPage = () => {
   const myRoutes = [
     {
       path: "information",
-      icon: FaInfoCircle,
+      icon: TbInfoCircle,
       name: "معلومات السهم",
       to: `/companies/${sector}/${symbol}/information`,
     },
     {
       path: "financials",
-      icon: FaChartPie,
+      icon: TbBook,
       name: "القوائم المالية",
       to: `/companies/${sector}/${symbol}/financials`,
     },
     {
       path: "chart",
-      icon: FaChartLine,
+      icon: TbChartHistogram,
       name: "تحركات السهم",
       to: `/companies/${sector}/${symbol}/chart`,
     },
     {
       path: "dividend",
-      icon: FaMoneyBillAlt,
+      icon: TbReportMoney,
       name: "التوزيعات",
       to: `/companies/${sector}/${symbol}/dividend`,
+    },
+    {
+      path: "analysis",
+      icon: TbDeviceAnalytics,
+      name: "تحليل",
+      to: `/companies/${sector}/${symbol}/analysis`,
     },
   ];
 
