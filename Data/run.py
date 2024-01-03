@@ -117,7 +117,7 @@ def japanese_candlestick_patterns_markers():
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
-    correlation_matrix(["2222","4321","2030"])
+    correlation_matrix(["2222","4321","2030","4030"])
     params = flask.request.args.get("params")
     stock_data = get_price_data(symbol)
     parsed_data = json.loads(params)
