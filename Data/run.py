@@ -172,7 +172,6 @@ def calculate_ta_indicator_with_params(params):
 def correlationMatrix():
     symbols = flask.request.args.get("symbols")
     symbols = symbols.split(',')
-    print(symbols==["2222","4321","2030","4030"])
     data=correlation_matrix(symbols)
     print(data)
     return data.to_json()

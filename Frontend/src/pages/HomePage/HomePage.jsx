@@ -33,7 +33,15 @@ const HomePage = () => {
     const fetchEarningsData = async () => {
       try {
         setHeatmapData(
-          await correlationMatrix(["2222", "4321", "2030", "2020"])
+          await correlationMatrix([
+            "2030",
+            "2222",
+            "2380",
+            "2381",
+            "4030",
+            "4200",
+            "2382",
+          ])
         );
 
         setEarningsData(await getAllBasicEarningsPerShareTTM());
