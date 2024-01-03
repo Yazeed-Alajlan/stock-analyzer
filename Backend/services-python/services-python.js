@@ -16,6 +16,29 @@ router.get("/:symbol/price-summary", async (req, res) => {
       console.log(error);
     });
 });
+
+router.get("/correlation-matrix", async (req, res) => {
+  const { symbols } = req.query;
+  console.log(symbols);
+  axios
+    .get(
+      `http://127.0.0.1:4000/api/stocks/correlation-matrix?symbols=${symbols}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((response) => {
+      var data = response.data;
+      res.json(data);
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
 router.get("/:symbol/volume-seasonality-daily", async (req, res) => {
   const symbol = "4321";
 

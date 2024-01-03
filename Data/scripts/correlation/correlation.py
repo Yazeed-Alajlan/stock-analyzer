@@ -19,13 +19,13 @@ def correlation_matrix(symbols):
     
     # Calculate the correlation matrix for 'Close' prices
     corr_matrix = stock_data_close.corr()
-
+    return corr_matrix
     # Plot heatmap
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
-    plt.title('Correlation Matrix Heatmap')
-    plt.xlabel('Stock Symbols')
-    plt.ylabel('Stock Symbols')
-    plt.show()
+    # plt.figure(figsize=(10, 8))
+    # sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+    # plt.title('Correlation Matrix Heatmap')
+    # plt.xlabel('Stock Symbols')
+    # plt.ylabel('Stock Symbols')
+    # plt.show()
 
 

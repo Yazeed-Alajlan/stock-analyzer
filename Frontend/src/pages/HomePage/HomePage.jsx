@@ -7,6 +7,8 @@ import FinancialMetricsTable from "./FinancialMetricsTable";
 import GeneralTable from "components/utils/GeneralTable";
 import FinancialMetricsComparisonTable from "./FinancialMetricsComparisonTable";
 import axios from "axios";
+import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
+import HeatmapChart from "components/utils/charts/HeatmapChart";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -20,13 +22,20 @@ const HomePage = () => {
     getFinancialMetric,
   } = useStocksData();
 
+  const { correlationMatrix } = useTechnicalAnalysis();
+
   const [data, setData] = useState();
   const [earningsData, setEarningsData] = useState();
   const [workingCapitalRatioData, setWorkingCapitalRatioData] = useState();
+  const [heatmapData, setHeatmapData] = useState();
 
   useEffect(() => {
     const fetchEarningsData = async () => {
       try {
+        setHeatmapData(
+          await correlationMatrix(["2222", "4321", "2030", "2020"])
+        );
+
         setEarningsData(await getAllBasicEarningsPerShareTTM());
         setData(await prepareFinancialMetricsComparisonTableData());
         setWorkingCapitalRatioData(
@@ -126,6 +135,7 @@ const HomePage = () => {
           </Col>
         )}
       </Row>
+      {heatmapData && <HeatmapChart data={heatmapData} />}
     </Container>
   );
 };

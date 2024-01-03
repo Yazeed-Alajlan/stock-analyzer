@@ -58,6 +58,23 @@ export function TechnicalAnalysisProvider({ children }) {
       console.error("Error:", error);
     }
   }
+  async function correlationMatrix(symbols) {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/python-api/correlation-matrix?symbols=${symbols}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        return data;
+      } else {
+        console.error("Failed to send pattern ");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   const value = {
     filteredStocks,
@@ -69,6 +86,7 @@ export function TechnicalAnalysisProvider({ children }) {
     selectedStock,
     setSelectedStock,
     japaneseCandlestickMarkers,
+    correlationMatrix,
   };
 
   return (

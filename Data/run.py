@@ -115,9 +115,10 @@ def japanese_candlestick_patterns_markers():
     return data
 
 
+
+
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
-    correlation_matrix(["2222","4321","2030","4030"])
     params = flask.request.args.get("params")
     stock_data = get_price_data(symbol)
     parsed_data = json.loads(params)
@@ -150,9 +151,6 @@ def indicators(symbol,indicator):
         result_dict[list(kwargs.keys())[0]] = data.to_dict()
     return result_dict
     # return data.to_json()
-
-
-
 def calculate_ta_indicator_with_params(params):
     try:
         indicator_name = params.get('indicator_name')
@@ -169,6 +167,15 @@ def calculate_ta_indicator_with_params(params):
         return result
     except AttributeError:
         return None
+
+@app.route("/api/stocks/correlation-matrix")
+def correlationMatrix():
+    symbols = flask.request.args.get("symbols")
+    symbols = symbols.split(',')
+    print(symbols==["2222","4321","2030","4030"])
+    data=correlation_matrix(symbols)
+    print(data)
+    return data.to_json()
 
 
 
