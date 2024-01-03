@@ -2,6 +2,7 @@ from scripts.price_analysis.main import *
 from scripts.patterns.main import *
 from scripts.vsa.main import *
 from scripts.trends.main import *
+from scripts.correlation.main import *
 from scripts.Files.TechnicalAnalysisAutomation.flags_pennants import *
 # from scripts.moving_average.main import *
 from database.main import *
@@ -116,16 +117,15 @@ def japanese_candlestick_patterns_markers():
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
 def indicators(symbol,indicator):
+    correlation_matrix(["2222","4321","2030"])
     params = flask.request.args.get("params")
     stock_data = get_price_data(symbol)
-    print(params)
     parsed_data = json.loads(params)
     indicator_name = list(parsed_data.keys())[0]  # Get the indicator name (e.g., RSI)
     kwargs = parsed_data[indicator_name]["kwargs"]  # Get the kwargs for the indicator
     result_dict = {}
 
     if(indicator_name=="VSA"):
-        print("HELLLLLLLLLLo")
         stock_data=get_price_data(symbol) 
         data=vsa_indicator(stock_data,norm_lookback=10)
         data.index = data.index.strftime('%Y-%m-%d')
@@ -133,7 +133,6 @@ def indicators(symbol,indicator):
         result_dict["value"]=data.to_dict()
         return result_dict
     
-    print("AFTER METHOD")
     indicator_params = {
     'indicator_name': indicator_name,
     'data': stock_data["close"],  # Replace this with your actual stock data
@@ -149,7 +148,6 @@ def indicators(symbol,indicator):
         data = data.dropna(how='any',axis=0) 
         data.index = data.index.strftime('%Y-%m-%d')
         result_dict[list(kwargs.keys())[0]] = data.to_dict()
-    print(result_dict)
     return result_dict
     # return data.to_json()
 
