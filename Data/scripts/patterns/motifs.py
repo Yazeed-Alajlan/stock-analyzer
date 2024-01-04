@@ -1,50 +1,39 @@
-
-from matplotlib import pyplot as plt
-import numpy as np
-import yfinance
+import yfinance as yf
+import matplotlib.pyplot as plt
 import stumpy
 
+# Define the stock symbol and period
+stock_symbol = 'AAPL'  # Change this to the desired stock symbol
+start_date = '2022-01-01'
+end_date = '2023-01-01'
 
-def pattern_recognition(df,m,k):
-    # Assuming you already have your stock price data in a DataFrame named 'df'
-    # Extract the 'Close' prices as a numpy array
-    stock_prices = df['Close'].to_numpy()
-    # K is Number of motifs to display, adjust as needed
-    # M is Set the motif length (adjust as needed)
+# Fetch the stock data using yfinance
+stock_data = yf.download(stock_symbol, start=start_date, end=end_date)['Close']
 
-    # Compute the matrix profile
-    matrix_profile = stumpy.stump(stock_prices, m=m)
+# Convert the stock data to a list
+stock_prices = stock_data.tolist()
 
-    # Identify motifs based on the matrix profile values
-    motif_indices = np.argsort(matrix_profile[:, 0])[:k]
+# Set the window size for motif discovery
+window_size = 80  # You can adjust this window size
 
-    # Create a plot to visualize the motifs
-    plt.figure(figsize=(12, 6))
-    plt.plot(stock_prices, label='Stock Prices', color='b')
+# Calculate the matrix profile
+matrix_profile = stumpy.stump(stock_prices, m=window_size)
 
-    # Define colors for the motifs
-    colors = ['g', 'r', 'c', 'm', 'y']
+# Find the index of the first occurrence of the motif
+motif_idx = matrix_profile[:, 0].argsort()[:5]  # Get indices of the top 5 motifs
 
-    for i, idx in enumerate(motif_indices):
-        motif_start = idx
-        motif_end = idx + m
-        motif_values = stock_prices[motif_start:motif_end]
+# Plot the stock closing prices
+plt.figure(figsize=(10, 6))
+plt.plot(stock_prices)
+plt.title(f'{stock_symbol} Closing Prices')
+plt.xlabel('Days')
+plt.ylabel('Price')
+plt.grid(True)
 
-        # Plot each motif in a different color
-        plt.plot(range(motif_start, motif_end), motif_values, label=f'Motif {i + 1}', color=colors[i])
+# Highlight the motifs on the plot
+for idx in motif_idx:
+    motif_start = idx
+    motif_end = idx + window_size
+    plt.axvspan(motif_start, motif_end, color='orange', alpha=0.3)
 
-    plt.xlabel('Time')
-    plt.ylabel('Stock Price')
-    plt.legend()
-    plt.title('Stock Price with Motifs')
-    plt.show()
-
-def prepData():
-    df=yfinance.download("2222.SR", start="2021-01-1", end="2023-07-7")
-    df.reset_index(inplace=True)
-    ## Start index with 1
-    # df.index = np.arange(1, len(df) + 1)
-    return df
-
-df=prepData()
-pattern_recognition(df,8,6)
+plt.show()
