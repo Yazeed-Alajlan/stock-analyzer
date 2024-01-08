@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
-import Indicators from "./Indicators";
+import Indicators from "./Toolbar/Indicators";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 
 const CandlestickAndIndicatorsChart = ({

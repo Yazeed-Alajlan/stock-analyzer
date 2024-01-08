@@ -20,10 +20,10 @@ import { useStocksData } from "contexts/StocksDataContext";
 import CandlestickAndIndicatorsChart from "./CandlestickAndIndicatorsChart";
 import { useNavigate } from "react-router-dom";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
-import IndicatorsList from "../IndicatorsList";
-import IndicatorsSelection from "./IndicatorsSelection";
-import PatternsSelection from "./PatternsSelection";
-import candlestick_patterns from "../candlestickPatterns";
+import IndicatorsList from "../utils/IndicatorsList";
+import IndicatorsSelection from "./Toolbar/IndicatorsSelection";
+import PatternsSelection from "./Toolbar/PatternsSelection";
+import candlestick_patterns from "../utils/candlestickPatterns";
 const AdvancedChart = () => {
   const navigate = useNavigate();
 
@@ -45,6 +45,7 @@ const AdvancedChart = () => {
           name: indicatorName,
           pane: indicatorName === "SMA" || indicatorName === "EMA" ? 0 : 1,
           params: IndicatorsList[indicatorName],
+          color: "fff",
           lines: [
             await getIndicatorData(selectedStock, indicatorName, {
               [indicatorName]: IndicatorsList[indicatorName],

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CompnentLayout from "components/CompnentLayout";
 import { Col, Row } from "react-bootstrap";
-import candlestick_patterns from "../candlestickPatterns";
+import candlestick_patterns from "../utils/candlestickPatterns";
 import CandlestickChart from "pages/StockPage/components/chart/CandlestickChart";
 import { CustomCard } from "components/utils/cards/CustomCard";
 import CustomButton from "components/utils/buttons/CustomButton";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import IndicatorsList from "pages/TechnicalAnalysisPage/utils/IndicatorsList";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
@@ -11,46 +11,52 @@ const IndicatorSettingsModal = ({
   indicator,
   settings,
 }) => {
+  console.log(indicator);
+  console.log(indicatorName);
   const { selectedStock, selectedIndicators, setSelectedIndicators } =
     useTechnicalAnalysis();
   const { getIndicatorData } = useStocksData();
 
-  const [updatedSettings, setUpdatedSettings] = useState({});
-  const [paneValue, setPaneValue] = useState(indicator.pane);
-
-  useEffect(() => {
-    setPaneValue(indicator.pane);
-  }, [indicator]);
+  const [updatedSettings, setUpdatedSettings] = useState({}); // State to hold updated settings
 
   const handleChange = (key, value) => {
-    if (key === "pane") {
-      setPaneValue(value);
-    } else {
-      setUpdatedSettings({
-        ...updatedSettings,
-        [key]: value,
-      });
-    }
+    setUpdatedSettings({
+      ...updatedSettings,
+      [key]: value,
+    });
   };
 
   const handleSaveChanges = async () => {
-    const updatedIndicators = selectedIndicators.map((ind) => {
-      if (ind.name === indicatorName) {
-        const updatedParams = {
-          ...ind.params,
-          kwargs: {
-            ...ind.params.kwargs,
-            ...updatedSettings,
-          },
-        };
-        return {
-          ...ind,
-          params: updatedParams,
-          pane: paneValue, // Update the 'pane' value
-        };
-      }
-      return ind;
-    });
+    const updatedIndicators = await Promise.all(
+      selectedIndicators.map(async (indicator) => {
+        const { name } = indicator;
+        // Update params if the name matches indicatorName
+        let updatedParams = indicator.params;
+        if (name === indicatorName) {
+          updatedParams = {
+            ...indicator.params,
+            kwargs: {
+              ...indicator.params.kwargs,
+              ...updatedSettings, // Apply updated settings
+            },
+          };
+
+          // Fetch updated value based on indicatorName
+          const updatedValue = await getIndicatorData(
+            selectedStock,
+            indicatorName,
+            {
+              [indicatorName]: updatedParams,
+            }
+          );
+          return {
+            ...indicator,
+            params: updatedParams,
+            lines: [updatedValue],
+          };
+        } else return indicator;
+      })
+    );
 
     setSelectedIndicators(updatedIndicators);
     handleClose();
@@ -58,13 +64,12 @@ const IndicatorSettingsModal = ({
 
   const renderSettingsInputs = () => {
     const indicator = selectedIndicators.find(
-      (ind) => ind.name === indicatorName
+      (indicator) => indicator.name === indicatorName
     );
 
     if (!indicator) {
       return <div>No settings found for this indicator.</div>;
     }
-
     const kwargs = indicator.params.kwargs;
     const inputs = Object.entries(kwargs).map(([key, value]) => (
       <Form.Group key={key} controlId={`form${key}`}>
@@ -77,20 +82,6 @@ const IndicatorSettingsModal = ({
         />
       </Form.Group>
     ));
-
-    // Include input for 'pane' value
-    inputs.push(
-      <Form.Group key="pane" controlId="formPane">
-        <Form.Label>Pane</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter pane"
-          defaultValue={paneValue}
-          onChange={(e) => handleChange("pane", parseInt(e.target.value, 10))}
-        />
-      </Form.Group>
-    );
-
     return <Form>{inputs}</Form>;
   };
 

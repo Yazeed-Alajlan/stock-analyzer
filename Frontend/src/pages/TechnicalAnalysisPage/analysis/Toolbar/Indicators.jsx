@@ -3,7 +3,7 @@ import IndicatorSettingsModal from "components/utils/modals/IndicatorSettingsMod
 import React, { useState } from "react";
 import { ListGroup } from "react-bootstrap";
 import { TbX, TbSettings } from "react-icons/tb";
-import IndicatorsList from "../IndicatorsList";
+import IndicatorsList from "../../utils/IndicatorsList";
 
 const Indicators = ({ indicators, onDelete }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
@@ -50,7 +50,7 @@ const Indicators = ({ indicators, onDelete }) => {
             <IndicatorSettingsModal
               key={index} // Ensure each modal has a unique key
               indicatorName={indicator.name}
-              settings={IndicatorsList[indicator.name]}
+              indicator={indicator}
               showModal={showModalIndex === index}
               handleClose={() => setShowModalIndex(null)}
             />

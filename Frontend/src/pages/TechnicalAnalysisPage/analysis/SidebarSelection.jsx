@@ -6,7 +6,7 @@ import IconButton from "components/utils/buttons/IconButton";
 import { TbFilter, TbFilterOff } from "react-icons/tb";
 import { useTechnicalAnalysis } from "contexts/TechnicalAnalysisContext";
 import { TbArrowMergeBoth, TbChartCandle } from "react-icons/tb";
-import candlestick_patterns from "pages/TechnicalAnalysisPage/candlestickPatterns";
+import candlestick_patterns from "pages/TechnicalAnalysisPage/utils/candlestickPatterns";
 import StockFilterSettingsModal from "components/utils/modals/StockFilterSettingsModal";
 import StocksTable from "./StocksTable";
 
