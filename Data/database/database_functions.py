@@ -77,5 +77,4 @@ def get_price_data(symbol):
 #     result = df.groupby(df.index.date).agg({'open': 'first', 'close': 'last', 'high': 'max', 'low': 'min', 'volume': 'sum'})
 #     client.close()
 #     print(result)
-
 #     return result
