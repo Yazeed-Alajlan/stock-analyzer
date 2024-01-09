@@ -24,6 +24,7 @@ import IndicatorsList from "../utils/IndicatorsList";
 import IndicatorsSelection from "./Toolbar/IndicatorsSelection";
 import PatternsSelection from "./Toolbar/PatternsSelection";
 import candlestick_patterns from "../utils/candlestickPatterns";
+import MultiChartComponent from "../MultiChartComponent";
 const AdvancedChart = () => {
   const navigate = useNavigate();
 
@@ -190,6 +191,85 @@ const AdvancedChart = () => {
         />
       </Toolbar>
       <div id="responsive-chart" className="h-100 ">
+        {/* <MultiChartComponent
+          data={[
+            {
+              pane: 0,
+              type: "candlestick",
+              data: [
+                {
+                  time: "2023-01-01",
+                  open: 100,
+                  high: 120,
+                  low: 90,
+                  close: 110,
+                },
+                {
+                  time: "2023-01-02",
+                  open: 110,
+                  high: 125,
+                  low: 95,
+                  close: 115,
+                },
+                {
+                  time: "2023-01-03",
+                  open: 115,
+                  high: 130,
+                  low: 100,
+                  close: 120,
+                },
+                {
+                  time: "2023-01-04",
+                  open: 115,
+                  high: 130,
+                  low: 100,
+                  close: 120,
+                },
+              ],
+              color: "blue",
+              chartOptions: {
+                width: 600,
+                height: 150,
+                layout: {
+                  textColor: "black",
+                  background: { type: "solid", color: "white" },
+                },
+                rightPriceScale: {
+                  scaleMargins: {
+                    top: 0.4,
+                    bottom: 0.15,
+                  },
+                },
+                crosshair: {
+                  horzLine: {
+                    visible: false,
+                    labelVisible: false,
+                  },
+                },
+                grid: {
+                  vertLines: {
+                    visible: false,
+                  },
+                  horzLines: {
+                    visible: false,
+                  },
+                },
+              },
+            },
+            {
+              pane: 1,
+              color: "red",
+              type: "line",
+
+              data: [
+                { time: "2023-01-01", value: 0.5 },
+                { time: "2023-01-02", value: 0.7 },
+                { time: "2023-01-03", value: 0.6 },
+                { time: "2023-01-04", value: 0.65 },
+              ],
+            },
+          ]}
+        /> */}
         <CandlestickAndIndicatorsChart
           series={stockPriceData}
           indicators={selectedIndicators}

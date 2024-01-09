@@ -64,7 +64,7 @@ const CandlestickAndIndicatorsChart = ({
     const chartOptions = {
       width: containerWidth,
       // height: containerHeight / indicators?.length, // Divide height equally between two charts
-      height: containerHeight / 4, // Divide height equally between two charts
+      height: containerHeight / 2, // Divide height equally between two charts
       layout: {
         textColor: "black",
         background: { type: "solid", color: "white" },
@@ -146,6 +146,7 @@ const CandlestickAndIndicatorsChart = ({
     createTooltip(chartContainerId, chart, candlestickSeries);
     return () => {
       removeAllCharts();
+      chart.remove();
     };
   }, [symbol, selectedIndicators]);
 
@@ -284,8 +285,11 @@ const CandlestickAndIndicatorsChart = ({
     <>
       {series && indicators ? (
         <>
-          <Indicators indicators={indicators} onDelete={handleDelete} />
-          <div id={chartContainerId} />
+          <div className="position-relative" id={chartContainerId}>
+            <span className=" d-inline-flex flex-column position-absolute z-3 top-0 start-0 mx-3">
+              <Indicators indicators={indicators} onDelete={handleDelete} />
+            </span>
+          </div>
           {chartElRefs.map((ref, i) => (
             <div
               ref={ref}
