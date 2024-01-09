@@ -1,6 +1,7 @@
+import pandas as pd
 import numpy as np
-
-
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
 
 import pandas as pd
 from pymongo import MongoClient
@@ -34,35 +35,43 @@ def get_price_data(symbol):
     # Close the MongoDB client when done
     client.close()
     return df
-
-
-
 def normalize_data(df,rolling=30):
     df = df[df["volume"] > 0]
     df["vol_norm"] = np.log(df["volume"] / df["volume"].rolling(rolling).median())
     return df
 
+
 def volume_seasonality_daily(df):
-    df=normalize_data(df,rolling=30)
-    df['day_name'] = df.index.day_name()
-    df['month'] = df.index.month_name()
+    df = normalize_data(df, rolling=30)
+    df['vol_norm'].fillna(df['vol_norm'].mean(), inplace=True)  # Fill missing values with mean
 
-    annual_avg_volume_norm = df['vol_norm'].resample('Y').mean()
-    daily_avg_volume_per_day = df.groupby('day_name')['vol_norm'].mean()
-    daily_avg_volume_per_day_per_month = df.groupby(['month', 'day_name'])['vol_norm'].mean().unstack()
+    print(df)
+    # Decompose the time series to identify seasonality
+    decomposition = sm.tsa.seasonal_decompose(df['vol_norm'], model='additive', period=30)  # Assuming a period of 30 days
 
-    custom_month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    custom_day_order = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']
+    # Plot the original volume data
+    plt.figure(figsize=(10, 8))
+    plt.subplot(411)
+    plt.plot(df['vol_norm'], label='Original Volume')
+    plt.legend()
 
-    daily_avg_volume_per_day_per_month = daily_avg_volume_per_day_per_month.reindex(custom_day_order, axis=1)
+    # Plot the trend component
+    plt.subplot(412)
+    plt.plot(decomposition.trend, label='Trend')
+    plt.legend()
 
-    daily_avg_volume_per_day_per_month = daily_avg_volume_per_day_per_month.reindex(custom_month_order, axis=0)
-    print(daily_avg_volume_per_day_per_month)
-    
+    # Plot the seasonal component
+    plt.subplot(413)
+    plt.plot(decomposition.seasonal, label='Seasonal')
+    plt.legend()
 
-    return df,annual_avg_volume_norm,daily_avg_volume_per_day
+    # Plot the residual component
+    plt.subplot(414)
+    plt.plot(decomposition.resid, label='Residual')
+    plt.legend()
 
-df=get_price_data("2222") 
-result,annual_avg_volume_norm,daily_avg_volume_per_day =  volume_seasonality_daily(df)
-print(daily_avg_volume_per_day)
+    plt.tight_layout()
+    plt.show()
 
+df = get_price_data("2222")
+volume_seasonality_daily(df)
