@@ -46,7 +46,7 @@ const StockAnalysis = () => {
         },
         {
           name: "tab2",
-          label: "Tab 2",
+          label: "متوسط العوائد الشهرية",
           render: () => {
             return (
               <DynamicChart
@@ -58,35 +58,35 @@ const StockAnalysis = () => {
         },
         {
           name: "tab3",
-          label: "Tab 3",
+          label: "توزيع تغير الشموع",
           render: () => {
             return <DynamicChart type={"bar"} data={data["price_change"]} />;
           },
         },
-        {
-          name: "tab4",
-          label: "Tab 4",
-          render: () => {
-            return (
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Incidunt222222222222222 eveniet...
-              </p>
-            );
-          },
-        },
-        {
-          name: "tab5",
-          label: "Tab 5",
-          render: () => {
-            return (
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Incidunt222222222222222 eveniet...
-              </p>
-            );
-          },
-        },
+        // {
+        //   name: "tab4",
+        //   label: "Tab 4",
+        //   render: () => {
+        //     return (
+        //       <p>
+        //         Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+        //         Incidunt222222222222222 eveniet...
+        //       </p>
+        //     );
+        //   },
+        // },
+        // {
+        //   name: "tab5",
+        //   label: "Tab 5",
+        //   render: () => {
+        //     return (
+        //       <p>
+        //         Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+        //         Incidunt222222222222222 eveniet...
+        //       </p>
+        //     );
+        //   },
+        // },
       ];
       return <TabsWithIndicator tabs={tabs} />;
     }

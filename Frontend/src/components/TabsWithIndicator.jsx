@@ -1,6 +1,7 @@
 // TabsWithIndicator.js
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { CustomCard } from "./utils/cards/CustomCard";
 
 const tabContentVariants = {
   initial: {
@@ -28,15 +29,14 @@ const TabsWithIndicator = ({ tabs }) => {
   const isSelected = (tab) => activeTab.name === tab.name;
 
   return (
-    <div className="tabs-container">
-      <div className="d-flex gap-2">
+    <CustomCard className="tabs-container">
+      <div className="d-flex gap-2 my-2">
         {tabs.map((tab) => (
           <div
             key={tab.name}
             className={`position-relative cursor-pointer ${
               isSelected(tab) ? "selected" : ""
             }`}
-            // style={{ position: "relative", cursor: "pointer" }}
           >
             <div
               onClick={(e) => handleClick(e, tab)}
@@ -70,7 +70,7 @@ const TabsWithIndicator = ({ tabs }) => {
         ))}
       </div>
 
-      <div className="tab-content">
+      <div className="tab-content bg-light">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab.name || "empty"}
@@ -86,7 +86,7 @@ const TabsWithIndicator = ({ tabs }) => {
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </CustomCard>
   );
 };
 
