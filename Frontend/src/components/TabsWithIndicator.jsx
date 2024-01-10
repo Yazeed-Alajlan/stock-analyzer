@@ -33,13 +33,15 @@ const TabsWithIndicator = ({ tabs }) => {
         {tabs.map((tab) => (
           <div
             key={tab.name}
-            className={` ${isSelected(tab) ? "selected" : ""}`}
-            style={{ position: "relative", cursor: "pointer" }}
+            className={`position-relative cursor-pointer ${
+              isSelected(tab) ? "selected" : ""
+            }`}
+            // style={{ position: "relative", cursor: "pointer" }}
           >
             <div
               onClick={(e) => handleClick(e, tab)}
+              className="pb-1 d-block"
               style={{
-                display: "block",
                 color: isSelected(tab) ? "#535bf2" : "#ccc",
               }}
             >
@@ -55,7 +57,7 @@ const TabsWithIndicator = ({ tabs }) => {
                     bottom: "0",
                     left: "0",
                     right: "0",
-                    height: "2px",
+                    height: "1px",
                     backgroundColor: "#535bf2",
                   }}
                   initial={{ opacity: 0 }}

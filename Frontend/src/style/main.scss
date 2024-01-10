@@ -110,5 +110,9 @@ $theme-colors: (
   background: #555; /* Color of the scrollbar handle on hover */
 }
 
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";

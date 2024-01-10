@@ -10,6 +10,7 @@ from database.main import *
 import talib
 import flask 
 import json
+from flask import jsonify
 
 
 app = flask.Flask(__name__)
@@ -19,7 +20,6 @@ def get_price_summary(symbol):
     df=get_price_data(symbol) 
     monthly_returns = calculate_monthly_returns(df)
     monthly_returns_average=calculate_monthly_average_returns(df)
-
     # Convert the date index to ISO 8601 format
     monthly_returns.index = monthly_returns.index.strftime('%Y-%m')
     result_dict = {
@@ -28,7 +28,7 @@ def get_price_summary(symbol):
         "price_change":count_price_change(df)
     } 
     print(result_dict)
-    return result_dict
+    return jsonify(result_dict)
 
 @app.route("/api/stocks/<symbol>/volume-seasonality-daily")
 def get_volume_seasonality_daily(symbol):

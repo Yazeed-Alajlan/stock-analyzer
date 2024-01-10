@@ -32,40 +32,7 @@ const MonthlyReturnTable = ({ symbol }) => {
       ...new Set(sortedMonths.map((date) => date.substring(0, 4))),
     ];
   }
-
-  function sortObjectByMonth(data) {
-    if (data == null) return;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const sortedData = Object.entries(data)
-      .sort((a, b) => {
-        const [aYear, aMonth] = a[0].split("-");
-        const [bYear, bMonth] = b[0].split("-");
-        if (aYear !== bYear) {
-          return parseInt(aYear, 10) - parseInt(bYear, 10);
-        }
-        return months.indexOf(aMonth) - months.indexOf(bMonth);
-      })
-      .reduce((obj, [key, value]) => {
-        obj[key] = value;
-        return obj;
-      }, {});
-
-    return sortedData;
-  }
+  console.log(data);
 
   return (
     <CompnentLayout>
@@ -120,11 +87,8 @@ const MonthlyReturnTable = ({ symbol }) => {
             ))}
         </tbody>
       </Table>
-      <DynamicChart type={"bar"} data={data["monthly_returns"]} />
-      <DynamicChart
-        type={"bar"}
-        data={sortObjectByMonth(data["monthly_returns_average"])}
-      />
+      {/* <DynamicChart type={"bar"} data={data["monthly_returns"]} /> */}
+      <DynamicChart type={"bar"} data={data["monthly_returns_average"]} />
       <DynamicChart type={"bar"} data={data["price_change"]} />
     </CompnentLayout>
   );

@@ -73,5 +73,8 @@ def volume_seasonality_daily(df):
     plt.tight_layout()
     plt.show()
 
+
+
+
 df = get_price_data("2222")
 volume_seasonality_daily(df)

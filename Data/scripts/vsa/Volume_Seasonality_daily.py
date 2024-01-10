@@ -62,7 +62,7 @@ def volume_seasonality_daily(df):
 
     return df,annual_avg_volume_norm,daily_avg_volume_per_day
 
-df=get_price_data("2222") 
-result,annual_avg_volume_norm,daily_avg_volume_per_day =  volume_seasonality_daily(df)
-print(daily_avg_volume_per_day)
+# df=get_price_data("2222") 
+# result,annual_avg_volume_norm,daily_avg_volume_per_day =  volume_seasonality_daily(df)
+# print(daily_avg_volume_per_day)
 
