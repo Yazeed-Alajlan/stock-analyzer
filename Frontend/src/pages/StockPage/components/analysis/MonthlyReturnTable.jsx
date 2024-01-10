@@ -4,34 +4,15 @@ import DynamicChart from "components/utils/charts/DynamicChart";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
-const MonthlyReturnTable = ({ symbol }) => {
-  const [data, setData] = useState({});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `http://localhost:5000/python-api/${symbol}/price-summary`;
-        const response = await axios.get(url);
-
-        setData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [symbol]);
-
+const MonthlyReturnTable = ({ data }) => {
+  console.log(data);
   let uniqueYears = [];
   let sortedMonths = [];
 
-  if (data["monthly_returns"]) {
-    const dates = Object.keys(data["monthly_returns"]);
-    sortedMonths = dates.sort((a, b) => new Date(a) - new Date(b));
-    uniqueYears = [
-      ...new Set(sortedMonths.map((date) => date.substring(0, 4))),
-    ];
-  }
+  const dates = Object.keys(data);
+  sortedMonths = dates.sort((a, b) => new Date(a) - new Date(b));
+  uniqueYears = [...new Set(sortedMonths.map((date) => date.substring(0, 4)))];
+
   console.log(data);
 
   return (
@@ -55,7 +36,7 @@ const MonthlyReturnTable = ({ symbol }) => {
           </tr>
         </thead>
         <tbody>
-          {data["monthly_returns"] &&
+          {data &&
             uniqueYears.map((year) => (
               <tr key={year}>
                 <td>{year}</td>
@@ -64,9 +45,7 @@ const MonthlyReturnTable = ({ symbol }) => {
                     date.startsWith(`${year}-${String(m).padStart(2, "0")}`)
                   );
                   const value =
-                    monthIndex !== -1
-                      ? data["monthly_returns"][sortedMonths[monthIndex]]
-                      : null;
+                    monthIndex !== -1 ? data[sortedMonths[monthIndex]] : null;
                   let cellClass = "";
 
                   if (value !== null) {
@@ -87,9 +66,6 @@ const MonthlyReturnTable = ({ symbol }) => {
             ))}
         </tbody>
       </Table>
-      {/* <DynamicChart type={"bar"} data={data["monthly_returns"]} /> */}
-      <DynamicChart type={"bar"} data={data["monthly_returns_average"]} />
-      <DynamicChart type={"bar"} data={data["price_change"]} />
     </CompnentLayout>
   );
 };
