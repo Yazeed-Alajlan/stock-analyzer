@@ -33,10 +33,10 @@ const Tabs = ({ children, activeTab }) => {
   return (
     <div>
       <div className="d-flex flex-wrap justify-content-between">
-        <div className="d-flex flex-wrap align-items-center align-content-center gap-4">
+        <div className="d-flex flex-wrap align-items-center align-content-center gap-4 mt-2">
           {tabElements}
         </div>
-        {filterElements}
+        <div className="mt-2">{filterElements}</div>
       </div>
       {/* Load Tab Content */}
       <div className="tab-content mt-4">

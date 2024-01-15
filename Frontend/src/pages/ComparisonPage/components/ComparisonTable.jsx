@@ -8,10 +8,7 @@ import { Container } from "react-bootstrap";
 import { useStocksData } from "contexts/StocksDataContext";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import Tabs from "components/utils/Tabs";
-import Tab from "components/utils/Tab";
-import FinancialsTable from "pages/StockPage/components/financials/FinancialsTable";
-import ButtonsGroup from "components/utils/buttons/ButtonsGroup";
+import InputSelect from "components/utils/inputs/InputSelect";
 
 const ComparisonTable = () => {
   const { getStockFinancialData, getStockInformationData, stocksData } =
@@ -80,6 +77,7 @@ const ComparisonTable = () => {
             fetchedData[1].tradingNameAr,
           ],
         };
+        console.log(combinedObject);
         // Set stock financial data
         setStockFinancialData(combinedObject);
       } catch (error) {
@@ -102,91 +100,93 @@ const ComparisonTable = () => {
 
   return (
     <div>
-      <CustomCard>
-        <p className="fs-4 fw-bold">اختر شركتين للمقارنة من نفس القطاع :</p>
-        <div className="w-50">
-          <Select
-            isMulti
-            options={
-              stocksData &&
-              stocksData
-                .filter((stock) => {
-                  // Filter out stocks that do not match the sector of selectedOptions
-                  if (
-                    selectedOptions.length === 0 ||
-                    selectedOptions.every(
-                      (selectedOption) =>
-                        selectedOption.sector === stock.sectorNameEn
-                    )
-                  ) {
-                    return true;
-                  }
-                  return false;
-                })
-                .map((stock) => ({
-                  value: stock.symbol,
-                  label: `${stock.tradingNameAr} (${stock.symbol})`,
-                  sector: stock.sectorNameEn,
-                }))
+      <>
+        <InputSelect
+          label={"اختر شركتين للمقارنة من نفس القطاع"}
+          labelDirection={"vr"}
+          isMulti
+          options={
+            stocksData &&
+            stocksData
+              .filter((stock) => {
+                // Filter out stocks that do not match the sector of selectedOptions
+                if (
+                  selectedOptions.length === 0 ||
+                  selectedOptions.every(
+                    (selectedOption) =>
+                      selectedOption.sector === stock.sectorNameEn
+                  )
+                ) {
+                  return true;
+                }
+                return false;
+              })
+              .map((stock) => ({
+                value: stock.symbol,
+                label: `${stock.tradingNameAr} (${stock.symbol})`,
+                sector: stock.sectorNameEn,
+              }))
+          }
+          className="basic-multi-select"
+          classNamePrefix="select"
+          components={animatedComponents}
+          maxMenuHeight={200}
+          value={selectedOptions}
+          onChange={(selected) => {
+            if (selected.length <= maxSelected) {
+              setSelectedOptions(selected);
             }
-            className="basic-multi-select"
-            classNamePrefix="select"
-            components={animatedComponents}
-            maxMenuHeight={200}
-            value={selectedOptions}
-            onChange={(selected) => {
-              if (selected.length <= maxSelected) {
-                setSelectedOptions(selected);
-              }
-            }}
-          />
-        </div>
+          }}
+        />
 
         {stockFinancialData && selectedOptions.length == 2 ? (
           <Container className="py-4">
             <div className="d-flex justify-content-between align-items-center pb-5">
-              <Tabs activeTab={1}>
-                <Tab text={"المركز المالي"}>
-                  <FinancialsTable
-                    header={
-                      (stockFinancialData.tradingNameAr,
-                      stockFinancialData.tradingNameAr)
-                    }
-                    title={"المركز المالي"}
-                    data={stockFinancialData.balanceSheet}
-                  />
-                </Tab>
-                <Tab text={"قائمة الدخل"}>
-                  <FinancialsTable
-                    header={
-                      (stockFinancialData.tradingNameAr,
-                      stockFinancialData.tradingNameAr)
-                    }
-                    title={"قائمة الدخل"}
-                    data={stockFinancialData.incomeSheet}
-                  />
-                </Tab>
-                <Tab text={"التدفق النقدي"}>
-                  <FinancialsTable
-                    header={
-                      (stockFinancialData.tradingNameAr,
-                      stockFinancialData.tradingNameAr)
-                    }
-                    title={"التدفق النقدي"}
-                    data={stockFinancialData.cashFlow}
-                  />
-                </Tab>
-              </Tabs>
-
-              <ButtonsGroup
-                label={"المدة"}
-                icon={<BsCalendar3 />}
-                buttons={[
-                  { id: 1, text: "سنوي" },
-                  { id: 2, text: "ربع سنوي" },
-                ]}
-                parentSetState={setDisplayAnnual}
-              />
+              <ButtonGroup className="gap-2">
+                <CustomButton
+                  variant={
+                    selectedTab === "Balance Sheet"
+                      ? "primary"
+                      : "outline-primary"
+                  }
+                  onClick={() => handleTabClick("Balance Sheet")}
+                  text={"المركز المالي"}
+                />
+                <CustomButton
+                  variant={
+                    selectedTab === "Statment of Income"
+                      ? "primary"
+                      : "outline-primary"
+                  }
+                  onClick={() => handleTabClick("Statment of Income")}
+                  text={"قائمة الدخل"}
+                />
+                <CustomButton
+                  variant={
+                    selectedTab === "Cash Flow" ? "primary" : "outline-primary"
+                  }
+                  onClick={() => handleTabClick("Cash Flow")}
+                  text={"التدفق النقدي"}
+                />
+              </ButtonGroup>
+              <ButtonGroup className="gap-2">
+                <div className="fs-3">
+                  <span className="mx-2">
+                    <BsCalendar3 />
+                  </span>
+                  المدة:
+                </div>
+                <CustomButton
+                  variant={displayAnnual ? "primary" : "outline-primary"}
+                  onClick={() => handleDisplayButtonClick(true)}
+                  text={"سنوي"}
+                />
+                <CustomButton
+                  variant={displayAnnual ? "outline-primary" : "primary"}
+                  onClick={() => handleDisplayButtonClick(false)}
+                  text={"ربع سنوي"}
+                />
+              </ButtonGroup>
             </div>
 
             <div>
@@ -239,7 +239,7 @@ const ComparisonTable = () => {
         ) : (
           <p>loading</p>
         )}
-      </CustomCard>
+      </>
     </div>
   );
 };

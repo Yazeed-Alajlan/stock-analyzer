@@ -12,13 +12,18 @@ const Input = ({
   min,
   max,
   ref,
+  labelDirection, // New prop for label direction (horizontal/vertical)
 }) => {
   return (
     <CompnentLayout>
-      <div className="d-flex gap-2">
-        <p className="fs-5 my-auto">{label}</p>
+      <div
+        className={`d-flex ${
+          labelDirection === "vr" ? "flex-column" : ""
+        } gap-2`}
+      >
+        <label className="form-label fs-5 my-auto fw-bold">{label}</label>
         <input
-          className="w-100 z-2"
+          className="form-control w-100 z-2"
           type={type}
           placeholder={placeholder}
           value={value}
@@ -34,6 +39,7 @@ const Input = ({
   );
 };
 
+// Example usage:
 // <Input
 //   label="النمط:"
 //   type="number"
@@ -44,6 +50,7 @@ const Input = ({
 //   placeholder="حدد النمط"
 //   max={100}
 //   min={0}
+//   labelDirection="vertical" // or "horizontal" (default)
 // />;
 
 export default Input;
