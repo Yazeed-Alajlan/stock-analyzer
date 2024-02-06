@@ -11,9 +11,11 @@ import talib
 import flask 
 import json
 from flask import jsonify
+from flask_cors import CORS
 
 
 app = flask.Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 @app.route("/api/stocks/<symbol>/price-summary")
 def get_price_summary(symbol):
@@ -170,6 +172,7 @@ def calculate_ta_indicator_with_params(params):
 
 @app.route("/api/stocks/correlation-matrix")
 def correlationMatrix():
+    print("HELLLLLLLLLLo")
     symbols = flask.request.args.get("symbols")
     symbols = symbols.split(',')
     data=correlation_matrix(symbols)
