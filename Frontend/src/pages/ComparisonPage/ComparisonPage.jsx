@@ -35,6 +35,7 @@ const ComparisonPage = () => {
       <CustomCard>
         <InputSelect
           label={"اختر شركتين للمقارنة من نفس القطاع"}
+          labelDirection={"vr"}
           isMulti
           options={
             stocksData &&
@@ -66,9 +67,14 @@ const ComparisonPage = () => {
           }}
         />
         {stockFinancialData && (
-          <ComparisonChart stockFinancialData={stockFinancialData} />
+          <>
+            {" "}
+            <ComparisonChart stockFinancialData={stockFinancialData} />
+            <br />
+            <br />
+            <ComparisonTable />
+          </>
         )}
-        <ComparisonTable />
       </CustomCard>
     </PageLayout>
   );

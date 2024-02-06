@@ -1,7 +1,7 @@
 import { CustomCard } from "components/utils/cards/CustomCard";
 import InputSelect from "components/utils/inputs/InputSelect";
 import React, { useMemo, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useTable, useSortBy, usePagination } from "react-table";
 
 const FinancialMetricsTable = ({
@@ -84,38 +84,37 @@ const FinancialMetricsTable = ({
     <CustomCard header={header}>
       {tableData && (
         <>
-          {searchBy ||
-            (filterBy && (
-              <Form className="mb-2">
-                {searchBy && (
-                  <Form.Control
-                    type="text"
-                    placeholder="Filter by Company"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
+          {(searchBy || filterBy) && (
+            <Form className="mb-2">
+              {searchBy && (
+                <Form.Control
+                  type="text"
+                  placeholder="Filter by Company"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+              )}
+              {filterBy && (
+                <div className="w-50">
+                  <InputSelect
+                    label={"القطاع"}
+                    placeholder="تصفية حسب القطاع"
+                    value={filterOption}
+                    options={[
+                      ...uniqueFilter.map((sector, index) => ({
+                        value: sector,
+                        label: sector,
+                      })),
+                    ]}
+                    onChange={(e) => {
+                      setFilterOption(e && e.value);
+                    }}
+                    isSearchable={true}
                   />
-                )}
-                {filterBy && (
-                  <div className="w-50">
-                    <InputSelect
-                      label={"القطاع"}
-                      placeholder="تصفية حسب القطاع"
-                      value={filterOption}
-                      options={[
-                        ...uniqueFilter.map((sector, index) => ({
-                          value: sector,
-                          label: sector,
-                        })),
-                      ]}
-                      onChange={(e) => {
-                        setFilterOption(e && e.value);
-                      }}
-                      isSearchable={true}
-                    />
-                  </div>
-                )}
-              </Form>
-            ))}
+                </div>
+              )}
+            </Form>
+          )}
 
           <div
             style={{

@@ -72,6 +72,7 @@ const ComparisonChart = ({ stockFinancialData }) => {
     <>
       <InputSelect
         label={"اختر المؤشرات المالية"}
+        labelDirection={"vr"}
         options={groupedOptions}
         isMulti={true}
         onChange={handleSelectChange}
