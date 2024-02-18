@@ -26,6 +26,11 @@ def find_hawkes_process(data, kappa= 0.1,norm_lookback=336,rolling=168):
     data['v_hawk']=pd.Series(output, index=data.index) * kappa
     data['q05'] = data['v_hawk'].rolling(rolling).quantile(0.05)
     data['q95'] = data['v_hawk'].rolling(rolling).quantile(0.95)
+    data['v_hawk'].fillna(0, inplace=True)
+    data['q95'].fillna(0, inplace=True)
+    data['q05'].fillna(0, inplace=True)
+    data['log_close'].fillna(0, inplace=True)
+
     return data
 
 

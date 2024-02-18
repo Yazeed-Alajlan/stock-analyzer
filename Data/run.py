@@ -133,8 +133,7 @@ def indicators(symbol,indicator):
         data=vsa_indicator(stock_data,norm_lookback=10)
         data.index = data.index.strftime('%Y-%m-%d')
         data=data.fillna(0)
-        result_dict["value"]=data.to_dict()
-        return result_dict
+        return data.to_dict()
     
     indicator_params = {
     'indicator_name': indicator_name,
