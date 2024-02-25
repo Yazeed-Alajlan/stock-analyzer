@@ -4,7 +4,7 @@ from scripts.vsa.main import *
 from scripts.trends.main import *
 from scripts.correlation.main import *
 from scripts.Files.TechnicalAnalysisAutomation.flags_pennants import *
-# from scripts.moving_average.main import *
+from scripts.moving_average.main import *
 from database.main import *
 #------------------------------------------------------------------------------#
 import talib
@@ -96,12 +96,9 @@ def flags_pennants():
 @app.route("/api/stocks/vsa")
 def vsa():
     symbol = flask.request.args.get("symbol")
-    print(symbol)
-    print("---------------------------------------------------")
     stock_data=get_price_data(symbol) 
-
     data=vsa_indicator(stock_data,norm_lookback=10)
-    
+
     data.index = data.index.strftime('%Y-%m-%d')
     data=data.fillna(0)
     return data.to_json()
@@ -115,8 +112,6 @@ def japanese_candlestick_patterns_markers():
 
     print(data)
     return data
-
-
 
 
 @app.route("/api/stocks/<symbol>/indicators/<indicator>")
@@ -171,13 +166,21 @@ def calculate_ta_indicator_with_params(params):
 
 @app.route("/api/stocks/correlation-matrix")
 def correlationMatrix():
-    print("HELLLLLLLLLLo")
     symbols = flask.request.args.get("symbols")
     symbols = symbols.split(',')
     data=correlation_matrix(symbols)
     print(data)
     return data.to_json()
 
+@app.route("/api/stocks/moving-average-bounce-penetration-percentage")
+def movingAverage():
+    print("--------------------")
+    symbol = flask.request.args.get("symbol")
+    stock_data=get_price_data(symbol) 
+    data=moving_average_bounce_penetration_percentage(stock_data)
+
+    print(data)
+    return data
 
 
 

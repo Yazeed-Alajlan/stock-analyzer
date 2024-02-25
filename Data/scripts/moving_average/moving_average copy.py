@@ -12,15 +12,15 @@ data = yf.download(symbol, start=start_date, end=end_date)
 # Extract closing prices
 closing_prices = data['Close']
 
-# Calculate SMA and ATR
-sma_periods = [50]  # Define a range of SMA values to test
-atr_period = 14
+# Calculate bounce percentage for different SMA periods
+bounce_percentages = []
+penetration_percentages = []
+support_bounces_percentages=[]
+resistance_bounces_percentages=[]
+sma_periods = list(range(2, 201))  # Modify the range from 2 to 200
+# sma_periods = [50] 
 
-# Initialize variables to keep track of best SMA and intersections
-best_sma = None
-best_sma_intersections = 0
-best_sma_indices_above = []
-best_sma_indices_below = []
+atr_period = 14
 
 for sma_period in sma_periods:
     sma = talib.SMA(closing_prices, timeperiod=sma_period)
@@ -38,78 +38,51 @@ for sma_period in sma_periods:
     crossed_upper = initially_above & above_bound
     crossed_lower = initially_below & below_bound
 
-    above_bound_indices = crossed_upper[crossed_upper == True].index.tolist()
-    below_bound_indices = crossed_lower[crossed_lower == True].index.tolist()
+    above_bound_indices = crossed_upper[crossed_upper].index.tolist()
+    below_bound_indices = crossed_lower[crossed_lower].index.tolist()
 
-    # Count intersections
-    total_intersections = len(above_bound_indices) + len(below_bound_indices)
+    merged_indices = [(idx, 'above') for idx in above_bound_indices] + [(idx, 'below') for idx in below_bound_indices]
+    merged_indices.sort()
 
-    # Update best SMA if current SMA has more intersections
-    if total_intersections > best_sma_intersections:
-        best_sma_intersections = total_intersections
-        best_sma = sma_period
-        best_sma_indices_above = above_bound_indices
-        best_sma_indices_below = below_bound_indices
+    support_penetrations = []
+    resistance_bounces = []
+    resistance_penetrations = []
+    support_bounces = []
 
-merged_indices = [(idx, 'above') for idx in best_sma_indices_above] + [(idx, 'below') for idx in best_sma_indices_below]
-merged_indices.sort()
+    for i in range(1, len(merged_indices)):
+        current_idx, current_pos = merged_indices[i]
+        prev_idx, prev_pos = merged_indices[i - 1]
 
-# Identify consecutive bounces and penetrations, then mark on the chart
-support_penetrations = []
-resistance_bounces = []
-resistance_penetrations = []
-support_bounces = []
+        if current_pos == 'above' and prev_pos == 'below':
+            resistance_penetrations.append(current_idx)
+        elif current_pos == 'below' and prev_pos == 'below':
+            resistance_bounces.append(current_idx)
+        elif current_pos == 'below' and prev_pos == 'above':
+            support_penetrations.append(current_idx)
+        elif current_pos == 'above' and prev_pos == 'above':
+            support_bounces.append(current_idx)
 
-# Loop to identify support and resistance
-for i in range(1, len(merged_indices)):
-    current_idx, current_pos = merged_indices[i]
-    prev_idx, prev_pos = merged_indices[i - 1]
+    total_intersections = len(support_penetrations) + len(resistance_bounces) + len(resistance_penetrations) + len(support_bounces)
+    print(total_intersections)
+    # Calculate bounce percentage
+    bounce_percentage = ((len(support_bounces) + len(resistance_bounces)) / total_intersections) * 100
+    bounce_percentages.append(bounce_percentage)
 
-    if current_pos == 'above' and prev_pos == 'below':  # Support Penetration
-        resistance_penetrations.append(current_idx)
-    elif current_pos == 'below' and prev_pos == 'below':  # Resistance Bounce
-        resistance_bounces.append(current_idx)
-    elif current_pos == 'below' and prev_pos == 'above':  # Resistance Penetration
-        support_penetrations.append(current_idx)
-    elif current_pos == 'above' and prev_pos == 'above':  # Support Bounce
-        support_bounces.append(current_idx)
+    penetration_percentage = ((len(resistance_penetrations) + len(support_penetrations)) / total_intersections) * 100
+    penetration_percentages.append(penetration_percentage)
+
+    support_bounces_percentage=((len(support_bounces))/ (len(support_bounces) + len(support_penetrations)))
+    resistance_bounces_percentage=((len(resistance_bounces))/ (len(resistance_bounces) + len(resistance_penetrations)))
+    support_bounces_percentages.append(support_bounces_percentage)
+    resistance_bounces_percentages.append(resistance_bounces_percentage)
 
 
-# Plotting for the best SMA only
+# Plotting bounce percentage against SMA periods
 plt.figure(figsize=(10, 6))
-plt.plot(data.index, closing_prices, label='Price')
-plt.plot(data.index, talib.SMA(closing_prices, timeperiod=best_sma), label=f'Best SMA ({best_sma} days)')
-plt.plot(data.index, talib.SMA(closing_prices, timeperiod=best_sma) + 0.5 * talib.ATR(data['High'], data['Low'], closing_prices, timeperiod=atr_period), label='Upper Bound', color='green')
-plt.plot(data.index, talib.SMA(closing_prices, timeperiod=best_sma) - 0.5 * talib.ATR(data['High'], data['Low'], closing_prices, timeperiod=atr_period), label='Lower Bound', color='red')
-
-# Marking intersections for best SMA
-intersection_prices_above = closing_prices.loc[best_sma_indices_above]
-plt.scatter(intersection_prices_above.index, intersection_prices_above,
-            marker='o', color='green', label='Above Upper Bound')
-
-intersection_prices_below = closing_prices.loc[best_sma_indices_below]
-plt.scatter(intersection_prices_below.index, intersection_prices_below,
-            marker='o', color='red', label='Below Lower Bound')
-
-# Marking consecutive bounces on the chart
-for idx in support_bounces:
-    plt.axvline(x=idx, color='green', linestyle='--')  # Marking the index on the plot in yellow
-
-for idx in support_penetrations:
-    plt.axvline(x=idx, color='red', linestyle='--')  # Marking penetrations in orange
-
-
-
-print(best_sma)
-# Printing counts for each category
-print(f"Number of Support Penetrations: {len(support_penetrations)}")
-print(f"Number of Resistance Bounces: {len(resistance_bounces)}")
-print(f"Number of Resistance Penetrations: {len(resistance_penetrations)}")
-print(f"Number of Support Bounces: {len(support_bounces)}")
-
-plt.title(f'{symbol} Stock Price and Custom Bounds for Best SMA')
-plt.xlabel('Date')
-plt.ylabel('Price')
-plt.legend()
+plt.plot(sma_periods, support_bounces_percentages, linestyle='-', color='blue')
+plt.plot(sma_periods, resistance_bounces_percentages, linestyle='-', color='yellow')
+plt.title('Bounce Percentage for Different SMA Periods')
+plt.xlabel('SMA Period')
+plt.ylabel('Bounce Percentage')
 plt.grid(True)
 plt.show()
