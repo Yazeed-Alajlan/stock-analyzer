@@ -55,10 +55,12 @@ def moving_average_bounce_penetration_percentage(df):
                 support_bounces.append(current_idx)
 
         total_intersections = len(support_penetrations) + len(resistance_bounces) + len(resistance_penetrations) + len(support_bounces)
-        bounce_percentage = ((len(support_bounces) + len(resistance_bounces)) / total_intersections) * 100
-        penetration_percentage = ((len(resistance_penetrations) + len(support_penetrations)) / total_intersections) * 100
+        bounce_percentage = ((len(support_bounces) + len(resistance_bounces)) / total_intersections) 
+        penetration_percentage = ((len(resistance_penetrations) + len(support_penetrations)) / total_intersections) 
         support_bounces_percentage = (len(support_bounces)) / (len(support_bounces) + len(support_penetrations))
         resistance_bounces_percentage = (len(resistance_bounces)) / (len(resistance_bounces) + len(resistance_penetrations))
+        support_penetration_percentage = (len(support_penetrations)) / (len(support_bounces) + len(support_penetrations))
+        resistance_penetration_percentage = (len(resistance_penetrations)) / (len(resistance_bounces) + len(resistance_penetrations))
 
         result = {
             "period": sma_period,
@@ -70,7 +72,9 @@ def moving_average_bounce_penetration_percentage(df):
             'resistance_penetrations': resistance_penetrations,
             'resistance_bounces': resistance_bounces,
             'support_penetrations': support_penetrations,
-            'support_bounces': support_bounces
+            'support_bounces': support_bounces,
+            'support_penetration_percentage': support_penetration_percentage,
+            'resistance_penetration_percentage': resistance_penetration_percentage
         }
 
         results.append(result)
